@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & 科技晚间简报 · 2026-10-12</title>
+<style>
+:root {
+  --bg: #f7f8fa; --card: #ffffff; --text: #1e2a35; --text-2: #4a5a68; --text-3: #8a99a8;
+  --accent: #6E8899; --accent-dark: #55697a; --accent-bg: #eaf0f4;
+  --terracotta: #C4956E; --terracotta-bg: #faf2e9;
+  --green: #2e9e5b; --green-bg: #e7f6ed; --red: #d0483c; --red-bg: #fbeae8;
+  --amber-bg: #fdf6e3; --amber: #8a6d1a; --border: #e4e9ee;
+  --shadow: 0 1px 4px rgba(30,42,53,0.05); --shadow-lg: 0 6px 20px rgba(30,42,53,0.09);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; -webkit-font-smoothing: antialiased;
+}
+.hero {
+  background: linear-gradient(135deg, #34495e 0%, #4a6274 50%, #6E8899 100%);
+  color: #fff; padding: 52px 24px 44px; position: relative; overflow: hidden;
+}
+.hero::after { content: ""; position: absolute; right: -70px; top: -70px; width: 260px; height: 260px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+.hero::before { content: ""; position: absolute; right: 50px; bottom: -50px; width: 150px; height: 150px; border-radius: 50%; background: rgba(196,149,110,0.18); }
+.hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+.hero .kicker { display: inline-block; font-size: 12px; letter-spacing: 2px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 4px 14px; border-radius: 20px; margin-bottom: 16px; }
+.hero h1 { font-size: 29px; font-weight: 700; margin-bottom: 10px; }
+.hero .sub { font-size: 15px; opacity: 0.88; }
+.hero .src-line { margin-top: 18px; font-size: 12px; opacity: 0.72; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 24px 70px; }
+.toc-bar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.93); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 24px; margin: 0 -24px 30px; }
+.toc-bar-inner { max-width: 860px; margin: 0 auto; display: flex; gap: 4px; overflow-x: auto; }
+.toc-bar a { padding: 14px 15px; font-size: 14px; color: var(--text-2); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.toc-bar a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.sec-title { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 700; margin: 38px 0 16px; }
+.sec-title .ico { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: var(--accent-bg); flex-shrink: 0; }
+/* 导读 */
+.lead { background: linear-gradient(135deg, var(--terracotta-bg), #fdf9f3); border: 1px solid #ecd9c4; border-radius: 14px; padding: 20px 24px; font-size: 14.5px; color: #6b543a; margin-bottom: 8px; }
+.lead b { color: #9c6b3f; }
+/* 头条 */
+.headline { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--terracotta); border-radius: 12px; padding: 20px 24px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.headline .tag { display: inline-block; font-size: 11px; font-weight: 700; color: #fff; background: var(--terracotta); padding: 2px 10px; border-radius: 4px; margin-bottom: 8px; letter-spacing: 1px; }
+.headline h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.headline p { font-size: 14px; color: var(--text-2); }
+.headline .src { margin-top: 8px; font-size: 11.5px; color: var(--text-3); }
+.headline .verified { color: var(--green); font-weight: 600; }
+/* 新闻卡 */
+.news-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; box-shadow: var(--shadow); border-left: 3px solid var(--accent); }
+.news-item:hover { box-shadow: var(--shadow-lg); }
+.news-item .head { font-weight: 600; font-size: 15px; margin-bottom: 5px; }
+.news-item .body { font-size: 13.5px; color: var(--text-2); margin-bottom: 6px; }
+.news-item .src { font-size: 11.5px; color: var(--text-3); }
+.flag { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+.flag-rumor { background: var(--amber-bg); color: var(--amber); }
+.flag-single { background: #f0e6f6; color: #7a4a9c; }
+.flag-verified { background: var(--green-bg); color: var(--green); }
+/* 核实说明 */
+.verify-box { background: var(--amber-bg); border: 1px solid #ecdcb0; border-radius: 12px; padding: 18px 22px; margin-top: 28px; }
+.verify-box h3 { font-size: 15px; color: var(--amber); margin-bottom: 10px; }
+.verify-box li { font-size: 13.5px; color: #7a6420; margin: 6px 0; list-style: none; padding-left: 20px; position: relative; }
+.verify-box li::before { content: "•"; position: absolute; left: 6px; color: var(--terracotta); font-weight: 700; }
+.footer { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--border); color: var(--text-3); font-size: 12.5px; text-align: center; line-height: 1.9; }
+@media (max-width: 600px) {
+  .hero { padding: 40px 20px 34px; } .hero h1 { font-size: 23px; }
+  .container { padding: 0 16px 50px; } .toc-bar { margin: 0 -16px 24px; padding: 0 8px; }
+  .sec-title { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <span class="kicker">晚间简报 · EVENING</span>
+    <h1>AI & 科技晚间简报</h1>
+    <div class="sub">2026 年 10 月 12 日 · 周一 · 晚场</div>
+    <div class="src-line">数据窗口 当日 00:00–20:15 (UTC+8) · linux.do 今日 30 帖（RSS）+ X 5 组检索 + Reuters / IT之家 / 官网交叉核实</div>
+  </div>
+</div>
+
+<div class="toc-bar">
+  <div class="toc-bar-inner">
+    <a href="#lead">🧭 本期导读</a>
+    <a href="#top">🔥 头条</a>
+    <a href="#news">📰 核心动态</a>
+    <a href="#dev">🛠 工具开发</a>
+    <a href="#community">💬 社区热议</a>
+    <a href="#verify">⚠️ 核实说明</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="sec-title" id="lead"><span class="ico">🧭</span> 本期导读</div>
+  <div class="lead">
+    今天双源主线是<b>「中国模型低成本扩散拿到产业背书 + 个人智能体大战升温」</b>——Intel CEO 陈立武在新加坡 DBS 论坛称 DeepSeek/Kimi/GLM 采用「非常快」（Reuters 今日）；X 热传 Meta Muse 两周采用率 +300% 与 Alexandr Wang 72 分钟深访；腾讯被传推独立 App「元宝助手」。就业侧 CNBC/斯坦福给出新证据：初级程序员岗位约 -20%、资深岗吃下七成增量。Gemini 4 Argon「发布周」刷屏——注意是放量窗口传闻，模型本体 9/30 已发布。国内社区：OpenCode Go 官宣 DeepSeek 每月 80 美元额度、Claude 升 Max 被封号、Opus「降智」吐槽。另有搜狗问问官宣 11/7 停服。
+  </div>
+
+  <div class="sec-title" id="top"><span class="ico">🔥</span> 头条</div>
+  <div class="headline">
+    <span class="tag">头条</span>
+    <h3>Intel CEO：中国前沿模型采用「非常快」</h3>
+    <p>DeepSeek/Kimi/GLM 成本更低「够用了」，Intel CEO 陈立武在新加坡 DBS 论坛称中国前沿模型采用速度「非常快」，并自称开源坚定信徒。</p>
+    <div class="src">Reuters · 10-12 · <span class="verified">✓ 已核实</span></div>
+  </div>
+  <div class="headline">
+    <span class="tag">头条</span>
+    <h3>报告：初级程序员就业降约 20%</h3>
+    <p>Claude Code 发布以来美国开发职位发布反增 15%，但高级岗占增量 71%；斯坦福 AI 指数：22-25 岁 AI 领域就业 -16%。</p>
+    <div class="src">IT之家编译 CNBC · 10-12 16:13 · <span class="verified">✓ 已核实</span></div>
+  </div>
+
+  <div class="sec-title" id="news"><span class="ico">📰</span> 核心动态</div>
+  <div class="news-item"><div class="head">Meta Muse「两周采用率 +300%」<span class="flag flag-single">单一来源</span></div><div class="body">X Techub News 报道；背景已核实：9/8 上线、12 天 280 万安装。另 Alexandr Wang 72 分钟深访十点刷屏。</div><span class="src">X Techub News · 10-12</span></div>
+  <div class="news-item"><div class="head">Gemini 4 Argon「发布周」传闻<span class="flag flag-rumor">放量猜测</span></div><div class="body">linux.do 大规模灰测投票刷屏。注意：模型本体 9/30 已发布，今日为放量窗口传闻，非新发布。</div><span class="src">linux.do · 10-12</span></div>
+  <div class="news-item"><div class="head">腾讯据传推独立 App「元宝助手」<span class="flag flag-rumor">传闻</span></div><div class="body">入局个人智能体赛道。媒体背景：字节小豆、阿里千问已在赛道。</div><span class="src">传闻 · 未一手核实</span></div>
+
+  <div class="sec-title" id="dev"><span class="ico">🛠</span> 工具 & 开发</div>
+  <div class="news-item"><div class="head">OpenCode Go 官宣 DeepSeek 每月 80 美元额度</div><div class="body">社区评「现在最好的 DeepSeek Coding plan」。二楼疑非官方 API。官网现列 V4.1 Flash $60/$120 两档。</div><span class="src">linux.do · 10-12</span></div>
+  <div class="news-item"><div class="head">搜狗问问官宣 11/7 停服<span class="flag flag-verified">已核实</span></div><div class="body">11 月 7 日 23:59 停止服务，账号自动注销。</div><span class="src">官网公告</span></div>
+  <div class="news-item"><div class="head">日本实验：1 美元预算双 agent 自律做视频</div><div class="body">Opus 5.5 + GPT-6 Astra 双 agent 自律制作 30 秒视频（Minimax H3 + Qwen Edit）。</div><span class="src">10-12</span></div>
+  <div class="news-item"><div class="head">NVIDIA 洽谈收购/增持 Reflection AI<span class="flag flag-rumor">未一手核实</span></div><div class="body">市场摘要级消息。</div><span class="src">市场摘要</span></div>
+
+  <div class="sec-title" id="community"><span class="ico">💬</span> 社区热议</div>
+  <div class="news-item"><div class="head">Claude 封号</div><div class="body">升 Max 5x 后两年/三年老号被封，申诉未解（延续昨晚话题）。</div><span class="src">linux.do · 10-12</span></div>
+  <div class="news-item"><div class="head">Opus 评价两极化</div><div class="body">「降智明显」吐槽 vs「Opus 5.5 Max 震惊瘫坐」——两种声音并存。</div><span class="src">linux.do · 10-12</span></div>
+  <div class="news-item"><div class="head">GPT 6.1 Sol 与 Astra 速度对比</div><div class="body">约 20tps；另有「只会喵喵的 GPT 6 Astra API」趣味项目。</div><span class="src">linux.do · 10-12</span></div>
+  <div class="news-item"><div class="head">额度省钱帖密集</div><div class="body">Claude 额度参考、48 月 team 额度少、deepseek 便宜途径、GPT Pro 20x 姿势。</div><span class="src">linux.do · 10-12</span></div>
+
+  <div class="verify-box" id="verify">
+    <h3>⚠️ 核实说明</h3>
+    <ul>
+      <li>Gemini 4 Argon 非今日新发布（本体 9/30 已发布，今日为放量猜测）</li>
+      <li>Muse「+300%」为单一来源</li>
+      <li>元宝助手、NVIDIA/Reflection AI 均未一手核实，报告中已标注</li>
+      <li>linux.do 单帖 JSON 中途遭 Cloudflare 限流，部分为标题级信息</li>
+      <li>X 英文泛词检索噪音大，本场以中文词为主</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    Leon 的报告库 · AI 简报 · 晚场<br>
+    生成于 2026-10-12 ｜ Hermes Agent 自动整理
+  </div>
+</div>
+
+</body>
+</html>
