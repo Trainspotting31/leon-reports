@@ -77,9 +77,7 @@
   .book{border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:#fcfaf5}
   .book b{font-family:var(--serif)}
   .book small{color:var(--muted);font-size:14px}
-  .pending{text-align:center;padding:30px 26px}
-  .pending .big{font-family:var(--serif);font-size:22px;margin:8px 0}
-  footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0 48px;font-size:14px;color:var(--muted);line-height:1.8}
+    footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0 48px;font-size:14px;color:var(--muted);line-height:1.8}
   footer a{color:var(--muted)}
   footer ul{padding-left:18px;margin:6px 0 14px}
 
@@ -129,7 +127,7 @@
     <a class="mini" href="#chemistry" style="--c:var(--chem)"><div class="t">化学 · 10.7</div><div class="n">生命为什么只用"一只手"</div><div class="s">在试管里演示了：一点点偶然的偏差，怎样滚雪球变成几乎百分之百。</div></a>
     <a class="mini" href="#literature" style="--c:var(--lit)"><div class="t">文学 · 10.8</div><div class="n">安妮·卡森</div><div class="s">一位研究古希腊的加拿大教授，把两千多年前的诗人请到今天的厨房桌边。</div></a>
     <a class="mini" href="#peace" style="--c:var(--peace)"><div class="t">和平 · 10.9</div><div class="n">纳瓦尼特姆·皮莱</div><div class="s">从种族隔离下的律师到国际法官，让战争罪、种族灭绝有人要负责。</div></a>
-    <a class="mini" href="#economics" style="--c:var(--eco)"><div class="t">经济学 · 10.12</div><div class="n">今天揭晓</div><div class="s">北京时间 10 月 12 日 17:45 公布，本页随后更新。</div></a>
+    <a class="mini" href="#economics" style="--c:var(--eco)"><div class="t">经济学 · 10.12</div><div class="n">经济该踩油门还是刹车</div><div class="s">从每个家庭、每家公司怎么做决定算起，重写了央行定利率用的那套计算工具。</div></a>
   </div>
 </section>
 
@@ -361,18 +359,41 @@
   <div class="ph">
     <div>
       <div class="tag">经济学奖 · 10 月 12 日公布</div>
-      <h3>今天揭晓，本页随后更新</h3>
-      <div class="who">公布时间：斯德哥尔摩时间 11:45，<b>北京时间 17:45</b></div>
+      <h3>经济忽冷忽热，什么时候踩油门、什么时候踩刹车</h3>
+      <div class="who"><b>罗伯特·霍尔</b>（Robert E. Hall，1943 年生，美国斯坦福大学）<br><b>迈克尔·伍德福德</b>（Michael Woodford，1955 年生，美国哥伦比亚大学）<br>两人平分</div>
     </div>
     <svg viewBox="0 0 120 120" aria-hidden="true">
-      <circle cx="60" cy="60" r="44" fill="#f4ead2" stroke="#8a6a1f" stroke-width="3"/>
-      <circle cx="60" cy="60" r="36" fill="none" stroke="#8a6a1f" stroke-width="1"/>
-      <text x="60" y="76" text-anchor="middle" font-size="44" font-family="serif" fill="#8a6a1f" font-weight="700">?</text>
+      <path d="M6 60 L18 26 L30 92 L42 20 L54 98 L66 30 L78 88 L90 36 L102 80 L114 50" fill="none" stroke="#c9b27a" stroke-width="2" stroke-dasharray="4 3"/>
+      <path d="M6 60 C24 48 36 70 54 60 S 90 50 114 60" fill="none" stroke="#8a6a1f" stroke-width="4" stroke-linecap="round"/>
     </svg>
   </div>
-  <div class="pb pending">
-    <p class="big">结果公布后，这里会换成和上面一样的大白话解读。</p>
-    <p style="color:var(--muted);font-size:15px;margin:0">一个冷知识：经济学奖并不在诺贝尔的遗嘱里。它的全名是"瑞典中央银行纪念阿尔弗雷德·诺贝尔经济学奖"，1968 年由瑞典央行出资设立，但评选、奖金和颁奖都与其他诺贝尔奖一致。</p>
+  <div class="pb">
+    <p class="one">经济总是一阵热一阵冷。央行降息、政府发补贴，是给经济"踩油门"；加息、收紧开支，是"踩刹车"。这两位重新造了一套计算工具，让这一脚什么时候踩、踩多重，算得更准。今天世界各国的央行和财政部都在用。</p>
+
+    <h4>老办法为什么失灵</h4>
+    <p>大约一百年前，经济学家凯恩斯指出：大家想买的东西，不会自动等于经济能生产的东西。买得太少，工厂减产、工人失业；买得太多，经济过热、物价飞涨。所以冷了要踩油门，热了要踩刹车。</p>
+    <p>过去算这一脚，靠的是从历史数据里总结出的统计规律，比如"失业高的时候，通胀就低""收入多了，花钱就多"。可到了 1970 年代石油危机，这些规律突然不灵了：失业和通胀一起往上涨，刺激政策只换来了十年的低增长、高通胀。很多人甚至认为，政府还是别插手经济为好。</p>
+
+    <div class="analogy">老办法像开车只盯着转速表，因为过去转速一高车就快。换了路况，表和车速对不上，车就开进了沟里。新办法是去看引擎里每个零件怎么转，也就是每个家庭、每家公司是怎么做决定的，再把它们加起来，算出整辆车会怎么走。</div>
+
+    <h4>他们做了什么</h4>
+    <ol class="steps">
+      <li><span class="yr">1970 年代末</span>1995 年诺奖得主卢卡斯批评说：宏观经济的统计规律靠不住，模型必须从个人和企业的决定算起。道理大家都认，但真要做出来，没人知道怎么做。</li>
+      <li><span class="yr">1978 年 · 霍尔</span>难点之一是：一家人花多少钱，取决于他们觉得以后能挣多少，而"觉得"是看不见的。霍尔把问题倒过来想：既然花钱反映的是对未来的判断，那人只会在听到新消息时才改变花钱的习惯，而新消息本来就是猜不到的。所以如果理论没错，消费的变化应该<b>无法预测</b>。他拿数据一验，果然如此。</li>
+      <li><span class="yr">1982 年 · 霍尔</span>他和同事用家庭数据算出：大约 80% 的家庭是这样"看着未来花钱"的，剩下的人挣多少花多少，没有余钱可以调整。这个比例后来成了各国模型里的一个关键参数。</li>
+      <li><span class="yr">2003 年 · 伍德福德</span>他出了一本书，搭出一套只有三个方程的完整模型，叫<b>新凯恩斯模型</b>，后来各国央行的模型基本都从它改出来。它讲清了几件事：央行主要靠<b>调利率</b>来影响经济；商家不会天天改价格，可一旦改价，看的是未来，所以<b>人们对未来的预期本身就会推高或压低物价</b>；还有一个叫"产出缺口"的指标，衡量经济比正常水平热了多少、冷了多少，政策的目标就是把这个缺口拉回零。</li>
+    </ol>
+
+    <div class="analogy">霍尔的发现有点像看人点外卖：一个人平时点多少、点什么，其实已经反映了他对下个月工资的估计。他只会在突然听说要涨工资、或者要裁员时才改变习惯，而这种消息谁也没法提前知道。</div>
+
+    <h4>跟你有什么关系</h4>
+    <div class="you">
+      <p>你的房贷利率、存款利息、超市物价，都和央行的利率决定有关。评奖委员会的原话是：下次你的央行定利率时，可以确定其中一项依据来自这类模型。</p>
+      <p>这也解释了为什么央行行长讲话总是字斟句酌：大家对未来怎么想，本身就会影响经济，所以央行说话要清楚、可信。</p>
+      <p style="margin:0">委员会认为，靠这套方法，疫情和近几年的能源危机没有像 1970 年代那样留下多年的高通胀、低增长。但他们也承认，衰退和高通胀并没有消失，只是持续得更短了。</p>
+    </div>
+
+    <div class="cite">官方颁奖理由：<q>for microeconomic foundations of macroeconomic stabilisation</q><br>（表彰他们为宏观经济稳定政策奠定微观经济基础）<br><br>冷知识：经济学奖并不在诺贝尔的遗嘱里，全名是"瑞典中央银行纪念阿尔弗雷德·诺贝尔经济学奖"，1968 年由瑞典央行出资设立。</div>
   </div>
 </article>
 
@@ -383,7 +404,7 @@
     <p><b>资料来源</b>（截至 2026 年 10 月 12 日）</p>
     <ul>
       <li>诺贝尔奖官网各奖项新闻稿与科普材料：<a href="https://www.nobelprize.org/all-nobel-prizes-2026/">nobelprize.org/all-nobel-prizes-2026</a></li>
-      <li><a href="https://www.nobelprize.org/prizes/medicine/2026/popular-information/">医学奖科普</a> · <a href="https://www.nobelprize.org/prizes/physics/2026/popular-information/">物理学奖科普</a> · <a href="https://www.nobelprize.org/prizes/chemistry/2026/popular-information/">化学奖科普</a> · <a href="https://www.nobelprize.org/prizes/literature/2026/bio-bibliography/">文学奖作家介绍</a> · <a href="https://www.nobelprize.org/prizes/peace/2026/press-release/">和平奖公告</a></li>
+      <li><a href="https://www.nobelprize.org/prizes/medicine/2026/popular-information/">医学奖科普</a> · <a href="https://www.nobelprize.org/prizes/physics/2026/popular-information/">物理学奖科普</a> · <a href="https://www.nobelprize.org/prizes/chemistry/2026/popular-information/">化学奖科普</a> · <a href="https://www.nobelprize.org/prizes/literature/2026/bio-bibliography/">文学奖作家介绍</a> · <a href="https://www.nobelprize.org/prizes/peace/2026/press-release/">和平奖公告</a> · <a href="https://www.nobelprize.org/prizes/economic-sciences/2026/popular-information/">经济学奖科普</a></li>
       <li>报道：<a href="https://www.aljazeera.com/news/2026/10/8/canadian-anne-carson-wins-2026-nobel-prize-in-literature">Al Jazeera</a>（文学奖）、<a href="https://www.aljazeera.com/news/2026/10/9/2026-nobel-peace-prize-awarded-to-navi-pillay">Al Jazeera</a>（和平奖）、<a href="https://www.opb.org/article/2026/10/06/francis-halzen-wins-nobel-prize-in-physics-for-work-on-high-energy-neutrinos/">AP / OPB</a>（物理学奖）</li>
     </ul>
     <p>中文译名与大白话解释为本页自拟，以官方英文原文为准。</p>
