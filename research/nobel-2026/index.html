@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 诺贝尔奖 · 给普通人的说明书</title>
+<meta name="description" content="用大白话讲清楚 2026 年诺贝尔奖各奖项：获奖者是谁、发现了什么、跟你有什么关系。">
+<style>
+  :root{
+    --paper:#f6f1e7; --card:#fffdf8; --ink:#1f1c17; --muted:#5b554b; --line:#e3dacb;
+    --gold:#8a6a1f; --gold-soft:#efe3c4;
+    --phy:#2b6a88; --chem:#7a3f86; --med:#2c7556; --lit:#9a3a2c; --peace:#38548a; --eco:#8a6a1f;
+    --serif:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","STSong","SimSun",serif;
+    --sans:"PingFang SC","Noto Sans CJK SC","Source Han Sans SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:64px}
+  body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.85 var(--sans);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+
+  /* hero */
+  header.hero{padding:56px 0 36px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .hero .kicker{font-size:14px;letter-spacing:.2em;color:var(--gold);font-weight:600}
+  .hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(36px,8vw,60px);line-height:1.15;margin:12px 0 14px;letter-spacing:.02em}
+  .hero h1 em{font-style:normal;color:var(--gold)}
+  .hero p.lead{font-size:18px;color:var(--muted);margin:0;max-width:34em}
+  .hero .medal{position:absolute;right:-40px;top:20px;width:220px;height:220px;opacity:.13;pointer-events:none}
+  .facts{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;font-size:14px;color:var(--muted)}
+  .facts b{color:var(--ink);font-weight:600}
+
+  /* nav */
+  nav.chips{position:sticky;top:0;z-index:10;background:rgba(246,241,231,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.chips .wrap{display:flex;gap:8px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+  nav.chips .wrap::-webkit-scrollbar{display:none}
+  nav.chips a{flex:none;text-decoration:none;font-size:15px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);white-space:nowrap}
+  nav.chips a:hover{border-color:var(--ink)}
+  nav.chips a i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+
+  /* overview */
+  section.overview{padding:36px 0 8px}
+  h2.sec{font-family:var(--serif);font-size:24px;margin:0 0 16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+  .mini{display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;border-top:4px solid var(--c);transition:transform .15s}
+  .mini:hover{transform:translateY(-2px)}
+  .mini .t{font-size:13px;color:var(--c);font-weight:700;letter-spacing:.05em}
+  .mini .n{font-family:var(--serif);font-weight:700;font-size:18px;margin:4px 0 6px;line-height:1.4}
+  .mini .s{font-size:15px;color:var(--muted);line-height:1.65}
+
+  /* prize */
+  article.prize{margin:44px 0;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+  .ph{padding:28px 26px 22px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 120px;gap:16px;align-items:center;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 9%,#fff) 0%,var(--card) 70%)}
+  .ph .tag{font-size:14px;font-weight:700;color:var(--c);letter-spacing:.08em}
+  .ph h3{font-family:var(--serif);font-size:clamp(23px,4.6vw,30px);line-height:1.4;margin:6px 0 10px}
+  .ph .who{font-size:15px;color:var(--muted);line-height:1.7}
+  .ph .who b{color:var(--ink)}
+  .ph svg{width:120px;height:120px}
+  .pb{padding:8px 26px 26px}
+  .pb h4{font-size:15px;letter-spacing:.12em;color:var(--c);margin:26px 0 8px;font-weight:700}
+  .pb p{margin:0 0 12px}
+  .one{font-family:var(--serif);font-size:20px;line-height:1.7;margin:22px 0 4px;padding:14px 18px;border-left:4px solid var(--c);background:color-mix(in srgb,var(--c) 6%,#fff);border-radius:0 10px 10px 0}
+  .analogy{background:#faf6ec;border:1px dashed #d8ccb2;border-radius:12px;padding:14px 18px;margin:14px 0}
+  .analogy::before{content:"打个比方";display:block;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.1em;margin-bottom:4px}
+  ol.steps{list-style:none;padding:0;margin:8px 0 0;counter-reset:s}
+  ol.steps li{position:relative;padding:0 0 16px 44px;counter-increment:s}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:2px;width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  ol.steps li:not(:last-child)::after{content:"";position:absolute;left:13.5px;top:34px;bottom:4px;width:1px;background:var(--line)}
+  ol.steps .yr{font-weight:700;margin-right:6px}
+  .nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0}
+  .num{background:#faf7f0;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .num b{display:block;font-family:var(--serif);font-size:24px;color:var(--c);line-height:1.3}
+  .num span{font-size:14px;color:var(--muted);line-height:1.5;display:block}
+  .you{background:color-mix(in srgb,var(--c) 7%,#fff);border-radius:12px;padding:14px 18px}
+  .cite{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted);line-height:1.7}
+  .cite q{font-style:italic}
+  .books{display:grid;gap:10px;margin:10px 0}
+  .book{border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:#fcfaf5}
+  .book b{font-family:var(--serif)}
+  .book small{color:var(--muted);font-size:14px}
+  .pending{text-align:center;padding:30px 26px}
+  .pending .big{font-family:var(--serif);font-size:22px;margin:8px 0}
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0 48px;font-size:14px;color:var(--muted);line-height:1.8}
+  footer a{color:var(--muted)}
+  footer ul{padding-left:18px;margin:6px 0 14px}
+
+  @media (max-width:560px){
+    body{font-size:17px}
+    .ph{grid-template-columns:1fr;padding:22px 18px 18px}
+    .ph svg{width:88px;height:88px;order:-1}
+    .pb{padding:4px 18px 22px}
+    .hero .medal{width:160px;height:160px;right:-50px;top:10px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="medal" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="92" fill="none" stroke="#8a6a1f" stroke-width="6"/><circle cx="100" cy="100" r="76" fill="none" stroke="#8a6a1f" stroke-width="2"/><text x="100" y="118" text-anchor="middle" font-size="52" font-family="serif" fill="#8a6a1f" font-weight="700">2026</text></svg>
+  <div class="wrap">
+    <div class="kicker">NOBEL PRIZE 2026</div>
+    <h1>2026 诺贝尔奖<br><em>给普通人的说明书</em></h1>
+    <p class="lead">六个奖，四门科学，一位诗人，一位法官。不用专业背景，每个奖读五分钟，知道他们发现了什么、为什么重要、跟你有没有关系。</p>
+    <div class="facts">
+      <span>公布时间 <b>10 月 5 日 – 12 日</b></span>
+      <span>奖金 <b>每项 1200 万瑞典克朗</b></span>
+      <span>颁奖 <b>12 月 10 日</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="chips" aria-label="奖项导航">
+  <div class="wrap">
+    <a href="#medicine"><i style="background:var(--med)"></i>生理学或医学</a>
+    <a href="#physics"><i style="background:var(--phy)"></i>物理学</a>
+    <a href="#chemistry"><i style="background:var(--chem)"></i>化学</a>
+    <a href="#literature"><i style="background:var(--lit)"></i>文学</a>
+    <a href="#peace"><i style="background:var(--peace)"></i>和平</a>
+    <a href="#economics"><i style="background:var(--eco)"></i>经济学</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section class="overview">
+  <h2 class="sec">30 秒速览</h2>
+  <div class="grid">
+    <a class="mini" href="#medicine" style="--c:var(--med)"><div class="t">生理学或医学 · 10.5</div><div class="n">用一束光开关脑细胞</div><div class="s">从绿藻身上借来"光控开关"，装进神经细胞，脑科学从此能精确到"哪一种细胞干了什么"。</div></a>
+    <a class="mini" href="#physics" style="--c:var(--phy)"><div class="t">物理学 · 10.6</div><div class="n">南极冰层里抓"幽灵粒子"</div><div class="s">把一立方公里的冰变成望远镜，第一次确认了来自宇宙深处的高能中微子。</div></a>
+    <a class="mini" href="#chemistry" style="--c:var(--chem)"><div class="t">化学 · 10.7</div><div class="n">生命为什么只用"一只手"</div><div class="s">在试管里演示了：一点点偶然的偏差，怎样滚雪球变成几乎百分之百。</div></a>
+    <a class="mini" href="#literature" style="--c:var(--lit)"><div class="t">文学 · 10.8</div><div class="n">安妮·卡森</div><div class="s">一位研究古希腊的加拿大教授，把两千多年前的诗人请到今天的厨房桌边。</div></a>
+    <a class="mini" href="#peace" style="--c:var(--peace)"><div class="t">和平 · 10.9</div><div class="n">纳瓦尼特姆·皮莱</div><div class="s">从种族隔离下的律师到国际法官，让战争罪、种族灭绝有人要负责。</div></a>
+    <a class="mini" href="#economics" style="--c:var(--eco)"><div class="t">经济学 · 10.12</div><div class="n">今天揭晓</div><div class="s">北京时间 10 月 12 日 17:45 公布，本页随后更新。</div></a>
+  </div>
+</section>
+
+<!-- ============ 医学 ============ -->
+<article class="prize" id="medicine" style="--c:var(--med)">
+  <div class="ph">
+    <div>
+      <div class="tag">生理学或医学奖 · 10 月 5 日公布</div>
+      <h3>从一种绿藻身上，借来一个开关大脑的"光控开关"</h3>
+      <div class="who"><b>卡尔·戴瑟罗斯</b>（Karl Deisseroth，1971 年生，美国斯坦福大学）<br><b>彼得·黑格曼</b>（Peter Hegemann，1954 年生，德国柏林洪堡大学）<br><b>格奥尔格·纳格尔</b>（Georg Nagel，1953 年生，德国维尔茨堡大学）<br>三人平分</div>
+    </div>
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <path d="M60 4 L44 50 L76 50 Z" fill="#7fb6ff" opacity=".35"/>
+      <line x1="60" y1="4" x2="60" y2="48" stroke="#3b82f6" stroke-width="3"/>
+      <circle cx="60" cy="62" r="14" fill="#2c7556"/>
+      <g stroke="#2c7556" stroke-width="3" fill="none" stroke-linecap="round">
+        <path d="M48 56 L30 44 M30 44 L22 46 M30 44 L28 34"/>
+        <path d="M72 56 L90 44 M90 44 L98 46 M90 44 L92 34"/>
+        <path d="M60 76 C60 90 52 96 58 108 M58 108 L50 114 M58 108 L64 116"/>
+      </g>
+      <circle cx="60" cy="62" r="20" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3 3"/>
+    </svg>
+  </div>
+  <div class="pb">
+    <p class="one">大脑里有约 900 亿个神经细胞，缠在一起。这三位让科学家可以挑出某一种细胞，用一束蓝光让它"开"或"关"，再看动物会发生什么变化。这个方法叫<b>光遗传学</b>。</p>
+
+    <div class="analogy">一座城市的电线全缠在一个箱子里，以前想知道哪根线管哪盏灯，只能拉掉整个街区的总闸。现在的办法是：只给某一种灯泡装上"见光就亮"的开关，然后拿手电筒一照，就知道它管的是哪儿。</div>
+
+    <h4>他们是怎么做到的</h4>
+    <ol class="steps">
+      <li><span class="yr">1990 年代初</span>黑格曼好奇一件小事：一种叫<b>衣藻</b>的单细胞绿藻会游向光，而且它对光的反应只要 0.5 毫秒，比人眼快二十多倍。他猜：衣藻身上有一种蛋白，既能感光，又能直接"开门"放电。当时几乎没人信。</li>
+      <li><span class="yr">2002–2003 年</span>日本团队公开了衣藻的基因数据。黑格曼找到两个可疑基因，交给纳格尔。纳格尔把基因注进青蛙卵，让卵细胞自己造出这种蛋白。光一照，蛋白上的"小门"0.2 毫秒内就打开了，电流随之通过。黑格曼的猜测成立。这种蛋白被命名为<b>通道视紫红质</b>（channelrhodopsin）。</li>
+      <li><span class="yr">2005 年</span>戴瑟罗斯学医时在精神科见过很多病人，他想弄明白抑郁、自闭症、精神分裂到底是哪里出了问题。他向纳格尔要来这个基因，装进大鼠的神经细胞，蓝光一照，神经细胞立刻放电。</li>
+      <li><span class="yr">2006–2007 年</span>方法被正式命名为"光遗传学"。戴瑟罗斯团队用一根细光纤伸进活老鼠的大脑，一开灯，老鼠的胡须就动；还在另一项实验里，用光把睡着的老鼠叫醒。</li>
+      <li><span class="yr">2012 年</span>他和 1987 年诺奖得主利根川进合作，找到储存一段"恐惧记忆"的那几个神经细胞。用光重新激活它们，老鼠明明没遇到危险，也表现出害怕。</li>
+    </ol>
+
+    <h4>跟你有什么关系</h4>
+    <div class="you">
+      <p>目前它主要是实验室里的工具，但已经用在全世界的脑科学研究中：疼痛、口渴、食欲、社交、注意力、昼夜节律，这些行为分别由哪类神经细胞控制，都靠它一一找出来。抑郁、焦虑、精神分裂、阿尔茨海默病、帕金森病的研究也因此推进了一大步。</p>
+      <p style="margin:0">开始走向治疗的例子：在临床试验中，一位因视网膜色素变性失明的患者，眼里被装入类似的感光蛋白，戴上特制眼镜后，能看见并拿起桌上的东西。</p>
+    </div>
+
+    <div class="cite">官方颁奖理由：<q>for their discoveries concerning light-gated ion channels and optogenetics</q><br>（表彰他们发现光控离子通道并开创光遗传学）</div>
+  </div>
+</article>
+
+<!-- ============ 物理 ============ -->
+<article class="prize" id="physics" style="--c:var(--phy)">
+  <div class="ph">
+    <div>
+      <div class="tag">物理学奖 · 10 月 6 日公布</div>
+      <h3>把南极一立方公里的冰，变成一台望远镜</h3>
+      <div class="who"><b>弗朗西斯·哈尔岑</b>（Francis Halzen，1944 年生于比利时，美国威斯康星大学麦迪逊分校）<br>一人独得</div>
+    </div>
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <path d="M20 40 L60 22 L100 40 L60 58 Z" fill="#dbeaf2" stroke="#2b6a88" stroke-width="2"/>
+      <path d="M20 40 L20 92 L60 110 L60 58" fill="#eef5f9" stroke="#2b6a88" stroke-width="2"/>
+      <path d="M100 40 L100 92 L60 110" fill="#e3eef4" stroke="#2b6a88" stroke-width="2"/>
+      <g fill="#2b6a88"><circle cx="34" cy="60" r="2"/><circle cx="34" cy="72" r="2"/><circle cx="34" cy="84" r="2"/><circle cx="46" cy="66" r="2"/><circle cx="46" cy="78" r="2"/><circle cx="46" cy="90" r="2"/><circle cx="74" cy="66" r="2"/><circle cx="74" cy="78" r="2"/><circle cx="74" cy="90" r="2"/><circle cx="86" cy="60" r="2"/><circle cx="86" cy="72" r="2"/><circle cx="86" cy="84" r="2"/></g>
+      <line x1="112" y1="2" x2="64" y2="78" stroke="#e0a100" stroke-width="2" stroke-dasharray="4 3"/>
+      <circle cx="64" cy="78" r="6" fill="#3b82f6" opacity=".5"/>
+    </svg>
+  </div>
+  <div class="pb">
+    <p class="one">宇宙里有一种几乎什么都穿得过去的"幽灵粒子"，叫<b>中微子</b>。哈尔岑想出办法，在南极冰层深处埋了 5000 多个光传感器，第一次确认抓到了来自遥远宇宙的高能中微子。</p>
+
+    <h4>先认识一下中微子</h4>
+    <p>它不带电，几乎没有质量，几乎不跟任何东西发生碰撞。每一秒，都有大约 650 亿个来自太阳的中微子穿过你的小指甲盖，你毫无感觉。它们穿过整个地球，就像穿过空气。</p>
+    <p>既然这么难抓，为什么还要抓？因为宇宙里有一些"天然粒子加速器"，产生的粒子能量比地球上最强的实验室高出约一百万倍，人类至今不清楚它们是什么、在哪儿。光会被宇宙尘埃挡住，带电粒子会被磁场带偏，只有中微子<b>一路直线飞来，不拐弯、不减速</b>，它来自哪个方向，源头就在哪个方向。</p>
+
+    <div class="analogy">中微子像一封从远方寄来、谁也没拆过的信，但它几乎从不落进邮箱。想收到几封，邮箱就得大到夸张，于是他们把一立方公里的冰当成了邮箱。</div>
+
+    <h4>为什么是南极的冰</h4>
+    <p>极少数情况下，中微子会撞上冰里的原子核，撞出一个带电粒子，发出一道微弱的蓝光。要看见这道光，需要一大块<b>又黑、又透明、又安静</b>的东西。南极 1400 米以下的冰极其纯净，光能走 300 米远；那里终年漆黑，没有生物干扰，没有地震，还有现成的科考站。</p>
+
+    <div class="nums">
+      <div class="num"><b>1 km³</b><span>冰体积，约等于 40 万个标准泳池</span></div>
+      <div class="num"><b>5160</b><span>个光传感器，挂在 86 根缆绳上</span></div>
+      <div class="num"><b>1450–2450 m</b><span>传感器埋藏深度</span></div>
+      <div class="num"><b>1 亿+</b><span>每天要筛掉的大气干扰粒子</span></div>
+    </div>
+
+    <h4>一个想法，走了二十多年</h4>
+    <ol class="steps">
+      <li><span class="yr">1988 年</span>哈尔岑和同事首次提出"在南极冰里抓中微子"。传感器被他形容为"倒着用的灯泡"：不是发光，而是把光变成电信号。</li>
+      <li><span class="yr">1993 年</span>平安夜，他抱着电脑坐在餐桌边，等南极传来第一串传感器下到冰里的消息。结果浅层冰里全是气泡，光被搅得一团乱，首战失利。往深处打，才发现深冰异常清澈。</li>
+      <li><span class="yr">2011 年</span>完整的冰立方（IceCube）建成。所有施工只能在南极夏天（11 月到次年 2 月）进行，用热水"淋浴头"在冰上融出两公里深的洞，再把传感器放下去。</li>
+      <li><span class="yr">2013 年</span>团队首次报告：找到了来自太阳系之外的高能中微子证据。几年后数据攒够，确认无疑。中微子天文学正式开张。</li>
+    </ol>
+
+    <h4>跟你有什么关系</h4>
+    <div class="you">
+      <p>坦白说，短期内不会改变你的生活。它的意义是多给了人类一种看宇宙的方式：以前只能靠光，后来有了引力波，现在又多了中微子。它们已经发现，银河系本身也在发射高能中微子；另有 79 个中微子疑似来自一个叫 NGC 1068 的星系，但还需要更多证据。</p>
+      <p style="margin:0">下一代冰立方计划扩大到 8 立方公里。获奖后哈尔岑开玩笑说，希望这个奖能帮他手上的项目申请顺利通过。</p>
+    </div>
+
+    <div class="cite">官方颁奖理由：<q>for decisive contributions to the IceCube Neutrino Observatory and the discovery of high-energy neutrinos of astrophysical origin</q><br>（表彰他对冰立方中微子天文台的决定性贡献，以及发现来自天体的高能中微子）</div>
+  </div>
+</article>
+
+<!-- ============ 化学 ============ -->
+<article class="prize" id="chemistry" style="--c:var(--chem)">
+  <div class="ph">
+    <div>
+      <div class="tag">化学奖 · 10 月 7 日公布</div>
+      <h3>生命为什么只用"左手"？一点点偏心，如何滚成百分之百</h3>
+      <div class="who"><b>亨利·卡冈</b>（Henri B. Kagan，1930 年生，法国巴黎南大学荣休教授）<br><b>硖合宪三</b>（Kenso Soai，1950 年生于广岛，日本东京理科大学荣休教授）<br>两人平分</div>
+    </div>
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <line x1="60" y1="8" x2="60" y2="112" stroke="#7a3f86" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <g stroke="#555" stroke-width="2.5"><line x1="34" y1="60" x2="34" y2="32"/><line x1="34" y1="60" x2="14" y2="76"/><line x1="34" y1="60" x2="48" y2="82"/><line x1="34" y1="60" x2="22" y2="44"/>
+      <line x1="86" y1="60" x2="86" y2="32"/><line x1="86" y1="60" x2="106" y2="76"/><line x1="86" y1="60" x2="72" y2="82"/><line x1="86" y1="60" x2="98" y2="44"/></g>
+      <circle cx="34" cy="60" r="8" fill="#333"/><circle cx="34" cy="30" r="7" fill="#7a3f86"/><circle cx="13" cy="77" r="7" fill="#e0a100"/><circle cx="49" cy="84" r="7" fill="#2b6a88"/><circle cx="21" cy="42" r="5" fill="#bbb"/>
+      <circle cx="86" cy="60" r="8" fill="#333"/><circle cx="86" cy="30" r="7" fill="#7a3f86"/><circle cx="107" cy="77" r="7" fill="#e0a100"/><circle cx="71" cy="84" r="7" fill="#2b6a88"/><circle cx="99" cy="42" r="5" fill="#bbb"/>
+    </svg>
+  </div>
+  <div class="pb">
+    <p class="one">很多分子像人的左右手，长得一模一样却叠不到一起。生命偏偏只用其中一只"手"。这两位化学家在试管里证明：只要开头有一丁点偶然的偏向，化学反应自己就能把它放大到几乎百分之百。</p>
+
+    <h4>先说清楚"左手、右手"</h4>
+    <p>把左手放到镜子前，镜子里是一只右手。很多分子也是这样，有两个互为镜像的版本，化学上叫<b>手性</b>。组成你身体蛋白质的氨基酸，几乎全是"左手版"；DNA 里的糖，全是"右手版"。这叫<b>同手性</b>。</p>
+    <p>奇怪的是，化学家在试管里合成这些分子，得到的永远是左右各一半。那生命一开始是怎么"偏"到一边去的？这个问题困扰了化学界一百多年。</p>
+    <p>它也很实际：药物分子常常也分左右手，一只治病，另一只可能没用，甚至有害。上世纪 60 年代的"反应停"事件，导致上万名婴儿出生缺陷，事后研究认为问题就出在药物分子的镜像版本上。</p>
+
+    <h4>一道 1953 年的"数学题"</h4>
+    <p>1953 年，物理学家查尔斯·弗兰克给出一个理论配方：想让反应只产出一只手，需要满足三个条件。① 反应本身有一点偏向；② 有办法把偏向<b>放大</b>；③ 产物能反过来<b>催化生成更多的自己</b>（自催化）。第一条前人早已做到（2001 年和 2021 年的化学奖），今年这两位，分别补上了第二条和第三条。</p>
+
+    <ol class="steps">
+      <li><span class="yr">1986 年 · 卡冈</span>化学家做反应要用"催化剂"，通常是一个金属原子带着几个手性分子干活。大家默认：催化剂有多纯，产物就有多纯，是一条直线。卡冈不信。他想到，金属原子一次会抓两个手性分子，于是会出现"左左""右右""左右"三种组合，而"左右"混搭的那种干活特别慢，等于自己退场了。剩下的全是多数派，结果产物比催化剂本身还纯。这叫<b>非线性效应</b>。</li>
+      <li><span class="yr">1995 年 · 硖合</span>硖合宪三顺着这个思路找到一种能"自己生自己"的分子：它既是产物，又是催化剂。起始时一只手只多 2%，反应完多到了 87%。</li>
+      <li><span class="yr">2003 年 · 硖合</span>又找了八年，他做到了：从完全不分左右的原料出发，靠开头偶然多出来的那一点点，一只手最终占到产物的 99.99%。再做一次，赢的可能就换成另一只手，全看开局运气。这就是著名的<b>"硖合反应"</b>，被认为是史上最漂亮的化学实验之一。</li>
+    </ol>
+
+    <div class="analogy">卡冈的发现像一场投票：一左一右的人凑成一对，互相拉着坐下不投了，剩下站着的全是多数派，结果比原本的民意更一边倒。硖合的反应像滚雪球，还是会自我复制的雪球：谁先多滚了一圈，谁就越滚越大，最后整座山都是它的。</div>
+
+    <h4>跟你有什么关系</h4>
+    <div class="you">
+      <p>你吃的药、闻的香水、用的调味料和农药，很多都需要只做"一只手"的版本。卡冈的非线性效应，如今是化学家设计和优化这类反应的常用工具。</p>
+      <p style="margin:0">更大的意义在于"生命起源"这道老题：硖合反应本身是人造的，不是生命里的化学，但它第一次证明，偶然的微小偏差真能被化学反应放大成"全是一只手"。现在世界各地的实验室都在试着用氨基酸和糖重现这一步。</p>
+    </div>
+
+    <div class="cite">官方颁奖理由：<q>for the discovery of non-linear effects and autocatalysis in asymmetric organic synthesis</q><br>（表彰他们在不对称有机合成中发现非线性效应和自催化）</div>
+  </div>
+</article>
+
+<!-- ============ 文学 ============ -->
+<article class="prize" id="literature" style="--c:var(--lit)">
+  <div class="ph">
+    <div>
+      <div class="tag">文学奖 · 10 月 8 日公布</div>
+      <h3>一位古希腊学者，把两千年前的诗人请进了今天的厨房</h3>
+      <div class="who"><b>安妮·卡森</b>（Anne Carson，1950 年生于加拿大多伦多）<br>诗人、译者、古典学教授</div>
+    </div>
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <path d="M60 30 C44 22 24 22 10 28 L10 94 C24 88 44 88 60 96 Z" fill="#fbf3ee" stroke="#9a3a2c" stroke-width="2"/>
+      <path d="M60 30 C76 22 96 22 110 28 L110 94 C96 88 76 88 60 96 Z" fill="#fbf3ee" stroke="#9a3a2c" stroke-width="2"/>
+      <g font-family="serif" font-size="11" fill="#9a3a2c"><text x="18" y="46">ἔρος</text><text x="18" y="62">[ &nbsp; &nbsp; ]</text><text x="18" y="78">γλυκύ</text>
+      <text x="68" y="46">eros</text><text x="68" y="62">bitter</text><text x="68" y="78">sweet</text></g>
+    </svg>
+  </div>
+  <div class="pb">
+    <p class="one">她的本职是研究古希腊文学的大学教授。她写诗、写小说、写随笔、做翻译，常常一本书里全都有，然后把古人和今天的人放在同一张桌子上对话。</p>
+
+    <div class="analogy">像一个 DJ 把老唱片的片段采样进新歌里：你能听出那是两千年前的旋律，但整首歌讲的是今天的失恋、离婚和丧亲。</div>
+
+    <h4>她写什么</h4>
+    <p>她说过，自己写作的起点往往是一个词的词源。她最在意的主题是爱，以及爱里那种又苦又甜的距离。她也说过，"无聊"是她的头号敌人，所以她的书常常好笑，带着冷幽默。</p>
+
+    <h4>可以从这几本认识她</h4>
+    <div class="books">
+      <div class="book"><b>《红的自传》</b> Autobiography of Red（1998）<br><small>一本用诗写成的小说，常被认为是她的代表作。古希腊神话里，红色的有翼怪物革律翁被大力士赫拉克勒斯杀死；在她笔下，革律翁是一个敏感、恋母、爱上了混蛋赫拉克勒斯的少年。书里在问：爱上一个终将毁掉你的人，会怎样？<b>想入门，读这本。</b></small></div>
+      <div class="book"><b>《玻璃随笔》</b> The Glass Essay（收于 1995 年的诗集）<br><small>一个被丈夫抛弃的女人回荒原上看望孤独的母亲，随身带着艾米莉·勃朗特的书。三个孤独的女人，加上一张厨房桌子。是长诗，也是故事，也是一篇读勃朗特的随笔。</small></div>
+      <div class="book"><b>《夜》</b> Nox（2010）<br><small>写给去世哥哥的挽歌。书装在一个盒子里，是一整条折叠起来的长纸，复制了她亲手做的剪贴笔记。</small></div>
+      <div class="book"><b>《若非，冬天》</b> If Not, Winter（2002）<br><small>古希腊女诗人萨福的残篇译本。原诗残缺的地方，她用方括号留白，不替古人补完。</small></div>
+    </div>
+
+    <h4>为什么是她</h4>
+    <div class="you">
+      <p style="margin:0">评委的意思是：她没有把古典文学当成博物馆里的东西，而是拿来"玩"，玩出了诗、小说、随笔都装不下的新文体。接到获奖电话时她正在冰岛，瑞典学院秘书长说，她只来得及说一句自己在那儿"听风"。她是史上第 19 位获得文学奖的女性。</p>
+    </div>
+
+    <div class="cite">官方颁奖理由：<q>for her bold and inventive oeuvre that, in playful dialogue with the classical tradition, has created new forms for contemporary literature</q><br>（她大胆而富有创造力的作品，在与古典传统的游戏式对话中，为当代文学开创了新的形式）</div>
+  </div>
+</article>
+
+<!-- ============ 和平 ============ -->
+<article class="prize" id="peace" style="--c:var(--peace)">
+  <div class="ph">
+    <div>
+      <div class="tag">和平奖 · 10 月 9 日公布</div>
+      <h3>让发动战争、屠杀平民的人，真的要上法庭</h3>
+      <div class="who"><b>纳瓦尼特姆·"娜薇"·皮莱</b>（Navanethem "Navi" Pillay，1941 年生于南非德班）<br>国际法官、前联合国人权事务高级专员</div>
+    </div>
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <line x1="60" y1="16" x2="60" y2="100" stroke="#38548a" stroke-width="3"/>
+      <line x1="22" y1="30" x2="98" y2="30" stroke="#38548a" stroke-width="3"/>
+      <circle cx="60" cy="16" r="5" fill="#38548a"/>
+      <path d="M22 30 L10 64 L34 64 Z M98 30 L86 64 L110 64 Z" fill="none" stroke="#38548a" stroke-width="1.5"/>
+      <path d="M8 64 Q22 76 36 64 Z M84 64 Q98 76 112 64 Z" fill="#38548a"/>
+      <path d="M40 104 L80 104" stroke="#38548a" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="pb">
+    <p class="one">今年的和平奖颁给了一位法官。挪威诺贝尔委员会的意思很直接：和平不能只靠谁拳头大，得有人立规矩、有人执法，而这套规矩眼下正在被削弱。</p>
+
+    <h4>她的一生，几乎是一部国际法简史</h4>
+    <ol class="steps">
+      <li><span class="yr">种族隔离年代</span>她出生在南非一个印度泰米尔裔家庭，在种族隔离制度下当上律师，1967 年开办自己的律所，为曼德拉等反种族隔离人士辩护。</li>
+      <li><span class="yr">1995 年</span>进入南非高等法院当法官。</li>
+      <li><span class="yr">1999 年起</span>出任卢旺达问题国际刑事法庭法官、庭长，审理 1994 年卢旺达大屠杀。她参与确立了两条至今影响深远的规则：<b>强奸和性暴力可以构成危害人类罪乃至种族灭绝罪</b>；<b>只是散布煽动性宣传，也可以被控煽动种族灭绝</b>。</li>
+      <li><span class="yr">之后</span>出任国际刑事法院法官；2008–2014 年任联合国人权事务高级专员。</li>
+      <li><span class="yr">2019 年至今</span>在国际法院"缅甸被控种族灭绝案"中担任专案法官。2021–2025 年，她还担任联合国巴勒斯坦被占领土问题调查委员会主席，该委员会去年得出以色列在加沙犯下种族灭绝的结论，以色列否认并驳斥了这份报告。</li>
+    </ol>
+
+    <div class="analogy">一场球赛如果没有裁判，最后赢的只会是块头最大、下脚最狠的那一方。国际法就是国家之间的裁判规则，皮莱当了一辈子裁判，还帮着把规则写得更清楚。</div>
+
+    <h4>为什么是现在</h4>
+    <div class="you">
+      <p style="margin:0">委员会在声明中说，当今世界的战争和冲突之多是多年未见的；国际法院的法官遭到制裁，国际机构受到攻击，"强权"正在压过"公理"。颁奖给皮莱，是提醒大家：和平需要正义，而正义需要有人敢坐在审判席上。今年也恰好是第一届诺贝尔和平奖颁发 125 周年。</p>
+    </div>
+
+    <div class="cite">官方颁奖理由：<q>for her efforts to promote peace and international law</q><br>（表彰她为促进和平与国际法所做的努力）</div>
+  </div>
+</article>
+
+<!-- ============ 经济学 ============ -->
+<article class="prize" id="economics" style="--c:var(--eco)">
+  <div class="ph">
+    <div>
+      <div class="tag">经济学奖 · 10 月 12 日公布</div>
+      <h3>今天揭晓，本页随后更新</h3>
+      <div class="who">公布时间：斯德哥尔摩时间 11:45，<b>北京时间 17:45</b></div>
+    </div>
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="60" r="44" fill="#f4ead2" stroke="#8a6a1f" stroke-width="3"/>
+      <circle cx="60" cy="60" r="36" fill="none" stroke="#8a6a1f" stroke-width="1"/>
+      <text x="60" y="76" text-anchor="middle" font-size="44" font-family="serif" fill="#8a6a1f" font-weight="700">?</text>
+    </svg>
+  </div>
+  <div class="pb pending">
+    <p class="big">结果公布后，这里会换成和上面一样的大白话解读。</p>
+    <p style="color:var(--muted);font-size:15px;margin:0">一个冷知识：经济学奖并不在诺贝尔的遗嘱里。它的全名是"瑞典中央银行纪念阿尔弗雷德·诺贝尔经济学奖"，1968 年由瑞典央行出资设立，但评选、奖金和颁奖都与其他诺贝尔奖一致。</p>
+  </div>
+</article>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>资料来源</b>（截至 2026 年 10 月 12 日）</p>
+    <ul>
+      <li>诺贝尔奖官网各奖项新闻稿与科普材料：<a href="https://www.nobelprize.org/all-nobel-prizes-2026/">nobelprize.org/all-nobel-prizes-2026</a></li>
+      <li><a href="https://www.nobelprize.org/prizes/medicine/2026/popular-information/">医学奖科普</a> · <a href="https://www.nobelprize.org/prizes/physics/2026/popular-information/">物理学奖科普</a> · <a href="https://www.nobelprize.org/prizes/chemistry/2026/popular-information/">化学奖科普</a> · <a href="https://www.nobelprize.org/prizes/literature/2026/bio-bibliography/">文学奖作家介绍</a> · <a href="https://www.nobelprize.org/prizes/peace/2026/press-release/">和平奖公告</a></li>
+      <li>报道：<a href="https://www.aljazeera.com/news/2026/10/8/canadian-anne-carson-wins-2026-nobel-prize-in-literature">Al Jazeera</a>（文学奖）、<a href="https://www.aljazeera.com/news/2026/10/9/2026-nobel-peace-prize-awarded-to-navi-pillay">Al Jazeera</a>（和平奖）、<a href="https://www.opb.org/article/2026/10/06/francis-halzen-wins-nobel-prize-in-physics-for-work-on-high-energy-neutrinos/">AP / OPB</a>（物理学奖）</li>
+    </ul>
+    <p>中文译名与大白话解释为本页自拟，以官方英文原文为准。</p>
+  </div>
+</footer>
+
+</body>
+</html>
