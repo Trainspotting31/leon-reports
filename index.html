@@ -6,16 +6,18 @@
 <title>Leon 的报告库</title>
 <style>
 :root {
-  --bg: #1a1d23;
-  --card: #22262e;
-  --card-hover: #272c35;
-  --text: #e8eaed;
-  --text-secondary: #9aa0a6;
-  --text-tertiary: #5f6368;
+  --bg: #f5f6f8;
+  --card: #ffffff;
+  --card-hover: #f0f2f5;
+  --text: #2c3e50;
+  --text-secondary: #5a6c7d;
+  --text-tertiary: #95a5a6;
   --accent: #6E8899;
   --accent-light: #8ba3b5;
-  --terracotta: #C4956E;
-  --border: #33373f;
+  --accent-bg: #eef2f5;
+  --border: #e0e4e8;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.1);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -23,42 +25,68 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.7;
-  padding: 24px 16px;
-  max-width: 720px;
-  margin: 0 auto;
+  padding: 0;
 }
+.container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
 .header {
+  background: linear-gradient(135deg, var(--accent) 0%, #5a7a8c 100%);
+  color: white;
+  padding: 40px 20px 32px;
   text-align: center;
   margin-bottom: 32px;
-  padding: 24px 0;
-  border-bottom: 1px solid var(--border);
 }
-.header h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-.header .meta { font-size: 13px; color: var(--text-tertiary); }
-.section { margin-bottom: 24px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+.header .meta { font-size: 14px; opacity: 0.85; }
+.search-box { max-width: 480px; margin: 20px auto 0; position: relative; }
+.search-box input {
+  width: 100%;
+  padding: 12px 20px 12px 44px;
+  border: none;
+  border-radius: 24px;
+  font-size: 15px;
+  background: rgba(255,255,255,0.95);
+  color: var(--text);
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.search-box input::placeholder { color: var(--text-tertiary); }
+.search-box .icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 16px; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; justify-content: center; }
+.tab {
+  padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border); background: var(--card);
+  color: var(--text-secondary); transition: all 0.2s;
+}
+.tab:hover, .tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+.section { margin-bottom: 28px; }
 .section-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--accent-light);
-  margin-bottom: 12px;
-  padding-left: 12px;
-  border-left: 3px solid var(--accent);
+  font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .count {
+  font-size: 12px; background: var(--accent-bg); color: var(--accent);
+  padding: 2px 10px; border-radius: 12px; font-weight: 500;
 }
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  transition: background 0.2s;
-  cursor: pointer;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px 20px; margin-bottom: 10px; transition: all 0.2s; cursor: pointer;
+  text-decoration: none; color: inherit; display: block; box-shadow: var(--shadow);
 }
-.card:hover { background: var(--card-hover); }
-.card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.card:hover { background: var(--card-hover); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+.card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
+.card-footer { display: flex; align-items: center; gap: 12px; }
 .card-date { font-size: 12px; color: var(--text-tertiary); }
-a { text-decoration: none; color: inherit; }
-@media (max-width: 480px) {
-  body { padding: 16px 12px; }
+.card-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+.tag-brief { background: #e3f2fd; color: #1565c0; }
+.tag-stock { background: #fff3e0; color: #e65100; }
+.tag-research { background: #f3e5f5; color: #6a1b9a; }
+.tag-misc { background: #e8f5e9; color: #2e7d32; }
+.empty { text-align: center; padding: 32px; color: var(--text-tertiary); font-size: 14px; }
+@media (max-width: 600px) {
+  .header h1 { font-size: 22px; }
+  .container { padding: 0 14px 40px; }
+  .card { padding: 14px 16px; }
 }
 </style>
 </head>
@@ -67,32 +95,76 @@ a { text-decoration: none; color: inherit; }
 <div class="header">
   <h1>Leon 的报告库</h1>
   <div class="meta">自动归档 &middot; 最后更新 2026-10-12</div>
+  <div class="search-box">
+    <span class="icon">&#128269;</span>
+    <input type="text" id="search" placeholder="搜索报告..." oninput="applyFilters()">
+  </div>
 </div>
 
-<div class="section">
-  <div class="section-title">AI 简报</div>
-  <a href="ai-brief/ai_brief_20261012_am.html">
-    <div class="card">
-      <div class="card-title">AI &amp; 科技话题简报 — 2026-10-12 早场</div>
-      <div class="card-date">GPT-6.1 Sol 500K 上下文 &middot; 英伟达洽购 Reflection AI &middot; Claude 5.5 口碑</div>
+<div class="container">
+  <div class="tabs">
+    <div class="tab active" onclick="filterCategory('all', this)">全部</div>
+    <div class="tab" onclick="filterCategory('brief', this)">AI 简报</div>
+    <div class="tab" onclick="filterCategory('stock', this)">股票分析</div>
+    <div class="tab" onclick="filterCategory('research', this)">调研报告</div>
+    <div class="tab" onclick="filterCategory('misc', this)">其他</div>
+  </div>
+
+  <div id="content">
+    <div class="section" data-category="brief">
+      <div class="section-title">AI 简报 <span class="count">1</span></div>
+      <a class="card" href="ai-brief/ai_brief_20261012_am.html">
+        <div class="card-title">AI &amp; 科技话题简报 — 2026-10-12 早场</div>
+        <div class="card-desc">GPT-6.1 Sol 500K 上下文官宣 · 英伟达洽购 Reflection AI · Claude 5.5 口碑发酵 · Google Antigravity 大路由时代</div>
+        <div class="card-footer">
+          <span class="card-date">2026-10-12 08:00</span>
+          <span class="card-tag tag-brief">简报</span>
+        </div>
+      </a>
     </div>
-  </a>
+
+    <div class="section" data-category="stock">
+      <div class="section-title">股票分析 <span class="count">0</span></div>
+      <div class="empty">暂无报告</div>
+    </div>
+
+    <div class="section" data-category="research">
+      <div class="section-title">调研报告 <span class="count">0</span></div>
+      <div class="empty">暂无报告</div>
+    </div>
+
+    <div class="section" data-category="misc">
+      <div class="section-title">其他 <span class="count">0</span></div>
+      <div class="empty">暂无报告</div>
+    </div>
+  </div>
 </div>
 
-<div class="section">
-  <div class="section-title">股票分析</div>
-  <div style="font-size:13px; color:var(--text-tertiary); padding:12px;">暂无</div>
-</div>
-
-<div class="section">
-  <div class="section-title">调研报告</div>
-  <div style="font-size:13px; color:var(--text-tertiary); padding:12px;">暂无</div>
-</div>
-
-<div class="section">
-  <div class="section-title">其他</div>
-  <div style="font-size:13px; color:var(--text-tertiary); padding:12px;">暂无</div>
-</div>
+<script>
+let currentCategory = 'all';
+function filterCategory(cat, el) {
+  currentCategory = cat;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+function applyFilters() {
+  const query = document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.section').forEach(section => {
+    const cat = section.dataset.category;
+    const matchCat = currentCategory === 'all' || cat === currentCategory;
+    let visible = false;
+    section.querySelectorAll('.card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      const matchSearch = !query || text.includes(query);
+      card.style.display = matchSearch ? '' : 'none';
+      if (matchSearch) visible = true;
+    });
+    const hasEmpty = !!section.querySelector('.empty');
+    section.style.display = (matchCat && (visible || hasEmpty)) ? '' : 'none';
+  });
+}
+</script>
 
 </body>
 </html>
