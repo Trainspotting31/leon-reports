@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#7fb6ff">
+<title>樽界 V我800 · 刹车挑战</title>
+<meta name="description" content="过 100 码按住屏幕刹车，把樽界 V我800 停在滑为大楼前。踏板踩到 1612N 就断，车毁。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 8 8%22 shape-rendering=%22crispEdges%22%3E%3Crect width=%228%22 height=%228%22 fill=%22%23d32020%22/%3E%3Crect x=%222%22 y=%222%22 width=%224%22 height=%224%22 fill=%22%23fff%22/%3E%3C/svg%3E">
+<link rel="preload" href="px.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: "PX"; src: url("px.woff2") format("woff2"); font-display: block; }
+:root {
+  --ink: #fff;
+  --ink-dim: #c9c9c9;
+  --shadow: #3a3a3a;
+  --panel: rgba(16, 12, 24, 0.82);
+  --yellow: #ffe14d;
+  --red: #ff4040;
+  --green: #5ed15e;
+  --grass: #5fae3a;
+  --dirt: #8a5a35;
+  --stone: #7b7b7b;
+  --px: "PX", "PingFang SC", "Microsoft YaHei", monospace;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%; height: 100%; overflow: hidden; background: #7fb6ff; color: var(--ink);
+  font-family: var(--px); font-size: 18px; line-height: 1.5;
+  -webkit-font-smoothing: none; -moz-osx-font-smoothing: unset;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+  overscroll-behavior: none; touch-action: none;
+}
+#gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+.hidden { display: none !important; }
+.t { text-shadow: 2px 2px 0 var(--shadow); }
+
+/* ---------- 像素面板 / 按钮 ---------- */
+.panel {
+  background: var(--panel);
+  box-shadow: 0 0 0 3px #000, inset 0 0 0 3px #2c1b52, inset 0 0 0 6px rgba(0,0,0,.5);
+  padding: 14px 16px;
+}
+.btn {
+  font-family: var(--px); color: #fff; border: 0; cursor: pointer; display: block;
+  background: #7d7d7d; font-size: 24px; line-height: 1; padding: 14px 18px 13px;
+  box-shadow: 0 0 0 3px #000, inset 3px 3px 0 #b5b5b5, inset -3px -4px 0 #4b4b4b;
+  text-shadow: 2px 2px 0 #3a3a3a; width: 100%;
+}
+.btn:active { background: #8a92c8; box-shadow: 0 0 0 3px #000, inset 3px 3px 0 #c3c8ef, inset -3px -4px 0 #555b8c; color: var(--yellow); }
+.btn.go {
+  font-size: 36px; padding: 20px 18px 18px;
+  background: linear-gradient(#6cc644 0 26%, #4e9a2e 26% 34%, #8a5a35 34% 100%);
+  box-shadow: 0 0 0 3px #000, inset 3px 3px 0 rgba(255,255,255,.35), inset -3px -4px 0 rgba(0,0,0,.35);
+}
+.btn.go:active { color: var(--yellow); filter: brightness(1.1); }
+.btn.small { font-size: 12px; padding: 8px 10px 7px; width: auto; display: inline-block; }
+
+/* ---------- 首页 ---------- */
+#menu {
+  position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: space-between;
+  padding: calc(var(--sat) + 18px) 16px calc(var(--sab) + 16px);
+  overflow-y: auto; touch-action: pan-y;
+}
+.logo { text-align: center; position: relative; }
+.logo .l1 { font-size: 24px; color: #fff; letter-spacing: 2px; }
+.logo .l1 b { color: #bfe3ff; font-weight: normal; }
+.logo .l2 {
+  font-size: 48px; line-height: 1.1; color: #fff; letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #4a4a4a, 6px 6px 0 #1f1f1f;
+}
+.splash {
+  position: absolute; right: 2px; bottom: -14px; color: var(--yellow); font-size: 18px;
+  text-shadow: 2px 2px 0 #3f3f00; transform: rotate(-12deg); animation: splash .45s ease-in-out infinite alternate;
+  white-space: nowrap;
+}
+@keyframes splash { to { transform: rotate(-12deg) scale(1.1); } }
+.mcard { width: 100%; max-width: 460px; margin: 0 auto; }
+.goal { font-size: 18px; margin-bottom: 10px; color: #fff; }
+.goal em { font-style: normal; color: #ff6b6b; }
+.rules { list-style: none; margin-bottom: 10px; }
+.rules li { display: flex; gap: 10px; align-items: flex-start; font-size: 18px; line-height: 1.45; padding: 6px 0; border-top: 2px dashed rgba(255,255,255,.12); }
+.rules li:first-child { border-top: 0; }
+.rules .n {
+  flex: none; width: 30px; height: 30px; display: grid; place-items: center; font-size: 18px; color: #000; margin-top: 1px;
+  background: var(--yellow); box-shadow: inset -3px -3px 0 rgba(0,0,0,.25);
+}
+.rules li.bad .n { background: var(--red); color: #fff; }
+.rules b { color: var(--yellow); font-weight: normal; }
+.rules li.bad b { color: #ff7a7a; }
+.score-line { font-size: 12px; color: var(--ink-dim); margin: 4px 0 14px; }
+.menu-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 12px; color: var(--ink-dim); }
+
+/* ---------- HUD ---------- */
+#hud { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+.hud-top { position: absolute; left: 10px; right: 10px; top: calc(var(--sat) + 10px); display: flex; justify-content: space-between; }
+.chip { background: rgba(0,0,0,.55); box-shadow: 0 0 0 2px #000; padding: 6px 10px 5px; min-width: 112px; }
+.chip .k { font-size: 12px; color: var(--ink-dim); }
+.chip .v { font-size: 24px; line-height: 1.1; color: #fff; text-shadow: 2px 2px 0 #000; font-variant-numeric: tabular-nums; }
+.chip.r { text-align: right; }
+.chip .v.warn { color: var(--red); animation: blink .3s steps(1) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+
+.hud-bot { position: absolute; left: 10px; right: 10px; bottom: calc(var(--sab) + 12px); }
+.force { background: rgba(0,0,0,.55); box-shadow: 0 0 0 2px #000; padding: 6px 8px 8px; margin-bottom: 10px; }
+.force .row { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-dim); margin-bottom: 4px; }
+.force .row .fv { color: #fff; }
+.force.danger .row .fv { color: var(--red); animation: blink .2s steps(1) infinite; }
+.cells { display: grid; grid-template-columns: repeat(20, 1fr); gap: 2px; height: 18px; }
+.cells i { background: #2a2a2a; box-shadow: inset -2px -2px 0 rgba(0,0,0,.4); }
+.cells i.on.g { background: #5ed15e; }
+.cells i.on.y { background: #ffd23d; }
+.cells i.on.r { background: #ff3b3b; }
+.cells i:last-child { outline: 2px solid #ff3b3b; outline-offset: -2px; }
+.bot-row { display: flex; justify-content: space-between; align-items: flex-end; }
+.speed { line-height: 1; }
+.speed .num { font-size: 60px; color: #fff; text-shadow: 3px 3px 0 #000; font-variant-numeric: tabular-nums; }
+.speed .unit { font-size: 12px; color: var(--ink-dim); margin-top: 2px; }
+.speed.ready .num { color: var(--yellow); }
+.pedal {
+  width: 112px; height: 84px; display: grid; place-items: center; text-align: center;
+  font-size: 18px; line-height: 1.2; color: #888; background: #3a3a3a;
+  box-shadow: 0 0 0 3px #000, inset 3px 3px 0 #555, inset -3px -4px 0 #222;
+}
+.pedal.ready { color: #fff; background: #c62828; box-shadow: 0 0 0 3px #000, inset 3px 3px 0 #ff7a7a, inset -3px -4px 0 #7a0f0f; animation: pulse .5s steps(2) infinite; }
+.pedal.on { color: #fff; background: #c62828; box-shadow: 0 0 0 3px #000, inset 3px 3px 0 #ff7a7a, inset -3px -4px 0 #7a0f0f; }
+.pedal.press { background: #8e1b1b; box-shadow: 0 0 0 3px #000, inset 3px 4px 0 #4d0a0a, inset -3px -2px 0 #b33; transform: translateY(3px); }
+.pedal.broken { background: #222; color: var(--red); }
+@keyframes pulse { 50% { transform: scale(1.06); } }
+
+/* 100 码弹出的「刹车」 */
+#call { position: absolute; left: 0; right: 0; top: 25%; text-align: center; transform: translateY(-50%); }
+#call .big {
+  display: inline-block; font-size: 72px; line-height: 1; color: #fff; letter-spacing: 6px; padding: 10px 20px 8px;
+  background: #d32020; box-shadow: 0 0 0 4px #000, inset 4px 4px 0 #ff6b6b, inset -4px -5px 0 #7a0f0f;
+  text-shadow: 4px 4px 0 #6d0000; animation: callin .18s steps(3) both, pulse .4s steps(2) .18s infinite;
+}
+#call.mini { top: calc(var(--sat) + 84px); transform: none; }
+#call.mini .big { font-size: 24px; letter-spacing: 2px; padding: 6px 12px 5px; box-shadow: 0 0 0 3px #000, inset 3px 3px 0 #ff6b6b, inset -3px -3px 0 #7a0f0f; text-shadow: 2px 2px 0 #6d0000; animation: pulse .4s steps(2) infinite; }
+#call.mini .big::after { content: ' 按住屏幕'; font-size: 18px; }
+#call.mini .sub { display: none; }
+#call .sub { margin-top: 14px; font-size: 24px; color: #fff; text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; }
+@keyframes callin { from { transform: scale(2.2); opacity: 0; } }
+#toast {
+  position: absolute; left: 50%; top: 40%; transform: translateX(-50%); white-space: nowrap;
+  background: rgba(0,0,0,.75); box-shadow: 0 0 0 2px #000; padding: 8px 14px 7px; font-size: 18px; color: var(--yellow);
+}
+#flash { position: fixed; inset: 0; z-index: 11; pointer-events: none; background: #fff; opacity: 0; }
+#snapTag { position: absolute; left: 0; right: 0; top: 30%; text-align: center; }
+#snapTag span {
+  display: inline-block; font-size: 48px; color: #fff; padding: 8px 16px 6px; background: #000;
+  box-shadow: 0 0 0 4px var(--red); text-shadow: 3px 3px 0 #a00; animation: callin .2s steps(3) both;
+}
+
+/* ---------- 倒计时 ---------- */
+#cd { position: fixed; inset: 0; z-index: 15; display: grid; place-items: center; pointer-events: none; }
+#cd span { font-size: 120px; color: #fff; text-shadow: 6px 6px 0 #000; animation: cdpop .5s steps(4) both; }
+#cd span.go { color: var(--yellow); }
+@keyframes cdpop { from { transform: scale(2); opacity: 0; } }
+
+/* ---------- 结算 ---------- */
+#result { position: fixed; inset: 0; z-index: 20; overflow-y: auto; touch-action: pan-y; padding: calc(var(--sat) + 16px) 14px calc(var(--sab) + 24px); background: rgba(10,6,20,.55); }
+.rcard { max-width: 460px; margin: 0 auto; }
+.verdict { font-size: 36px; line-height: 1.15; text-align: center; color: var(--yellow); text-shadow: 3px 3px 0 #000; }
+.verdict.lose { color: #ff5a5a; }
+.quip { text-align: center; font-size: 12px; color: var(--ink-dim); margin: 8px 0 12px; }
+.bigscore { text-align: center; margin-bottom: 12px; }
+.bigscore .k { font-size: 12px; color: var(--ink-dim); }
+.bigscore .v { font-size: 60px; line-height: 1.05; color: #7ff; text-shadow: 3px 3px 0 #000; }
+.bigscore.zero .v { color: #888; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.stats div { background: rgba(0,0,0,.4); box-shadow: inset 0 0 0 2px rgba(255,255,255,.08); padding: 6px 8px; }
+.stats .k { font-size: 12px; color: var(--ink-dim); }
+.stats .v { font-size: 24px; line-height: 1.2; }
+.stats .v.bad { color: var(--red); }
+.acts { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin: 6px 0 18px; }
+.sec { font-size: 12px; color: var(--ink-dim); margin: 0 0 6px; display: flex; justify-content: space-between; }
+#chart { width: 100%; aspect-ratio: 200 / 84; display: block; image-rendering: pixelated; background: #111; box-shadow: 0 0 0 2px #000; }
+.legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-dim); margin: 6px 0 16px; }
+.legend i { display: inline-block; width: 12px; height: 6px; margin-right: 4px; vertical-align: middle; }
+.submit { display: flex; gap: 8px; margin-bottom: 10px; }
+.submit input {
+  flex: 1; min-width: 0; font-size: 16px; padding: 10px; border: 0; outline: 0; color: #fff; background: #000;
+  box-shadow: inset 0 0 0 2px #a0a0a0; font-family: var(--px); user-select: text; -webkit-user-select: text;
+}
+.submit .btn { width: auto; font-size: 18px; padding: 10px 14px 9px; }
+#lb { background: rgba(0,0,0,.4); box-shadow: inset 0 0 0 2px rgba(255,255,255,.08); max-height: 300px; overflow-y: auto; }
+#lb table { width: 100%; border-collapse: collapse; font-size: 12px; }
+#lb th { position: sticky; top: 0; background: #1d1630; color: var(--ink-dim); text-align: left; padding: 6px 6px; font-weight: normal; }
+#lb td { padding: 6px; border-top: 2px solid rgba(255,255,255,.05); white-space: nowrap; }
+#lb td.nk { white-space: normal; word-break: break-all; }
+#lb td.sc, #lb th.sc { text-align: right; color: #7ff; }
+#lb tr.king td { color: var(--yellow); background: rgba(255,225,77,.12); }
+#lb tr.me td { background: rgba(120,255,255,.16); }
+.crown { display: inline-block; width: 12px; height: 9px; margin-right: 3px; vertical-align: -1px; background: var(--yellow);
+  clip-path: polygon(0 100%, 0 0, 25% 45%, 50% 0, 75% 45%, 100% 0, 100% 100%); }
+.foot { text-align: center; font-size: 12px; color: #9a94b0; margin-top: 14px; }
+
+#nogl { position: fixed; inset: 0; z-index: 99; display: grid; place-items: center; padding: 24px; text-align: center; background: #1a1428; font-size: 18px; }
+
+@media (min-aspect-ratio: 5/4) and (min-height: 520px) {
+  #menu { justify-content: center; align-items: flex-end; padding-right: 6vw; }
+  .logo, .mcard { width: 440px; margin: 0; }
+  .logo { margin-bottom: 24px; }
+}
+@media (max-height: 700px) {
+  .logo .l2 { font-size: 36px; }
+  .rules li { font-size: 16px; padding: 4px 0; }
+  .goal { font-size: 16px; }
+  .btn.go { font-size: 24px; padding: 14px; }
+  .speed .num { font-size: 48px; }
+}
+@media (max-width: 350px) {
+  .rules li, .goal { font-size: 15px; }
+  .chip { min-width: 96px; }
+  .chip .v { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div class="hud-top">
+    <div class="chip"><div class="k">距滑为大楼</div><div class="v" id="hDist">2597m</div></div>
+    <div class="chip r"><div class="k">刹车用时</div><div class="v" id="hTime">0.000s</div></div>
+  </div>
+  <div id="call" class="hidden"><div class="big">刹车!</div><div class="sub">按住屏幕</div></div>
+  <div id="toast" class="hidden">过 100 码才能刹车</div>
+  <div id="snapTag" class="hidden"><span>踏板断了!</span></div>
+  <div class="hud-bot">
+    <div class="force" id="force">
+      <div class="row"><span>踏板力（满格 1612N 就断）</span><span class="fv" id="hForce">0N</span></div>
+      <div class="cells" id="cells"></div>
+    </div>
+    <div class="bot-row">
+      <div class="speed" id="speed"><div class="num" id="hSpeed">0</div><div class="unit">KM/H</div></div>
+      <div class="pedal" id="pedal">100码后<br>才能刹</div>
+    </div>
+  </div>
+</div>
+<div id="flash"></div>
+<div id="cd" class="hidden"><span id="cdNum">3</span></div>
+
+<!-- 首页 -->
+<div id="menu">
+  <div class="logo t">
+    <div class="l1">樽界 <b>V我800</b></div>
+    <div class="l2">刹车挑战</div>
+    <div class="splash">踏板别踩断!</div>
+  </div>
+  <div class="mcard panel">
+    <div class="goal t">前方 2600 米是<em>滑为大楼</em>，把车停在楼前。</div>
+    <ol class="rules t">
+      <li><span class="n">1</span><span>车自己加速，<b>过 100 码</b>才能刹车</span></li>
+      <li><span class="n">2</span><span><b>按住屏幕</b>就是踩刹车，按越久，力越大</span></li>
+      <li class="bad"><span class="n">!</span><span>踩到 <b>1612N</b> 踏板断，车毁。快满格就松一下</span></li>
+    </ol>
+    <div class="score-line">得分 = 开始刹车时的车速² ÷ 刹停用时。越晚刹、停得越快，分越高；撞楼也算输。</div>
+    <button class="btn go" id="startBtn">开始</button>
+    <div class="menu-foot"><span>手机竖屏玩更爽</span><button class="btn small" id="soundBtn">声音：开</button></div>
+  </div>
+</div>
+
+<!-- 结算 -->
+<div id="result" class="hidden">
+  <div class="rcard panel">
+    <div class="verdict" id="verdict">刹停成功!</div>
+    <div class="quip" id="quip">稳稳停住</div>
+    <div class="bigscore" id="bigscore"><div class="k">得分</div><div class="v" id="rScore">0</div></div>
+    <div class="stats">
+      <div><div class="k">开始刹车时速</div><div class="v" id="rV0">–</div></div>
+      <div><div class="k">刹停用时</div><div class="v" id="rTime">–</div></div>
+      <div><div class="k">刹车距离</div><div class="v" id="rDist">–</div></div>
+      <div><div class="k">最大踏板力</div><div class="v" id="rForce">–</div></div>
+    </div>
+    <div class="acts">
+      <button class="btn go" id="againBtn">再来一次</button>
+      <button class="btn" id="homeBtn">首页</button>
+    </div>
+    <div class="sec"><span>刹车过程</span></div>
+    <canvas id="chart" width="200" height="84"></canvas>
+    <div class="legend"><span><i style="background:#5ff"></i>车速</span><span><i style="background:#ffd23d"></i>踏板力</span><span><i style="background:#ff3b3b"></i>1612N 断裂线</span></div>
+    <div class="sec"><span>排行榜 TOP 50</span><span id="lbHint">本机记录</span></div>
+    <div class="submit" id="submitRow">
+      <input id="nick" maxlength="12" placeholder="留个名字上榜（最多 12 字）" enterkeyhint="done">
+      <button class="btn" id="submitBtn">上榜</button>
+    </div>
+    <div id="lb"></div>
+    <div class="foot">开往滑为的尽头 · 樽界 V我800 · 纯属娱乐</div>
+  </div>
+</div>
+
+<div id="nogl" class="hidden">你的浏览器不支持 3D 画面，<br>换个浏览器（或用手机自带浏览器）打开试试。</div>
+
+<script type="module">
+import * as THREE from './three.module.min.js';
+
+/* =========================================================
+   物理参数（与参考版一致）
+   ========================================================= */
+const KMH = 3.6;
+const CFG = {
+  car: { maxSpeedKmh: 260, launchAccel: 7.4, accelFalloffExp: 1.55 },
+  brake: { minSpeedKmh: 100, breakForceN: 1612, rampBase: 200, rampGrowth: 400, releaseRate: 900,
+           decelPerNewton: 10.8 / 1612, rollingDecel: 0.15, dragCoeff: 22e-5, stopSpeed: 0.08 },
+  track: { barrierDistance: 2600, frontOverhang: 2.7 },
+  crash: { slowMoScale: 0.28, slowMoSeconds: 1.6 },
+  sampleEvery: 0.04,
+  leaderboard: { limit: 50, nicknameMax: 12 }
+};
+const VMAX = CFG.car.maxSpeedKmh / KMH;
+const scoreOf = (v0, t) => t <= 0 ? 0 : Math.round(v0 * v0 / t);
+
+class Dynamics {
+  constructor() { this.reset(); }
+  reset() { this.speed = 0; this.distance = 0; this.pedalForce = 0; this.powerCut = false; this.holdTime = 0; }
+  get speedKmh() { return this.speed * KMH; }
+  step(dt, holding) {
+    const B = CFG.brake;
+    let a;
+    if (this.powerCut) {
+      if (holding) {
+        this.holdTime += dt;
+        this.pedalForce += (B.rampBase + 2 * B.rampGrowth * this.holdTime) * dt;
+      } else {
+        this.holdTime = 0;
+        this.pedalForce = Math.max(0, this.pedalForce - B.releaseRate * dt);
+      }
+      a = -(B.rollingDecel + B.dragCoeff * this.speed * this.speed + B.decelPerNewton * this.pedalForce);
+    } else {
+      const e = Math.min(this.speed / VMAX, 1);
+      a = CFG.car.launchAccel * (1 - Math.pow(e, CFG.car.accelFalloffExp));
+    }
+    this.speed = Math.max(0, this.speed + a * dt);
+    this.distance += this.speed * dt;
+    return this.powerCut && this.pedalForce >= B.breakForceN;
+  }
+}
+
+const S = {
+  phase: 'menu',            // menu | countdown | accelerating | braking | stopped | crashed | result
+  dyn: new Dynamics(),
+  brakeElapsed: 0, v0Kmh: 0, peakForce: 0, peakSpeed: 0, brakeStartDistance: 0,
+  countdown: 0, lastTick: 4, earlyCd: 0, samples: [], sampleTimer: 0,
+  crashType: null, crashT: 0, endTimer: -1, score: 0, called: false
+};
+window.__S = S;
+const distToBarrier = () => CFG.track.barrierDistance - CFG.track.frontOverhang - S.dyn.distance;
+const canBrake = () => S.phase === 'accelerating' && S.dyn.speedKmh >= CFG.brake.minSpeedKmh;
+
+function resetRun() {
+  S.dyn.reset();
+  Object.assign(S, { brakeElapsed: 0, v0Kmh: 0, peakForce: 0, peakSpeed: 0, brakeStartDistance: 0,
+    earlyCd: 0, samples: [], sampleTimer: 0, crashType: null, crashT: 0, endTimer: -1, score: 0, called: false, callT: 0 });
+}
+function recordSample() {
+  S.samples.push({ t: S.brakeElapsed, v: S.dyn.speedKmh, f: Math.min(S.dyn.pedalForce, CFG.brake.breakForceN) });
+}
+
+/* 固定步长推进游戏逻辑 */
+function logicStep(dt, pressed) {
+  S.earlyCd = Math.max(0, S.earlyCd - dt);
+  switch (S.phase) {
+    case 'countdown': {
+      S.countdown -= dt;
+      const n = Math.ceil(S.countdown);
+      if (n < S.lastTick && n > 0) { S.lastTick = n; ui.countdown(n); }
+      if (S.countdown <= 0) { S.phase = 'accelerating'; ui.countdown('GO'); }
+      break;
+    }
+    case 'accelerating':
+      if (pressed) {
+        if (canBrake()) {
+          S.phase = 'braking';
+          S.dyn.powerCut = true;
+          S.v0Kmh = S.dyn.speedKmh;
+          S.brakeStartDistance = S.dyn.distance;
+          recordSample();
+          sfx.brakeStart();
+        } else if (S.earlyCd === 0) {
+          S.earlyCd = 1.2;
+          ui.toast();
+        }
+      }
+      if (S.phase === 'accelerating') {
+        S.dyn.step(dt, false);
+        if (!S.called && S.dyn.speedKmh >= CFG.brake.minSpeedKmh) { S.called = true; sfx.call(); }
+        checkBarrier();
+      }
+      break;
+    case 'braking': {
+      const snapped = S.dyn.step(dt, pressed);
+      S.brakeElapsed += dt;
+      S.peakForce = Math.max(S.peakForce, S.dyn.pedalForce);
+      S.sampleTimer += dt;
+      if (S.sampleTimer >= CFG.sampleEvery) { S.sampleTimer -= CFG.sampleEvery; recordSample(); }
+      if (snapped) {
+        S.dyn.pedalForce = CFG.brake.breakForceN;
+        S.peakForce = CFG.brake.breakForceN;
+        crash('pedal');
+      } else if (!checkBarrier() && S.dyn.speed <= CFG.brake.stopSpeed) {
+        S.dyn.speed = 0;
+        S.phase = 'stopped';
+        recordSample();
+        const v0 = Math.round(S.v0Kmh * 10) / 10, t = Math.round(S.brakeElapsed * 1000) / 1000;
+        S.score = scoreOf(v0, t);
+        S.endTimer = 2.6;
+        sfx.stop();
+      }
+      break;
+    }
+  }
+  S.peakSpeed = Math.max(S.peakSpeed, S.dyn.speedKmh);
+}
+function checkBarrier() {
+  if (distToBarrier() > 0) return false;
+  crash('barrier');
+  return true;
+}
+function crash(type) {
+  if (S.v0Kmh > 0) recordSample();
+  S.phase = 'crashed';
+  S.crashType = type;
+  S.crashT = 0;
+  S.endTimer = 3.4;
+  world.wreck(type, S.dyn.speed);
+  sfx.crash(type);
+  ui.crash(type);
+}
+
+/* =========================================================
+   音效（8-bit 合成）
+   ========================================================= */
+const sfx = {
+  ctx: null, on: true, eng: null, engGain: null, sq: null, sqGain: null,
+  init() {
+    if (this.ctx) return;
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new AC();
+      const c = this.ctx;
+      this.master = c.createGain(); this.master.gain.value = 0.7; this.master.connect(c.destination);
+      this.eng = c.createOscillator(); this.eng.type = 'square'; this.eng.frequency.value = 50;
+      const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 700;
+      this.engGain = c.createGain(); this.engGain.gain.value = 0;
+      this.eng.connect(lp); lp.connect(this.engGain); this.engGain.connect(this.master); this.eng.start();
+      const len = c.sampleRate, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      this.noise = buf;
+      this.sq = c.createBufferSource(); this.sq.buffer = buf; this.sq.loop = true;
+      this.sqF = c.createBiquadFilter(); this.sqF.type = 'bandpass'; this.sqF.frequency.value = 2800; this.sqF.Q.value = 3;
+      this.sqGain = c.createGain(); this.sqGain.gain.value = 0;
+      this.sq.connect(this.sqF); this.sqF.connect(this.sqGain); this.sqGain.connect(this.master); this.sq.start();
+    } catch (e) { this.ctx = null; }
+  },
+  resume() { if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); },
+  update() {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime, run = S.phase === 'accelerating' || S.phase === 'braking';
+    const on = this.on && run;
+    const s = Math.min(1, S.dyn.speedKmh / 260);
+    if (S.phase === 'accelerating') {
+      this.eng.frequency.setTargetAtTime(48 + s * 190, t, 0.05);
+      this.engGain.gain.setTargetAtTime(on ? 0.05 + s * 0.05 : 0, t, 0.08);
+      this.sqGain.gain.setTargetAtTime(0, t, 0.05);
+    } else if (S.phase === 'braking') {
+      const u = S.dyn.pedalForce / CFG.brake.breakForceN;
+      this.eng.frequency.setTargetAtTime(40 + s * 60, t, 0.1);
+      this.engGain.gain.setTargetAtTime(on ? 0.02 : 0, t, 0.1);
+      this.sqGain.gain.setTargetAtTime(on ? Math.pow(u, 1.5) * 0.35 : 0, t, 0.04);
+      this.sqF.frequency.setTargetAtTime(2000 + u * 2000, t, 0.05);
+    } else {
+      this.engGain.gain.setTargetAtTime(0, t, 0.08);
+      this.sqGain.gain.setTargetAtTime(0, t, 0.05);
+    }
+  },
+  tone(f, dur, type = 'square', vol = 0.16, f2) {
+    if (!this.ctx || !this.on) return;
+    const c = this.ctx, t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g); g.connect(this.master); o.start(t); o.stop(t + dur);
+  },
+  burst(dur, freq, vol) {
+    if (!this.ctx || !this.on) return;
+    const c = this.ctx, src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(), t = c.currentTime;
+    src.buffer = this.noise; f.type = 'lowpass'; f.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + dur);
+  },
+  tick(n) { this.tone(n === 'GO' ? 1046 : 523, n === 'GO' ? 0.35 : 0.14); },
+  call() { this.tone(880, 0.1); setTimeout(() => this.tone(880, 0.1), 130); setTimeout(() => this.tone(1175, 0.18), 260); },
+  brakeStart() { this.tone(330, 0.08, 'square', 0.1); },
+  stop() { this.tone(523, 0.12); setTimeout(() => this.tone(659, 0.12), 120); setTimeout(() => this.tone(784, 0.12), 240); setTimeout(() => this.tone(1046, 0.3), 360); },
+  crash(type) {
+    if (type === 'pedal') { this.tone(1800, 0.06, 'square', 0.2, 300); this.burst(0.15, 6000, 0.4); }
+    this.burst(1.1, 700, 0.7);
+    this.tone(140, 0.8, 'sawtooth', 0.35, 30);
+  }
+};
+
+/* =========================================================
+   排行榜（李休闲大王永远第一）
+   ========================================================= */
+const KING = { id: 'king_lee_supreme', nick: '李休闲大王', v0: 260.0, t: 1.612, score: 41935, isKing: true };
+const LB = {
+  key: 'brake_v800_lb_v2',
+  seed() {
+    return [
+      { id: 's1', nick: '滑为首席试车官', v0: 238.5, t: 3.420, score: 16633 },
+      { id: 's2', nick: '1611N边缘试探者', v0: 226.4, t: 3.890, score: 13176 },
+      { id: 's3', nick: '樽界全款车主', v0: 215.0, t: 4.100, score: 11274 },
+      { id: 's4', nick: '秋名山老司机', v0: 204.2, t: 4.350, score: 9585 },
+      { id: 's5', nick: '智障雷达避障员', v0: 198.0, t: 4.480, score: 8751 },
+      { id: 's6', nick: 'ABS脉冲神脚', v0: 192.5, t: 4.620, score: 8021 },
+      { id: 's7', nick: '踏板保全协会会长', v0: 185.0, t: 4.750, score: 7205 },
+      { id: 's8', nick: '沪A·V800准车主', v0: 178.6, t: 4.880, score: 6536 },
+      { id: 's9', nick: '滑为园区保安', v0: 172.0, t: 5.100, score: 5800 }
+    ];
+  },
+  others() {
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem(this.key) || '[]'); } catch (e) {}
+    if (!Array.isArray(list) || !list.length) list = this.seed();
+    list = list.filter(e => e && e.id !== KING.id && !String(e.nick).includes('李休闲大王'));
+    list.sort((a, b) => b.score - a.score);
+    return list;
+  },
+  load() {
+    const o = this.others();
+    if (o.length && o[0].score >= KING.score) KING.score = o[0].score + 666;
+    return [KING, ...o].slice(0, CFG.leaderboard.limit);
+  },
+  add(entry) {
+    const o = this.others().filter(e => e.id !== entry.id);
+    o.push(entry);
+    o.sort((a, b) => b.score - a.score);
+    try { localStorage.setItem(this.key, JSON.stringify(o.slice(0, CFG.leaderboard.limit))); } catch (e) {}
+    const list = this.load();
+    return { list, rank: list.findIndex(e => e.id === entry.id) + 1 };
+  }
+};
+
+/* =========================================================
+   3D 体素世界
+   ========================================================= */
+let renderer;
+const glCanvas = document.getElementById('gl');
+try {
+  renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: false, powerPreference: 'high-performance' });
+} catch (e) {
+  document.getElementById('nogl').classList.remove('hidden');
+  throw e;
+}
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+const scene = new THREE.Scene();
+const SKY_TOP = '#5d9cf5', SKY_LOW = '#b8d8ff';
+scene.fog = new THREE.Fog(SKY_LOW, 160, 1100);
+const camera = new THREE.PerspectiveCamera(66, 1, 0.1, 5000);
+
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  const pr = Math.min(window.devicePixelRatio || 1, 2) * 0.5;
+  renderer.setPixelRatio(Math.max(0.75, pr));
+  renderer.setSize(w, h, false);
+  glCanvas.style.width = w + 'px'; glCanvas.style.height = h + 'px';
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+
+/* ---- 像素纹理 ---- */
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+function canvasTex(w, h, draw, mip = true) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d'); g.imageSmoothingEnabled = false; draw(g, w, h);
+  const t = new THREE.CanvasTexture(c);
+  t.magFilter = THREE.NearestFilter;
+  t.minFilter = mip ? THREE.NearestMipmapLinearFilter : THREE.NearestFilter;
+  t.generateMipmaps = mip;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function shade(hex, k) {
+  const c = new THREE.Color(hex);
+  c.r = Math.min(1, Math.max(0, c.r * k)); c.g = Math.min(1, Math.max(0, c.g * k)); c.b = Math.min(1, Math.max(0, c.b * k));
+  return '#' + c.getHexString();
+}
+function noiseTex(hex, amt = 0.08, n = 16) {
+  return canvasTex(n, n, g => {
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      g.fillStyle = shade(hex, 1 + (rnd() - 0.5) * 2 * amt); g.fillRect(x, y, 1, 1);
+    }
+  });
+}
+const matCache = {};
+function lam(hex, amt = 0.07, extra = {}) {
+  const key = hex + amt + JSON.stringify(extra);
+  if (!matCache[key]) matCache[key] = new THREE.MeshLambertMaterial({ map: noiseTex(hex, amt), ...extra });
+  return matCache[key];
+}
+/* 按世界尺寸缩放 UV，让纹理像素大小一致（unit = 一张纹理覆盖多少米） */
+function boxGeo(w, h, d, unit = 1) {
+  const g = new THREE.BoxGeometry(w, h, d);
+  const uv = g.attributes.uv, nm = g.attributes.normal;
+  for (let i = 0; i < uv.count; i++) {
+    const nx = Math.abs(nm.getX(i)), ny = Math.abs(nm.getY(i));
+    const su = nx > 0.5 ? d : w, sv = ny > 0.5 ? d : h;
+    uv.setXY(i, uv.getX(i) * su / unit, uv.getY(i) * sv / unit);
+  }
+  return g;
+}
+function box(w, h, d, mat, x = 0, y = 0, z = 0, parent, unit = 1) {
+  const m = new THREE.Mesh(boxGeo(w, h, d, unit), mat);
+  m.position.set(x, y, z);
+  if (parent) parent.add(m);
+  return m;
+}
+
+/* ---- 灯光与天空 ---- */
+scene.add(new THREE.HemisphereLight(0xdfefff, 0x6a8a4a, 1.25));
+const sunLight = new THREE.DirectionalLight(0xfff2d8, 1.5);
+sunLight.position.set(-0.5, 1, 0.35);
+scene.add(sunLight);
+scene.background = canvasTex(2, 128, (g, w, h) => {
+  const gr = g.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, SKY_TOP); gr.addColorStop(0.55, '#8dbcff'); gr.addColorStop(1, SKY_LOW);
+  g.fillStyle = gr; g.fillRect(0, 0, w, h);
+}, false);
+const sun = new THREE.Mesh(new THREE.PlaneGeometry(90, 90), new THREE.MeshBasicMaterial({ color: 0xfff6b0, fog: false, depthWrite: false }));
+sun.renderOrder = -1;
+scene.add(sun);
+
+/* ---- 地面与道路（静态长赛道，车沿 -Z 行驶） ---- */
+const ROAD_LEN = 2800, ROAD_Z0 = 60;
+const grassTex = canvasTex(16, 16, g => {
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+    const r = rnd(); g.fillStyle = r < 0.15 ? '#4f9a2f' : r < 0.3 ? '#77c04d' : r < 0.33 ? '#8fd45e' : '#62ad3b'; g.fillRect(x, y, 1, 1);
+  }
+});
+grassTex.repeat.set(600 / 2, 3600 / 2);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(600, 3600), new THREE.MeshLambertMaterial({ map: grassTex }));
+ground.rotation.x = -Math.PI / 2; ground.position.set(0, 0, -1500);
+scene.add(ground);
+
+const roadTex = canvasTex(112, 64, (g, w, h) => {
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const r = rnd(); g.fillStyle = r < 0.2 ? '#45464b' : r < 0.4 ? '#56575c' : '#4d4e53'; g.fillRect(x, y, 1, 1);
+  }
+  g.fillStyle = '#eeeeee'; g.fillRect(4, 0, 2, h); g.fillRect(w - 6, 0, 2, h);           // 路边白实线
+  g.fillStyle = '#f2f2f2';
+  for (const lx of [33, 78]) g.fillRect(lx, 0, 2, 24);                                    // 车道虚线
+  g.fillStyle = '#ffcf33'; g.fillRect(54, 0, 2, h); g.fillRect(57, 0, 2, h);              // 中央双黄线
+});
+roadTex.repeat.set(1, ROAD_LEN / 8);
+const road = new THREE.Mesh(new THREE.PlaneGeometry(14, ROAD_LEN), new THREE.MeshLambertMaterial({ map: roadTex }));
+road.rotation.x = -Math.PI / 2; road.position.set(0, 0.02, ROAD_Z0 - ROAD_LEN / 2);
+scene.add(road);
+// 路肩石块
+const curbTex = noiseTex('#9a9a9a', 0.12);
+curbTex.repeat.set(1, ROAD_LEN);
+for (const sx of [-7.5, 7.5]) {
+  const c = new THREE.Mesh(boxGeo(1, 0.3, ROAD_LEN, 1), new THREE.MeshLambertMaterial({ map: noiseTex('#9a9a9a', 0.12) }));
+  c.position.set(sx, 0.15, ROAD_Z0 - ROAD_LEN / 2); scene.add(c);
+}
+
+/* ---- 树木 / 路灯 / 云（实例化，省性能） ---- */
+function instanced(geo, mat, list) {
+  const im = new THREE.InstancedMesh(geo, mat, list.length), m4 = new THREE.Matrix4();
+  list.forEach((p, i) => { m4.makeScale(p.s || 1, p.sy || p.s || 1, p.sz || p.s || 1); m4.setPosition(p.x, p.y, p.z); im.setMatrixAt(i, m4); });
+  scene.add(im); return im;
+}
+const trunks = [], leaves = [], lamps = [], heads = [];
+for (let z = 40; z > -2560; z -= 7 + rnd() * 9) {
+  for (const side of [-1, 1]) {
+    if (rnd() < 0.35) continue;
+    const x = side * (12 + rnd() * 50), h = 4 + Math.floor(rnd() * 3), zz = z - rnd() * 6;
+    trunks.push({ x, y: h / 2, z: zz, s: 1, sy: h });
+    leaves.push({ x, y: h + 1, z: zz, s: 1 });
+  }
+}
+instanced(boxGeo(1, 1, 1), lam('#6b4f2a', 0.12), trunks);
+instanced(boxGeo(5, 3, 5), new THREE.MeshLambertMaterial({ map: canvasTex(16, 16, g => {
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const r = rnd(); g.fillStyle = r < 0.25 ? '#2f7a1f' : r < 0.5 ? '#3f9a2a' : r < 0.6 ? '#265f18' : '#358b24'; g.fillRect(x, y, 1, 1); }
+}) }), leaves);
+for (let z = 20; z > -2580; z -= 50) for (const side of [-1, 1]) {
+  lamps.push({ x: side * 9, y: 4, z, s: 1 });
+  heads.push({ x: side * 8.2, y: 8.1, z, s: 1 });
+}
+instanced(boxGeo(0.4, 8, 0.4), lam('#8c8c8c', 0.1), lamps);
+instanced(boxGeo(1.8, 0.4, 0.6), new THREE.MeshLambertMaterial({ color: 0xfff1b0, emissive: 0xffe680, emissiveIntensity: 0.6 }), heads);
+const clouds = [];
+for (let i = 0; i < 70; i++) clouds.push({ x: (rnd() - 0.5) * 900, y: 95 + rnd() * 20, z: 200 - rnd() * 3400, s: 1, sx: 1, sy: 1 });
+{
+  const im = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.88 }), clouds.length);
+  const m4 = new THREE.Matrix4();
+  clouds.forEach((c, i) => { m4.makeScale(16 + rnd() * 30, 4, 10 + rnd() * 24); m4.setPosition(c.x, c.y, c.z); im.setMatrixAt(i, m4); });
+  scene.add(im);
+}
+
+/* ---- 滑为大楼 ---- */
+const BZ = -CFG.track.barrierDistance;
+function petalLogo(g, ox, oy, size, color = '#e41f26') {
+  // 7 片花瓣扇形，像素化（向原 logo 致敬但不照抄）
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const k = c.getContext('2d'); k.fillStyle = color;
+  for (let i = 0; i < 7; i++) {
+    const a = (i - 3) * 0.44;
+    k.save(); k.translate(32, 60); k.rotate(a);
+    k.beginPath(); k.moveTo(0, -4);
+    k.quadraticCurveTo(-9, -30, -3.5, -50); k.quadraticCurveTo(0, -55, 3.5, -50); k.quadraticCurveTo(9, -30, 0, -4);
+    k.fill(); k.restore();
+  }
+  const d = k.getImageData(0, 0, 64, 64);
+  const cell = 64 / size;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const px = Math.floor((x + 0.5) * cell), py = Math.floor((y + 0.5) * cell);
+    if (d.data[(py * 64 + px) * 4 + 3] > 120) { g.fillStyle = color; g.fillRect(ox + x, oy + y, 1, 1); }
+  }
+}
+function signTex(w, h, bg, drawFn) {
+  return canvasTex(w, h, (g) => { if (bg) { g.fillStyle = bg; g.fillRect(0, 0, w, h); } drawFn(g); }, false);
+}
+function pixelText(g, text, x, y, color, size = 12) {
+  // 先画到临时画布，再阈值化成硬像素
+  const c = document.createElement('canvas'); c.width = Math.ceil(size * text.length * 1.1) + 4; c.height = size + 4;
+  const k = c.getContext('2d'); k.font = `${size}px PX`; k.textBaseline = 'top'; k.fillStyle = '#000'; k.fillText(text, 1, 1);
+  const d = k.getImageData(0, 0, c.width, c.height); g.fillStyle = color;
+  for (let yy = 0; yy < c.height; yy++) for (let xx = 0; xx < c.width; xx++) if (d.data[(yy * c.width + xx) * 4 + 3] > 110) g.fillRect(x + xx, y + yy, 1, 1);
+  return k.measureText(text).width;
+}
+function buildHQ() {
+  const hq = new THREE.Group();
+  const facade = canvasTex(16, 16, g => {
+    g.fillStyle = '#eef0f2'; g.fillRect(0, 0, 16, 16);
+    g.fillStyle = '#3c5b78'; g.fillRect(1, 3, 14, 11);
+    g.fillStyle = '#5a7ea0'; g.fillRect(1, 3, 14, 2); g.fillRect(2, 6, 2, 6);
+    g.fillStyle = '#d9dde1'; g.fillRect(5, 3, 1, 11); g.fillRect(10, 3, 1, 11);
+    g.fillStyle = '#c9ced3'; g.fillRect(0, 15, 16, 1);
+  });
+  const fm = new THREE.MeshLambertMaterial({ map: facade, fog: false });
+  const white = new THREE.MeshLambertMaterial({ map: noiseTex('#f1f2f3', 0.04), fog: false });
+  const grey = new THREE.MeshLambertMaterial({ map: noiseTex('#b7bcc2', 0.06), fog: false });
+  const signMap = () => signTex(90, 28, '#f4f5f6', g => { petalLogo(g, 5, 2, 24); pixelText(g, '滑为', 36, 2, '#e41f26', 24); });
+  // 后方主塔（远处就能看到塔顶招牌）
+  box(90, 190, 44, fm, 0, 95, -60, hq, 6);
+  box(94, 30, 48, white, 0, 205, -60, hq, 4);
+  const s1 = new THREE.Mesh(new THREE.PlaneGeometry(88, 27.4), new THREE.MeshBasicMaterial({ map: signMap(), fog: false }));
+  s1.position.set(0, 205, -35.9); hq.add(s1);
+  // 前排宽体园区楼 + 中层大招牌（离近也在画面里）
+  box(300, 64, 60, fm, 0, 32, 0, hq, 6);
+  box(304, 5, 64, white, 0, 66, 0, hq, 4);
+  box(150, 44, 4, white, 0, 30, 32, hq, 4);
+  const s2 = new THREE.Mesh(new THREE.PlaneGeometry(144, 44.8), new THREE.MeshBasicMaterial({ map: signMap(), fog: false }));
+  s2.position.set(0, 30, 34.1); hq.add(s2);
+  for (const sx of [-1, 1]) box(6, 64, 6, grey, sx * 78, 32, 32, hq, 4);
+  // 入口雨棚
+  box(70, 3, 14, white, 0, 9, 40, hq, 4);
+  // 楼前广场
+  const plaza = new THREE.Mesh(new THREE.PlaneGeometry(360, 140), new THREE.MeshLambertMaterial({ map: noiseTex('#cfcfcf', 0.06) }));
+  plaza.material.map.repeat.set(90, 35);
+  plaza.rotation.x = -Math.PI / 2; plaza.position.set(0, 0.03, 100); hq.add(plaza);
+  hq.position.set(0, 0, BZ - 150);
+  scene.add(hq);
+
+  // 大门石碑（近处也能看到牌子）
+  const mono = new THREE.Group();
+  box(14, 5, 1.6, new THREE.MeshLambertMaterial({ map: noiseTex('#f1f2f3', 0.04) }), 0, 2.5, 0, mono, 2);
+  const mt = signTex(90, 28, null, g => { petalLogo(g, 5, 2, 24); pixelText(g, '滑为', 36, 2, '#e41f26', 24); });
+  const mp = new THREE.Mesh(new THREE.PlaneGeometry(12.4, 3.86), new THREE.MeshBasicMaterial({ map: mt, transparent: true }));
+  mp.position.set(0, 2.6, 0.81); mono.add(mp);
+  mono.position.set(-15, 0, BZ - 6); mono.rotation.y = 0.25;
+  scene.add(mono);
+
+  // 路障：红白相间方块墙 + 警示灯
+  const red = lam('#c8302a', 0.1), wht = lam('#ececec', 0.06);
+  for (let i = -8; i <= 8; i++) for (let j = 0; j < 2; j++) box(1, 1, 1, (i + j) % 2 ? red : wht, i, 0.5 + j, BZ, scene);
+  world.beacons = [];
+  for (const s of [-9, 9]) {
+    box(0.6, 3, 0.6, lam('#333333'), s, 1.5, BZ, scene);
+    world.beacons.push(box(0.8, 0.8, 0.8, new THREE.MeshLambertMaterial({ color: 0x661111, emissive: 0xff2222, emissiveIntensity: 0 }), s, 3.4, BZ, scene));
+  }
+}
+
+/* ---- 樽界 V我800（浅蓝豪华 MPV） ---- */
+function plateTex() {
+  return signTex(80, 16, null, g => {
+    g.fillStyle = '#e9fff1'; g.fillRect(0, 0, 80, 8);
+    g.fillStyle = '#8fe0a8'; g.fillRect(0, 8, 80, 8);
+    g.fillStyle = '#1d3d27'; g.fillRect(0, 0, 80, 1); g.fillRect(0, 15, 80, 1); g.fillRect(0, 0, 1, 16); g.fillRect(79, 0, 1, 16);
+    pixelText(g, '滑A·V50800', 6, 1, '#10261a', 12);
+  });
+}
+function buildCar() {
+  const car = new THREE.Group();
+  const body = lam('#8fc3ea', 0.05), bodyD = lam('#78a9cf', 0.06), glass = lam('#1b2631', 0.05), chrome = lam('#e3e9ee', 0.05);
+  const black = lam('#1f2226', 0.06), cap = lam('#e8ecef', 0.04);
+  const tail = new THREE.MeshLambertMaterial({ color: 0x7a1010, emissive: 0xff2020, emissiveIntensity: 0.25 });
+  const head = new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: 0xfff3c8, emissiveIntensity: 0.9 });
+  const U = 0.5;
+  box(2.0, 0.62, 5.4, body, 0, 0.81, 0, car, U);                // 下车身
+  box(1.98, 0.18, 2.6, bodyD, 0, 0.45, 0.05, car, U);           // 侧裙
+  box(1.92, 0.84, 4.6, body, 0, 1.54, 0.35, car, U);            // 高顶车厢
+  box(1.94, 0.5, 4.0, glass, 0, 1.6, 0.42, car, U);             // 侧窗带
+  box(1.62, 0.52, 0.04, glass, 0, 1.6, 2.66, car, U);           // 后窗
+  for (const z of [-1.55, -0.45, 1.25, 2.45]) box(1.97, 0.5, 0.14, body, 0, 1.6, z, car, U); // A/B/C/D 柱
+  box(1.9, 0.2, 0.7, body, 0, 1.2, -2.15, car, U);              // 引擎盖台阶
+  const ws = box(1.78, 0.8, 0.05, glass, 0, 1.58, -2.12, car, U); ws.rotation.x = 0.6; // 前挡
+  box(1.5, 0.03, 3.3, glass, 0, 1.97, 0.5, car, U);             // 全景天幕
+  for (const s of [-1, 1]) box(0.06, 0.06, 3.7, chrome, s * 0.86, 1.99, 0.45, car, U); // 行李架
+  box(2.02, 0.05, 5.1, chrome, 0, 1.12, 0.05, car, U);          // 镀铬腰线
+  for (const z of [-0.45, 1.25]) box(2.01, 0.7, 0.03, black, 0, 0.92, z, car, U); // 滑门缝
+  for (const s of [-1, 1]) box(0.26, 0.16, 0.14, body, s * 1.1, 1.32, -1.6, car, U); // 后视镜
+  // 车尾：贯穿尾灯 + 竖灯 + 字标 + 车牌 + 保险杠
+  const tailBar = box(1.84, 0.09, 0.05, tail, 0, 1.05, 2.71, car, U);
+  const tailV = [-0.93, 0.93].map(x => box(0.09, 0.36, 0.05, tail, x, 0.92, 2.71, car, U));
+  const badge = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.105), new THREE.MeshBasicMaterial({ transparent: true,
+    map: signTex(32, 8, null, g => { pixelText(g, '樽界', 4, -2, '#eef2f5', 12); }) }));
+  badge.position.set(0, 0.88, 2.715); car.add(badge);
+  const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.124), new THREE.MeshBasicMaterial({ map: plateTex() }));
+  plate.position.set(0, 0.66, 2.72); car.add(plate);
+  box(1.98, 0.24, 0.12, bodyD, 0, 0.42, 2.66, car, U);          // 后保险杠
+  box(1.5, 0.08, 0.06, black, 0, 0.33, 2.73, car, U);
+  // 车头：竖向大灯 + 格栅 + 立标
+  box(1.2, 0.36, 0.05, black, 0, 0.78, -2.71, car, U);
+  for (const s of [-1, 1]) { box(0.14, 0.46, 0.05, head, s * 0.8, 0.94, -2.72, car, U); box(0.5, 0.05, 0.05, head, s * 0.58, 0.54, -2.72, car, U); }
+  box(0.1, 0.22, 0.05, chrome, 0, 0.84, -2.74, car, U);
+  // 车轮（八边形 = 像素圆），白色风阻轮毂
+  const wheels = [];
+  const tireG = new THREE.CylinderGeometry(0.38, 0.38, 0.3, 8), capG = new THREE.CylinderGeometry(0.25, 0.25, 0.32, 8);
+  for (const sx of [-1, 1]) for (const z of [-1.78, 1.72]) {
+    const w = new THREE.Group();
+    const tire = new THREE.Mesh(tireG, black); tire.rotation.z = Math.PI / 2; w.add(tire);
+    const hub = new THREE.Mesh(capG, cap); hub.rotation.z = Math.PI / 2; w.add(hub);
+    const spoke = box(0.33, 0.08, 0.4, chrome, 0, 0, 0, w, U);
+    w.position.set(sx * 0.9, 0.38, z); car.add(w); wheels.push(w);
+  }
+  // 影子
+  const sh = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 5.9), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.32, depthWrite: false }));
+  sh.rotation.x = -Math.PI / 2; sh.position.y = 0.04; car.add(sh);
+  car.userData = { wheels, tail, shadow: sh };
+  return car;
+}
+
+/* ---- 粒子（方块烟、碎片） ---- */
+const cubeG = new THREE.BoxGeometry(1, 1, 1);
+const particles = [];
+function spawnCube(pos, vel, size, color, life, opts = {}) {
+  const m = new THREE.Mesh(cubeG, new THREE.MeshLambertMaterial({ color, transparent: true, opacity: opts.opacity ?? 1, emissive: opts.emissive || 0x000000 }));
+  m.position.copy(pos); m.scale.setScalar(size);
+  scene.add(m);
+  particles.push({ m, vel, life, max: life, grow: opts.grow || 0, grav: opts.grav ?? -14, spin: new THREE.Vector3(rnd() * 8, rnd() * 8, rnd() * 8), fade: opts.fade ?? true, bounce: opts.bounce ?? 0.35 });
+}
+function updateParticles(dt) {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.life -= dt;
+    p.vel.y += p.grav * dt;
+    p.m.position.addScaledVector(p.vel, dt);
+    const half = p.m.scale.y * 0.5;
+    if (p.m.position.y < half && p.grav < 0) { p.m.position.y = half; p.vel.y *= -p.bounce; p.vel.x *= 0.7; p.vel.z *= 0.7; p.spin.multiplyScalar(0.6); }
+    p.m.rotation.x += p.spin.x * dt; p.m.rotation.y += p.spin.y * dt; p.m.rotation.z += p.spin.z * dt;
+    if (p.grow) p.m.scale.multiplyScalar(1 + p.grow * dt);
+    if (p.fade) p.m.material.opacity = Math.max(0, p.life / p.max) * (p.m.material.userData.o0 ?? 1);
+    if (p.life <= 0) { scene.remove(p.m); p.m.material.dispose(); particles.splice(i, 1); }
+  }
+}
+function clearParticles() { for (const p of particles) { scene.remove(p.m); p.m.material.dispose(); } particles.length = 0; }
+
+/* ---- 车毁：整车拆成方块飞散 ---- */
+const debris = [];
+const world = {
+  car: null, beacons: [],
+  newCar() {
+    if (this.car) scene.remove(this.car);
+    for (const d of debris) scene.remove(d.m);
+    debris.length = 0;
+    clearParticles();
+    this.car = buildCar();
+    scene.add(this.car);
+  },
+  wreck(type, speed) {
+    const car = this.car;
+    car.updateMatrixWorld(true);
+    const parts = [...car.children];
+    const fwd = type === 'pedal' ? speed * 0.32 : speed * 0.04;
+    const pos = car.position.clone();
+    for (const p of parts) {
+      if (p === car.userData.shadow) { car.remove(p); continue; }
+      scene.attach(p);
+      const out = p.position.clone().sub(pos); out.y = 0;
+      const v = new THREE.Vector3(out.x * (2 + rnd() * 4), 4 + rnd() * 9, -fwd + out.z * (1 + rnd() * 2) + (rnd() - 0.5) * 6);
+      if (type === 'barrier') v.z = Math.abs(v.z) * 0.6 + 2 + rnd() * 4;
+      debris.push({ m: p, vel: v, spin: new THREE.Vector3((rnd() - 0.5) * 12, (rnd() - 0.5) * 12, (rnd() - 0.5) * 12) });
+    }
+    // 额外碎块 + 玻璃渣 + 火花
+    const cols = [0x8fc3ea, 0x78a9cf, 0x1b2631, 0xe3e9ee, 0xff3030];
+    for (let i = 0; i < 46; i++) {
+      const v = new THREE.Vector3((rnd() - 0.5) * 16, 3 + rnd() * 12, -fwd * (0.6 + rnd() * 0.8) + (rnd() - 0.5) * 8);
+      if (type === 'barrier') v.z = 2 + rnd() * 8;
+      spawnCube(pos.clone().add(new THREE.Vector3((rnd() - 0.5) * 2, 0.6 + rnd() * 1.4, (rnd() - 0.5) * 5)), v, 0.12 + rnd() * 0.28, cols[i % cols.length], 3 + rnd() * 2, { fade: false });
+    }
+    for (let i = 0; i < 24; i++) spawnCube(pos.clone().add(new THREE.Vector3((rnd() - 0.5) * 2, 0.5, 1 + rnd() * 2)),
+      new THREE.Vector3((rnd() - 0.5) * 10, 4 + rnd() * 8, (rnd() - 0.5) * 10 - fwd * 0.5), 0.1, 0xffc040, 0.6 + rnd() * 0.4, { emissive: 0xff8800, grav: -20 });
+    car.visible = false;
+  },
+  updateDebris(dt) {
+    for (const d of debris) {
+      d.vel.y -= 14 * dt;
+      d.m.position.addScaledVector(d.vel, dt);
+      if (d.m.position.y < 0.25) { d.m.position.y = 0.25; d.vel.y *= -0.3; d.vel.x *= 0.75; d.vel.z *= 0.75; d.spin.multiplyScalar(0.6); }
+      d.m.rotation.x += d.spin.x * dt; d.m.rotation.y += d.spin.y * dt; d.m.rotation.z += d.spin.z * dt;
+    }
+  },
+  debrisCenter() {
+    if (!debris.length) return this.car.position;
+    const c = new THREE.Vector3(); for (const d of debris) c.add(d.m.position); return c.multiplyScalar(1 / debris.length);
+  }
+};
+
+/* =========================================================
+   界面
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const cellsEl = $('cells');
+for (let i = 0; i < 20; i++) { const c = document.createElement('i'); c.className = i < 12 ? 'g' : i < 17 ? 'y' : 'r'; cellsEl.appendChild(c); }
+const cellEls = [...cellsEl.children];
+const show = id => $(id).classList.remove('hidden');
+const hide = id => $(id).classList.add('hidden');
+let toastTimer = 0;
+const last = {};
+function setText(id, txt) { if (last[id] !== txt) { last[id] = txt; $(id).textContent = txt; } }
+
+const ui = {
+  countdown(n) {
+    show('cd'); const s = $('cdNum'); s.textContent = n; s.className = n === 'GO' ? 'go' : '';
+    s.style.animation = 'none'; void s.offsetWidth; s.style.animation = '';
+    sfx.tick(n);
+    if (n === 'GO') setTimeout(() => hide('cd'), 550);
+  },
+  toast() { show('toast'); toastTimer = 1.2; },
+  crash(type) {
+    hide('call');
+    if (type === 'pedal') { show('snapTag'); $('pedal').className = 'pedal broken'; $('pedal').textContent = '断了'; }
+    const f = $('flash'); f.style.transition = 'none'; f.style.opacity = 0.85; void f.offsetWidth; f.style.transition = 'opacity .5s steps(4)'; f.style.opacity = 0;
+    if (navigator.vibrate) try { navigator.vibrate([80, 40, 160]); } catch (e) {}
+  },
+  hud(pressed) {
+    const d = S.dyn;
+    setText('hSpeed', String(Math.round(d.speedKmh)));
+    $('speed').classList.toggle('ready', canBrake());
+    const rem = Math.max(0, distToBarrier());
+    setText('hDist', Math.round(rem) + 'm');
+    $('hDist').classList.toggle('warn', rem < 300);
+    setText('hTime', (S.phase === 'accelerating' || S.phase === 'countdown' ? 0 : S.brakeElapsed).toFixed(3) + 's');
+    const u = Math.min(1, d.pedalForce / CFG.brake.breakForceN), n = Math.round(u * 20);
+    if (last.cells !== n) { last.cells = n; cellEls.forEach((c, i) => c.classList.toggle('on', i < n)); }
+    setText('hForce', Math.round(d.pedalForce) + 'N');
+    $('force').classList.toggle('danger', u > 0.85);
+    if (S.phase !== 'crashed') {
+      const p = $('pedal');
+      const cls = S.phase === 'braking' ? (pressed ? 'pedal on press' : 'pedal on') : S.phase === 'stopped' ? 'pedal on' : canBrake() ? 'pedal ready' : 'pedal';
+      if (p.className !== cls) p.className = cls;
+      const txt = S.phase === 'braking' ? (pressed ? '踩住中' : '按住加力') : S.phase === 'stopped' ? '停住了' : canBrake() ? '踩刹车!' : '100码后\n才能刹';
+      if (last.pedal !== txt) { last.pedal = txt; p.innerText = txt; }
+    }
+    const callOn = S.phase === 'accelerating' && canBrake();
+    if (callOn && !S.callT) S.callT = clock;
+    $('call').classList.toggle('hidden', !callOn);
+    $('call').classList.toggle('mini', callOn && clock - S.callT > 3);
+    if (toastTimer > 0) { toastTimer -= 1 / 60; if (toastTimer <= 0) hide('toast'); }
+  }
+};
+
+function startGame() {
+  sfx.init(); sfx.resume();
+  resetRun();
+  world.newCar();
+  pointers.clear(); keyDown = false;
+  S.phase = 'countdown'; S.countdown = 3; S.lastTick = 4;
+  for (const k in last) delete last[k];
+  hide('menu'); hide('result'); hide('snapTag'); hide('toast'); hide('call');
+  show('hud');
+  camBlend = 0;
+}
+function toMenu() {
+  resetRun(); world.newCar();
+  S.phase = 'menu';
+  hide('result'); hide('hud'); show('menu');
+}
+
+const winQuips = ['稳稳停住，樽界 V我800 毫发无损！', '滑为园区直呼内行。', '这一脚，值回 V我800 的全款。', '不仅刹得住，发型都没乱。', '1611N？你在断裂边缘跳了支芭蕾。'];
+const pedalQuips = ['踏板：1612N 到了，我先裂为敬。', '车碎成了方块，但智驾还在思考。', '下次轻点踩，踏板也是有尊严的。', '快满格时要松一下，记住了吗？'];
+const wallQuips = ['滑为大楼：你是来送车的吗？', '刹晚了。下次早点按住。', '樽界 V我800 成功抵达滑为……的墙。'];
+const pick = a => a[Math.floor(Math.random() * a.length)];
+
+function showResult() {
+  S.phase = 'result';
+  hide('hud'); hide('snapTag');
+  const win = S.crashType === null;
+  $('verdict').textContent = win ? '刹停成功!' : S.crashType === 'pedal' ? '踏板断了，车毁了!' : '撞上滑为大楼，车毁了!';
+  $('verdict').className = 'verdict' + (win ? '' : ' lose');
+  $('quip').textContent = pick(win ? winQuips : S.crashType === 'pedal' ? pedalQuips : wallQuips);
+  $('rScore').textContent = win ? S.score : 0;
+  $('bigscore').classList.toggle('zero', !win);
+  const braked = S.v0Kmh > 0;
+  $('rV0').textContent = braked ? S.v0Kmh.toFixed(1) + 'km/h' : '没刹车';
+  $('rTime').textContent = win ? S.brakeElapsed.toFixed(3) + 's' : '–';
+  $('rDist').textContent = braked ? Math.round(S.dyn.distance - S.brakeStartDistance) + 'm' : '–';
+  $('rForce').textContent = Math.round(S.peakForce) + 'N';
+  $('rForce').classList.toggle('bad', S.crashType === 'pedal');
+  $('submitRow').style.display = win ? 'flex' : 'none';
+  $('nick').value = '';
+  $('lbHint').textContent = win ? '留名上榜，挑战李休闲大王' : '车毁不计分';
+  drawChart();
+  renderLB(null);
+  $('result').scrollTop = 0;
+  show('result');
+}
+
+function drawChart() {
+  const c = $('chart'), g = c.getContext('2d'), W = c.width, H = c.height;
+  g.imageSmoothingEnabled = false;
+  g.fillStyle = '#111'; g.fillRect(0, 0, W, H);
+  const pl = 2, pr = 2, pt = 4, pb = 4, cw = W - pl - pr, ch = H - pt - pb;
+  g.fillStyle = '#222'; for (let i = 1; i < 4; i++) g.fillRect(pl, pt + Math.round(ch * i / 4), cw, 1);
+  const s = S.samples, fMax = CFG.brake.breakForceN * 1.08;
+  const yl = pt + Math.round(ch * (1 - CFG.brake.breakForceN / fMax));
+  g.fillStyle = '#ff3b3b'; for (let x = pl; x < W - pr; x += 4) g.fillRect(x, yl, 2, 1);
+  if (s.length < 2) {
+    g.fillStyle = '#666'; g.font = '12px PX'; g.textAlign = 'center'; g.fillText('没有刹车数据', W / 2, H / 2 + 4); return;
+  }
+  const tMax = Math.max(0.5, s[s.length - 1].t), vMax = Math.max(100, S.peakSpeed * 1.08);
+  const plot = (key, max, color) => {
+    g.fillStyle = color;
+    let py = null;
+    for (let x = 0; x <= cw; x++) {
+      const t = tMax * x / cw;
+      let i = 0; while (i < s.length - 1 && s[i + 1].t < t) i++;
+      const a = s[i], b = s[Math.min(i + 1, s.length - 1)];
+      const k = b.t > a.t ? Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t))) : 0;
+      const val = a[key] + (b[key] - a[key]) * k;
+      const y = pt + Math.round(ch * (1 - val / max));
+      const y0 = py === null ? y : py;
+      g.fillRect(pl + x, Math.min(y, y0), 1, Math.abs(y - y0) + 2);
+      py = y;
+    }
+  };
+  plot('v', vMax, '#55ffff');
+  plot('f', fMax, '#ffd23d');
+}
+
+function renderLB(meId) {
+  const list = LB.load();
+  let h = '<table><thead><tr><th>#</th><th>名字</th><th>时速</th><th>用时</th><th class="sc">得分</th></tr></thead><tbody>';
+  list.forEach((e, i) => {
+    const cls = e.id === KING.id ? 'king' : e.id === meId ? 'me' : '';
+    const rk = e.id === KING.id ? '<span class="crown"></span>1' : i + 1;
+    h += `<tr class="${cls}"><td>${rk}</td><td class="nk">${esc(e.nick)}</td><td>${Number(e.v0).toFixed(1)}</td><td>${Number(e.t).toFixed(2)}s</td><td class="sc">${e.score}</td></tr>`;
+  });
+  $('lb').innerHTML = h + '</tbody></table>';
+}
+const esc = s => String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+
+/* =========================================================
+   输入：整屏按住 = 踩刹车（多指防误松）
+   ========================================================= */
+const pointers = new Set();
+let keyDown = false;
+const playing = () => S.phase === 'countdown' || S.phase === 'accelerating' || S.phase === 'braking';
+document.addEventListener('pointerdown', e => {
+  if (!playing()) return;
+  pointers.add(e.pointerId);
+  if (e.cancelable) e.preventDefault();
+  sfx.resume();
+}, { passive: false });
+const up = e => pointers.delete(e.pointerId);
+document.addEventListener('pointerup', up);
+document.addEventListener('pointercancel', up);
+document.addEventListener('touchstart', e => { if (playing() && e.cancelable) e.preventDefault(); }, { passive: false });
+document.addEventListener('contextmenu', e => e.preventDefault());
+window.addEventListener('keydown', e => { if ((e.code === 'Space' || e.code === 'ArrowDown') && playing()) { keyDown = true; e.preventDefault(); } });
+window.addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowDown') keyDown = false; });
+window.addEventListener('blur', () => { pointers.clear(); keyDown = false; });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { pointers.clear(); keyDown = false; } });
+const isPressed = () => pointers.size > 0 || keyDown;
+
+$('startBtn').addEventListener('click', startGame);
+$('againBtn').addEventListener('click', startGame);
+$('homeBtn').addEventListener('click', toMenu);
+$('soundBtn').addEventListener('click', function () {
+  sfx.on = !sfx.on; this.textContent = '声音：' + (sfx.on ? '开' : '关');
+});
+$('submitBtn').addEventListener('click', () => {
+  if (S.crashType !== null) return;
+  const nick = $('nick').value.trim().slice(0, CFG.leaderboard.nicknameMax) || '无名车手';
+  const entry = { id: 'u' + Date.now(), nick, v0: Math.round(S.v0Kmh * 10) / 10, t: Math.round(S.brakeElapsed * 1000) / 1000, score: S.score };
+  const { rank } = LB.add(entry);
+  renderLB(entry.id);
+  $('submitRow').style.display = 'none';
+  $('lbHint').textContent = `第 ${rank} 名，仅次于李休闲大王`;
+  $('nick').blur();
+});
+
+/* =========================================================
+   主循环
+   ========================================================= */
+const FIXED = 1 / 120;
+let acc = 0, lastT = performance.now(), camBlend = 0, shake = 0, clock = 0;
+const camPos = new THREE.Vector3(), camLook = new THREE.Vector3(), tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3();
+
+function frame() {
+  requestAnimationFrame(frame);
+  const now = performance.now();
+  const dt = Math.min((now - lastT) / 1000, 0.05);
+  lastT = now; clock += dt;
+  const pressed = isPressed();
+
+  let sdt = dt;
+  if (S.phase === 'crashed') {
+    S.crashT += dt;
+    const n = CFG.crash.slowMoSeconds;
+    sdt = dt * (S.crashT < n ? CFG.crash.slowMoScale : Math.min(1, CFG.crash.slowMoScale + (S.crashT - n) * 0.8));
+    world.updateDebris(sdt);
+  } else {
+    acc += dt;
+    while (acc >= FIXED) { acc -= FIXED; if (playing()) logicStep(FIXED, pressed); }
+  }
+  updateParticles(sdt);
+  if (S.endTimer > 0) { S.endTimer -= dt; if (S.endTimer <= 0) { S.endTimer = -1; showResult(); } }
+
+  // 车辆姿态
+  const car = world.car, d = S.dyn;
+  if (S.phase !== 'crashed' && S.phase !== 'result') {
+    car.position.z = -d.distance;
+    const u = d.pedalForce / CFG.brake.breakForceN;
+    const targetPitch = S.phase === 'braking' ? -0.045 * u : S.phase === 'accelerating' ? 0.012 * Math.min(1, d.speedKmh / 80) : 0;
+    car.rotation.x += (targetPitch - car.rotation.x) * Math.min(1, dt * 8);
+    car.position.y = S.phase === 'braking' && u > 0.6 ? (Math.random() - 0.5) * 0.03 * u : 0;
+    for (const w of car.userData.wheels) w.rotation.x -= d.speed * dt / 0.38;
+    car.userData.tail.emissiveIntensity = S.phase === 'braking' || S.phase === 'stopped' ? 1.2 + u * 1.5 : 0.25;
+    // 重踩时轮胎冒方块烟
+    if (S.phase === 'braking' && u > 0.55 && d.speed > 3 && Math.random() < u) {
+      for (const sx of [-0.9, 0.9]) spawnCube(new THREE.Vector3(sx, 0.3, car.position.z + 1.7),
+        new THREE.Vector3((Math.random() - 0.5) * 2, 1 + Math.random(), 2 + Math.random() * 2), 0.35 + Math.random() * 0.3, 0xdddddd, 0.7, { opacity: 0.7, grow: 1.4, grav: 0.5 });
+    }
+  }
+
+  // 警示灯
+  const near = distToBarrier() < 600;
+  for (const b of world.beacons) b.material.emissiveIntensity = near && Math.floor(clock * 4) % 2 ? 2 : 0;
+
+  // 镜头
+  const cz = car.position.z;
+  const portrait = camera.aspect < 1;
+  if (S.phase === 'menu') {
+    const a = clock * 0.22 + 0.9;
+    const r = portrait ? 19 : 10;
+    camPos.set(Math.sin(a) * r, portrait ? 3.6 : 2.4, cz + Math.cos(a) * r);
+    camLook.set(0, portrait ? -1.4 : 0.2, cz);
+    camera.fov = portrait ? 50 : 50;
+    if (!portrait && window.innerHeight >= 520) camera.setViewOffset(window.innerWidth, window.innerHeight, window.innerWidth * 0.2, 0, window.innerWidth, window.innerHeight); else camera.clearViewOffset();
+  } else {
+    camBlend = Math.min(1, camBlend + dt * 0.9);
+    const k = camBlend * camBlend * (3 - 2 * camBlend);
+    const sp = Math.min(1, d.speedKmh / 260);
+    const chaseP = tmpA.set(0, portrait ? 4.2 : 3.2, cz + (portrait ? 10 : 8.5) + sp * 1.2);
+    const chaseL = tmpB.set(0, 0.9, cz - 22);
+    if (S.phase === 'crashed' || S.phase === 'result') {
+      const c = world.debrisCenter();
+      chaseL.set(c.x, Math.max(0.5, c.y), c.z);
+    }
+    const a = clock * 0.22 + 0.9, r = portrait ? 19 : 10;
+    const orbitP = new THREE.Vector3(Math.sin(a) * r, portrait ? 3.6 : 2.4, cz + Math.cos(a) * r);
+    if (k < 1) { camPos.copy(orbitP).lerp(chaseP, k); camLook.set(0, portrait ? -1.4 : 0.2, cz).lerp(chaseL, k); }
+    else if (S.phase === 'crashed' || S.phase === 'result') { camLook.lerp(chaseL, Math.min(1, dt * 3)); }
+    else { camPos.copy(chaseP); camLook.copy(chaseL); }
+    camera.fov = (portrait ? 70 : 56) + sp * 10;
+    camera.clearViewOffset();
+  }
+  if (S.phase === 'crashed' && S.crashT < 0.05) shake = 1.2;
+  shake = Math.max(0, shake - dt * 1.6);
+  const bShake = S.phase === 'braking' ? (d.pedalForce / CFG.brake.breakForceN) * 0.06 : 0;
+  const sAmp = shake * 0.6 + bShake;
+  camera.position.set(camPos.x + (Math.random() - 0.5) * sAmp, camPos.y + (Math.random() - 0.5) * sAmp, camPos.z);
+  camera.lookAt(camLook);
+  camera.updateProjectionMatrix();
+  sun.position.set(camera.position.x + 700, camera.position.y + 520, camera.position.z - 2200);
+  sun.lookAt(camera.position);
+
+  sfx.update();
+  if (playing() || S.phase === 'crashed' || S.phase === 'stopped') ui.hud(pressed);
+  renderer.render(scene, camera);
+}
+
+/* 启动：等像素字体就绪（招牌、车牌要用） */
+resize();
+(async () => {
+  try { await Promise.race([document.fonts.load('12px PX', '滑为樽界A·V50800'), new Promise(r => setTimeout(r, 2500))]); } catch (e) {}
+  buildHQ();
+  world.newCar();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
