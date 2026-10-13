@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#ffe14d">
+<title>踩到 1609 · 樽界 V我800</title>
+<meta name="description" content="樽界 V我800 的刹车踏板 1610N 就断。数字自己往上涨，点一下停住，越接近 1609 越厉害。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 fill=%22%23ffe14d%22 stroke=%22%23111%22 stroke-width=%222%22/%3E%3Crect x=%223%22 y=%229%22 width=%2210%22 height=%223%22 fill=%22%23111%22/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #ffe14d;
+  --ink: #111111;
+  --paper: #ffffff;
+  --pink: #ff6fb5;
+  --blue: #1f5cff;
+  --red: #ff3b30;
+  --green: #22c55e;
+  --dim: #5b5b5b;
+  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --num: "Arial Black", "Helvetica Neue", -apple-system, "PingFang SC", sans-serif;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --b: 3px;
+  --sh: 6px 6px 0 var(--ink);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: var(--sans); color: var(--ink); background: var(--bg); user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; overscroll-behavior: none; touch-action: manipulation; }
+.hidden { display: none !important; }
+button { font-family: inherit; color: inherit; cursor: pointer; }
+.box { background: var(--paper); border: var(--b) solid var(--ink); box-shadow: var(--sh); }
+.btn { border: var(--b) solid var(--ink); box-shadow: var(--sh); font-weight: 900; font-size: 22px; padding: 16px 0; width: 100%; transition: transform .06s, box-shadow .06s; }
+.btn:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0 var(--ink); }
+.btn.blue { background: var(--blue); color: #fff; }
+.btn.white { background: var(--paper); }
+.btn.pink { background: var(--pink); }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+.screen { position: fixed; inset: 0; display: flex; flex-direction: column; padding: calc(var(--sat) + 16px) 18px calc(var(--sab) + 18px); max-width: 520px; margin: 0 auto; }
+
+/* ---------- 首页 ---------- */
+#intro { justify-content: center; gap: 18px; overflow-y: auto; }
+.kicker { font-size: 13px; font-weight: 700; letter-spacing: .14em; }
+.title { font-size: 64px; line-height: .95; font-weight: 900; letter-spacing: -.03em; }
+.title .n { font-family: var(--num); display: inline-block; background: var(--ink); color: var(--bg); padding: 2px 10px 0; transform: rotate(-3deg); margin-top: 8px; }
+.rules { padding: 14px 16px; display: grid; gap: 10px; }
+.rules p { font-size: 18px; font-weight: 700; line-height: 1.45; display: flex; gap: 10px; align-items: flex-start; }
+.rules i { flex: none; font-style: normal; width: 28px; height: 28px; display: grid; place-items: center; border: var(--b) solid var(--ink); background: var(--bg); font-size: 15px; font-weight: 900; margin-top: 1px; }
+.rules p.bad i { background: var(--red); color: #fff; }
+.rules b { background: var(--pink); padding: 0 4px; }
+.daily-note { font-size: 13px; color: var(--dim); font-weight: 700; }
+.row2 { display: grid; gap: 14px; }
+.links { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; }
+.links a { color: var(--ink); }
+
+/* ---------- 游戏 ---------- */
+#play { gap: 16px; }
+.hud { display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 14px; }
+.hud .tag { border: var(--b) solid var(--ink); background: var(--paper); padding: 4px 10px; }
+.readout { padding: 14px 16px 10px; text-align: center; position: relative; }
+.readout .v { font-family: var(--num); font-size: 92px; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.readout .u { font-size: 14px; font-weight: 900; color: var(--dim); }
+.readout.hot .v { color: var(--red); }
+.readout.dead { background: var(--red); color: #fff; }
+.readout.dead .u { color: #fff; }
+.meter { position: relative; flex: 1; min-height: 120px; border: var(--b) solid var(--ink); background: var(--paper); box-shadow: var(--sh); overflow: hidden; }
+.meter .fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: var(--pink); border-top: var(--b) solid var(--ink); }
+.meter .zone { position: absolute; left: 0; right: 0; top: 0; height: 7%; background: repeating-linear-gradient(-45deg, var(--red) 0 10px, #ff8a80 10px 20px); border-bottom: var(--b) solid var(--ink); }
+.meter .zone span { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 13px; color: #fff; text-shadow: 0 0 3px var(--ink); }
+.meter .mark { position: absolute; left: 0; right: 0; height: 0; border-top: 2px dashed var(--ink); font-size: 11px; font-weight: 900; }
+.meter .mark span { position: absolute; left: 8px; top: -18px; }
+.meter .pedal { position: absolute; left: 50%; bottom: 14px; width: 120px; transform: translateX(-50%); }
+.meter .ready { position: absolute; inset: 0; display: grid; place-items: center; font-size: 48px; font-weight: 900; }
+#stopBtn { font-size: 34px; padding: 22px 0; }
+.tap-hint { text-align: center; font-size: 13px; font-weight: 700; color: var(--dim); margin-top: -6px; }
+.shake { animation: shake .4s; }
+@keyframes shake { 20% { transform: translate(-8px, 2px) rotate(-1deg); } 40% { transform: translate(7px, -2px) rotate(1deg); } 60% { transform: translate(-5px, 1px); } 80% { transform: translate(3px, 0); } }
+#flash { position: fixed; inset: 0; background: var(--red); opacity: 0; pointer-events: none; z-index: 30; }
+
+/* ---------- 结果 ---------- */
+#result { gap: 16px; justify-content: center; overflow-y: auto; }
+.rcard { padding: 18px 18px 16px; display: grid; gap: 8px; text-align: center; }
+.rcard .k { font-size: 13px; font-weight: 900; letter-spacing: .1em; color: var(--dim); }
+.rcard .big { font-family: var(--num); font-size: 84px; line-height: 1; letter-spacing: -.04em; }
+.rcard .big small { font-size: 26px; }
+.rcard .verdict { justify-self: center; font-size: 22px; font-weight: 900; padding: 4px 12px; border: var(--b) solid var(--ink); background: var(--bg); }
+.rcard .verdict.dead { background: var(--red); color: #fff; }
+.rcard .verdict.perfect { background: var(--green); color: #fff; }
+.rcard .quip { font-size: 16px; font-weight: 700; line-height: 1.5; }
+.tries { display: flex; justify-content: center; gap: 8px; margin-top: 4px; }
+.tries span { min-width: 64px; padding: 6px 8px; border: var(--b) solid var(--ink); font-weight: 900; font-size: 14px; background: var(--paper); font-variant-numeric: tabular-nums; }
+.tries span.best { background: var(--green); color: #fff; }
+.tries span.dead { background: var(--red); color: #fff; }
+.tries span.todo { background: transparent; border-style: dashed; color: var(--dim); }
+.share { padding: 12px 14px; font-size: 14px; font-weight: 700; line-height: 1.55; text-align: left; white-space: pre-line; user-select: text; -webkit-user-select: text; }
+.copied { font-size: 13px; font-weight: 900; text-align: center; min-height: 18px; }
+
+@media (max-height: 700px) {
+  .title { font-size: 52px; }
+  .rules p { font-size: 16px; }
+  .readout .v { font-size: 72px; }
+  .rcard .big { font-size: 64px; }
+  #stopBtn { padding: 16px 0; }
+}
+@media (prefers-reduced-motion: reduce) { .shake { animation: none; } }
+</style>
+</head>
+<body>
+
+<!-- 首页 -->
+<section id="intro" class="screen">
+  <div class="kicker">樽界 V我800 · 刹车踏板测试</div>
+  <div class="title">踩到<br><span class="n">1609</span></div>
+  <div class="rules box">
+    <p><i>1</i><span>踏板力度会自己往上涨</span></p>
+    <p><i>2</i><span><b>点一下</b>，停住</span></p>
+    <p class="bad"><i>!</i><span>越接近 1609 越厉害，到 <b>1610 踏板就断</b></span></p>
+  </div>
+  <div class="row2">
+    <button class="btn blue" id="dailyBtn">今日挑战</button>
+    <div class="daily-note" id="dailyNote">每天 3 次机会，所有人同一关，取最好的一次</div>
+    <button class="btn white" id="freeBtn">随便练练</button>
+  </div>
+  <div class="links"><a href="https://acpbj.cn/brake/foot/" id="lnkFoot">另一款：这脚能踩吗？</a><a href="https://acpbj.cn/brake/" id="lnkBrake">极限刹车挑战</a></div>
+</section>
+
+<!-- 游戏 -->
+<section id="play" class="screen hidden">
+  <div class="hud"><span class="tag" id="modeTag">今日挑战</span><span class="tag" id="tryTag">第 1 / 3 次</span></div>
+  <div class="readout box" id="readout"><div class="v" id="val">0</div><div class="u">牛顿（N）</div></div>
+  <div class="meter" id="meter">
+    <div class="fill" id="fill"></div>
+    <div class="zone"><span>1610 断</span></div>
+    <div class="mark" style="top: calc(7% + 0px)"><span>← 1609 在这里</span></div>
+    <div class="ready" id="ready">预备</div>
+  </div>
+  <button class="btn blue" id="stopBtn">停！</button>
+  <div class="tap-hint">点屏幕任意位置也能停</div>
+</section>
+
+<!-- 结果 -->
+<section id="result" class="screen hidden">
+  <div class="rcard box">
+    <div class="k" id="rK">这一脚</div>
+    <div class="big"><span id="rVal">0</span><small>N</small></div>
+    <div class="verdict" id="rVerdict">差 3 牛</div>
+    <div class="quip" id="rQuip"></div>
+    <div class="tries" id="rTries"></div>
+  </div>
+  <div class="row2">
+    <button class="btn blue" id="nextBtn">再踩一次</button>
+    <div class="share box hidden" id="shareBox"></div>
+    <button class="btn pink hidden" id="copyBtn">复制战绩，发给朋友</button>
+    <div class="copied" id="copied"></div>
+    <button class="btn white" id="homeBtn">回首页</button>
+  </div>
+</section>
+
+<div id="flash"></div>
+
+<script>
+"use strict";
+const LIMIT = 1610, TARGET = 1609, TRIES = 3;
+const $ = id => document.getElementById(id);
+
+/* 按日期出同一关：同一天所有人每一次的涨法都一样 */
+function today() { const d = new Date(); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; }
+function hash(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* 一条涨法：先快冲到 1400 多，再一边抖一边慢慢爬，偶尔突然窜一下 */
+function makeCurve(rnd) {
+  const fastTo = 1380 + Math.floor(rnd() * 120);
+  const fastT = 0.9 + rnd() * 0.6;
+  const crawl = 55 + rnd() * 55;
+  const jumps = [];
+  let t = fastT + 0.25 + rnd() * 0.5;
+  for (let i = 0; i < 8; i++) { jumps.push({ t, dv: 3 + Math.floor(rnd() * 14) }); t += 0.35 + rnd() * 0.9; }
+  const pauses = [];
+  t = fastT + 0.4 + rnd() * 0.8;
+  for (let i = 0; i < 3; i++) { pauses.push({ t, d: 0.15 + rnd() * 0.3 }); t += 0.8 + rnd() * 1.2; }
+  return function value(time) {
+    if (time <= fastT) { const k = time / fastT; return fastTo * k * k; }
+    let tt = time - fastT;
+    for (const p of pauses) { const s = p.t - fastT; if (time > p.t) tt -= Math.min(p.d, time - p.t); }
+    let v = fastTo + crawl * tt;
+    for (const j of jumps) if (time >= j.t) v += j.dv;
+    v += Math.sin(time * 23) * 1.2;
+    return Math.max(0, v);
+  };
+}
+
+/* 存档 */
+const KEY = 'v1609';
+function load() { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; } }
+function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
+function dailyState() { const d = load(); if (d.day !== today()) { d.day = today(); d.tries = []; save(d); } return d; }
+
+const R = { mode: 'daily', curve: null, t0: 0, running: false, stopped: false, v: 0, raf: 0, tryNo: 0 };
+window.__R = R;
+
+function score(v) { return v >= LIMIT ? -1 : Math.floor(v); }
+function gap(v) { return TARGET - Math.floor(v); }
+function verdict(v) {
+  const s = score(v);
+  if (s < 0) return ['踏板断了', 'dead'];
+  if (s === TARGET) return ['1609！满分', 'perfect'];
+  return [`差 ${gap(v)} 牛`, ''];
+}
+const pick = a => a[Math.floor(Math.random() * a.length)];
+function quip(v) {
+  const s = score(v);
+  if (s < 0) return pick(['踏板：我先走一步。', '咔。维修部谢谢你。', '多了那么一点点，就像 PPT 里的"领先"一样。', '这一脚，值回一次上热搜。']);
+  if (s === TARGET) return pick(['再多 1 牛就上热搜。', '精确到牛，樽界销售都想挖你。', '你和断裂之间，只隔了 1 牛。']);
+  if (s >= 1600) return pick(['差一点点，踏板在发抖。', '踏板：你别过来啊。', '职业选手的脚。']);
+  if (s >= 1500) return pick(['稳，但有点怂。', '安全，但不够刺激。', '踏板松了一口气。']);
+  if (s >= 1000) return pick(['太保守了，这车还没开出车库。', '你在踩刹车，还是在试探它？', '踏板表示：就这？']);
+  return pick(['你是来摸踏板的吗？', '这一脚，蚂蚁都比你用力。', '踩了，但又好像没踩。']);
+}
+
+/* 音效 */
+const sfx = {
+  ctx: null, osc: null, gain: null,
+  init() { if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); },
+  hum(on) {
+    if (!this.ctx) return;
+    if (on && !this.osc) {
+      this.osc = this.ctx.createOscillator(); this.osc.type = 'square'; this.gain = this.ctx.createGain(); this.gain.gain.value = .04;
+      this.osc.connect(this.gain); this.gain.connect(this.ctx.destination); this.osc.start();
+    } else if (!on && this.osc) { this.osc.stop(); this.osc = null; }
+  },
+  pitch(v) { if (this.osc) this.osc.frequency.setTargetAtTime(90 + v * .32, this.ctx.currentTime, .02); },
+  tone(f, d, type = 'square', vol = .12, f2) {
+    if (!this.ctx) return; const c = this.ctx, t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + d); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + d);
+  },
+  snap() {
+    if (!this.ctx) return; const c = this.ctx, n = c.sampleRate * .3, b = c.createBuffer(1, n, c.sampleRate), x = b.getChannelData(0);
+    for (let i = 0; i < n; i++) x[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    const s = c.createBufferSource(), g = c.createGain(); s.buffer = b; g.gain.value = .5; s.connect(g); g.connect(c.destination); s.start();
+    this.tone(700, .25, 'sawtooth', .15, 80);
+  }
+};
+
+function show(id) { for (const s of ['intro', 'play', 'result']) $(s).classList.toggle('hidden', s !== id); }
+
+function startRound(mode) {
+  sfx.init();
+  R.mode = mode;
+  let rnd;
+  if (mode === 'daily') {
+    const d = dailyState();
+    if (d.tries.length >= TRIES) { showResult(null); return; }
+    R.tryNo = d.tries.length + 1;
+    rnd = mulberry(hash(today() + '#' + R.tryNo));
+    $('modeTag').textContent = '今日挑战 · ' + today().slice(5).replace('-', '月') + '日';
+    $('tryTag').textContent = `第 ${R.tryNo} / ${TRIES} 次`;
+  } else {
+    rnd = Math.random;
+    $('modeTag').textContent = '随便练练';
+    $('tryTag').textContent = '不计成绩';
+  }
+  R.curve = makeCurve(rnd);
+  R.running = false; R.stopped = false; R.v = 0;
+  $('val').textContent = '0'; $('fill').style.height = '0';
+  $('readout').className = 'readout box';
+  $('ready').classList.remove('hidden'); $('ready').textContent = '预备';
+  $('stopBtn').disabled = true;
+  show('play');
+  setTimeout(() => { $('ready').textContent = '踩！'; sfx.tone(880, .12); }, 600);
+  setTimeout(() => {
+    $('ready').classList.add('hidden');
+    $('stopBtn').disabled = false;
+    R.running = true; R.t0 = performance.now(); sfx.hum(true);
+    R.raf = requestAnimationFrame(tick);
+  }, 950);
+}
+
+function tick(now) {
+  if (!R.running) return;
+  const t = (now - R.t0) / 1000;
+  R.v = R.curve(t);
+  draw(R.v);
+  sfx.pitch(R.v);
+  if (R.v >= LIMIT) { stop(true); return; }
+  R.raf = requestAnimationFrame(tick);
+}
+function draw(v) {
+  $('val').textContent = Math.floor(Math.min(v, 9999));
+  $('fill').style.height = Math.min(100, v / LIMIT * 93) + '%';
+  $('readout').classList.toggle('hot', v >= 1550);
+}
+
+function stop(auto) {
+  if (!R.running) return;
+  R.running = false; R.stopped = true;
+  cancelAnimationFrame(R.raf);
+  sfx.hum(false);
+  if (auto) R.v = LIMIT + Math.random() * 6;
+  draw(R.v);
+  $('stopBtn').disabled = true;
+  if (R.v >= LIMIT) {
+    $('readout').className = 'readout box dead';
+    $('val').textContent = Math.floor(R.v);
+    document.querySelector('#play').classList.remove('shake'); void document.body.offsetWidth; document.querySelector('#play').classList.add('shake');
+    const f = $('flash'); f.style.transition = 'none'; f.style.opacity = .7; void f.offsetWidth; f.style.transition = 'opacity .5s'; f.style.opacity = 0;
+    sfx.snap();
+    if (navigator.vibrate) try { navigator.vibrate([40, 30, 120]); } catch (e) {}
+  } else {
+    sfx.tone(score(R.v) === TARGET ? 1320 : 520, .15, 'triangle', .15);
+  }
+  if (R.mode === 'daily') { const d = dailyState(); d.tries.push(Math.floor(R.v)); save(d); }
+  setTimeout(() => showResult(R.v), 900);
+}
+
+function bestOf(tries) {
+  let b = null;
+  for (const v of tries) if (v < LIMIT && (b === null || v > b)) b = v;
+  return b;
+}
+function showResult(v) {
+  const daily = R.mode === 'daily';
+  const d = dailyState();
+  if (v === null) v = d.tries[d.tries.length - 1];
+  $('rK').textContent = daily ? `今日挑战 · 第 ${d.tries.length} 次` : '这一脚';
+  $('rVal').textContent = Math.floor(v);
+  const [t, cls] = verdict(v);
+  $('rVerdict').textContent = t; $('rVerdict').className = 'verdict ' + cls;
+  $('rQuip').textContent = quip(v);
+  const tr = $('rTries'); tr.innerHTML = '';
+  if (daily) {
+    const b = bestOf(d.tries);
+    for (let i = 0; i < TRIES; i++) {
+      const x = d.tries[i], s = document.createElement('span');
+      if (x === undefined) { s.className = 'todo'; s.textContent = '未踩'; }
+      else if (x >= LIMIT) { s.className = 'dead'; s.textContent = '断'; }
+      else { s.className = x === b ? 'best' : ''; s.textContent = x; }
+      tr.appendChild(s);
+    }
+  }
+  const left = TRIES - d.tries.length;
+  $('nextBtn').textContent = daily ? (left > 0 ? `再踩一次（还剩 ${left} 次）` : '今天用完了，去练练') : '再踩一次';
+  $('nextBtn').onclick = () => startRound(daily && left > 0 ? 'daily' : 'free');
+  const done = daily && left === 0;
+  $('shareBox').classList.toggle('hidden', !done);
+  $('copyBtn').classList.toggle('hidden', !done);
+  $('copied').textContent = '';
+  if (done) $('shareBox').textContent = shareText(d);
+  show('result');
+}
+function shareText(d) {
+  const b = bestOf(d.tries);
+  const date = today().slice(5).replace('-', '月') + '日';
+  const marks = d.tries.map(x => x >= LIMIT ? '断' : x).join(' / ');
+  const line = b === null ? '三脚全踩断了，踏板已报废' : b === TARGET ? '踩到 1609，满分' : `最好 ${b}N，差 ${TARGET - b} 牛`;
+  return `踩到 1609 · ${date}\n${line}\n三次：${marks}\n你也来踩一脚：acpbj.cn/brake/1609/`;
+}
+
+/* 绑定 */
+$('dailyBtn').addEventListener('click', () => startRound('daily'));
+$('freeBtn').addEventListener('click', () => startRound('free'));
+$('homeBtn').addEventListener('click', () => { refreshIntro(); show('intro'); });
+$('stopBtn').addEventListener('pointerdown', e => { e.preventDefault(); stop(false); });
+$('play').addEventListener('pointerdown', e => { if (R.running) { e.preventDefault(); stop(false); } });
+window.addEventListener('keydown', e => { if ((e.code === 'Space' || e.code === 'Enter') && R.running) { e.preventDefault(); stop(false); } });
+document.addEventListener('contextmenu', e => e.preventDefault());
+$('copyBtn').addEventListener('click', () => {
+  const txt = $('shareBox').textContent;
+  const ok = () => { $('copied').textContent = '已复制，去微信粘贴吧'; };
+  const fallback = () => {
+    const ta = document.createElement('textarea'); ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); ok(); } catch (e) { $('copied').textContent = '复制失败，长按上面的文字手动复制'; }
+    ta.remove();
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, fallback); else fallback();
+});
+function refreshIntro() {
+  const d = dailyState(), left = TRIES - d.tries.length;
+  $('dailyBtn').textContent = left > 0 ? `今日挑战（还剩 ${left} 次）` : '今日挑战（看战绩）';
+  const b = bestOf(d.tries);
+  $('dailyNote').textContent = d.tries.length ? `今天最好：${b === null ? '全断了' : b + 'N'} · 每天 3 次，所有人同一关` : '每天 3 次机会，所有人同一关，取最好的一次';
+}
+refreshIntro();
+</script>
+</body>
+</html>
