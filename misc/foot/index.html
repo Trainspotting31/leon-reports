@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#efe4ff">
+<title>这脚能踩吗？· 樽界 V我800</title>
+<meta name="description" content="樽界 V我800 的刹车踏板 1610N 就断。来一个人，你判断：让他踩，还是拦住？">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%224%22 fill=%22%23ff6b6b%22/%3E%3Crect x=%224%22 y=%229%22 width=%228%22 height=%223%22 rx=%221.5%22 fill=%22%23fff%22/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg1: #efe4ff;
+  --bg2: #ffe1ec;
+  --ink: #2d2142;
+  --ink2: #7a6d99;
+  --card: #fffdfb;
+  --no: #ff6b6b;
+  --no-d: #d94848;
+  --yes: #3ccf91;
+  --yes-d: #23a571;
+  --gold: #ffc93c;
+  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: var(--sans); color: var(--ink); background: linear-gradient(170deg, var(--bg1) 0%, var(--bg2) 100%);
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; overscroll-behavior: none;
+}
+.hidden { display: none !important; }
+button { font-family: inherit; border: 0; cursor: pointer; color: inherit; }
+
+/* 黏土质感 */
+.clay {
+  background: var(--card); border-radius: 32px;
+  box-shadow: 0 22px 40px -12px rgba(90, 60, 140, .35), inset 0 -8px 0 rgba(90, 60, 140, .08), inset 0 6px 0 #fff;
+}
+.puffy {
+  border-radius: 999px; font-weight: 800; color: #fff;
+  box-shadow: 0 10px 20px -6px rgba(60, 30, 90, .35), inset 0 -6px 0 rgba(0,0,0,.16), inset 0 5px 0 rgba(255,255,255,.45);
+  transition: transform .08s;
+}
+.puffy:active { transform: translateY(3px) scale(.97); box-shadow: 0 4px 10px -4px rgba(60,30,90,.35), inset 0 -3px 0 rgba(0,0,0,.16), inset 0 3px 0 rgba(255,255,255,.4); }
+
+.screen { position: fixed; inset: 0; display: flex; flex-direction: column; padding: calc(var(--sat) + 14px) 16px calc(var(--sab) + 16px); }
+
+/* ---------- 开场 ---------- */
+#intro { align-items: center; justify-content: center; gap: 18px; text-align: center; overflow-y: auto; }
+.brandline { font-size: 13px; letter-spacing: .14em; color: var(--ink2); }
+.big-title { font-size: 52px; line-height: 1.05; font-weight: 900; letter-spacing: -.02em; }
+.big-title em { font-style: normal; color: var(--no); }
+.rule-n { display: inline-block; font-size: 17px; font-weight: 800; background: var(--ink); color: #fff; padding: 6px 14px; border-radius: 999px; }
+.howto { width: 100%; max-width: 380px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.howto div { padding: 16px 10px 14px; display: grid; gap: 4px; justify-items: center; }
+.howto .arrow { font-size: 30px; font-weight: 900; line-height: 1; }
+.howto .t { font-size: 18px; font-weight: 900; }
+.howto .s { font-size: 13px; color: var(--ink2); line-height: 1.4; }
+.howto .l .arrow, .howto .l .t { color: var(--no-d); }
+.howto .r .arrow, .howto .r .t { color: var(--yes-d); }
+.lives-note { font-size: 14px; color: var(--ink2); }
+#startBtn { background: var(--ink); font-size: 24px; padding: 18px 64px; }
+.best { font-size: 13px; color: var(--ink2); }
+
+/* ---------- 游戏 ---------- */
+#game { gap: 12px; }
+.topbar { display: flex; justify-content: space-between; align-items: center; height: 40px; }
+.hearts { display: flex; gap: 4px; }
+.hearts svg { width: 28px; height: 28px; transition: transform .3s, opacity .3s; }
+.hearts svg.lost { opacity: .22; transform: scale(.8); filter: grayscale(1); }
+.scorebox { text-align: right; line-height: 1.1; }
+.scorebox .k { font-size: 11px; color: var(--ink2); letter-spacing: .1em; }
+.scorebox .v { font-size: 26px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.combo { font-size: 13px; font-weight: 800; color: #e08a00; height: 16px; text-align: center; margin-top: -8px; }
+
+.stack { position: relative; flex: 1; min-height: 0; }
+.card { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; touch-action: none; will-change: transform; }
+.card.back { transform: translateY(14px) scale(.95); filter: brightness(.97); z-index: 0; }
+.card.front { z-index: 2; }
+.card .no-tag, .card .yes-tag {
+  position: absolute; top: 22px; z-index: 5; font-size: 26px; font-weight: 900; padding: 4px 14px; border-radius: 14px; border: 4px solid; opacity: 0; pointer-events: none;
+}
+.card .no-tag { right: 18px; color: var(--no-d); border-color: var(--no-d); transform: rotate(10deg); }
+.card .yes-tag { left: 18px; color: var(--yes-d); border-color: var(--yes-d); transform: rotate(-10deg); }
+.art { flex: 1 1 auto; min-height: 120px; display: grid; place-items: center; padding: 10px 10px 0; border-radius: 32px 32px 0 0; }
+.art svg { width: 100%; height: 100%; max-height: 300px; }
+.info { padding: 6px 20px 18px; display: grid; gap: 8px; }
+.cno { font-size: 12px; color: var(--ink2); letter-spacing: .1em; }
+.cname { font-size: 26px; line-height: 1.15; font-weight: 900; }
+.ctag { font-size: 15px; color: var(--ink2); line-height: 1.4; }
+.stats { display: grid; gap: 4px; margin-top: 2px; }
+.stats div { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; padding: 7px 12px; border-radius: 14px; background: #f5effd; }
+.stats b { font-weight: 800; text-align: right; }
+
+/* 揭晓 */
+.reveal { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; padding: 18px 20px 20px; border-radius: 28px 28px 32px 32px; background: #fff;
+  box-shadow: 0 -12px 30px -10px rgba(90,60,140,.3); transform: translateY(105%); transition: transform .35s cubic-bezier(.2,.9,.3,1.2); display: grid; gap: 10px; }
+.reveal.show { transform: none; }
+.rv-top { display: flex; justify-content: space-between; align-items: baseline; }
+.rv-n { font-size: 44px; font-weight: 900; font-variant-numeric: tabular-nums; line-height: 1; }
+.rv-n small { font-size: 18px; margin-left: 2px; }
+.rv-n.snap { color: var(--no-d); }
+.rv-lim { font-size: 12px; color: var(--ink2); }
+.gauge { position: relative; height: 22px; border-radius: 999px; background: #efe9f7; overflow: hidden; box-shadow: inset 0 3px 0 rgba(0,0,0,.06); }
+.gauge i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #3ccf91, #ffc93c 70%, #ff6b6b); }
+.gauge b { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--ink); left: 80%; }
+.rv-verdict { font-size: 22px; font-weight: 900; }
+.rv-quip { font-size: 15px; color: var(--ink2); line-height: 1.5; }
+.rv-me { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 4px; }
+.rv-me span { font-size: 16px; font-weight: 900; padding: 6px 14px; border-radius: 999px; color: #fff; }
+.rv-me span.ok { background: var(--yes); }
+.rv-me span.bad { background: var(--no); }
+.rv-me em { font-style: normal; font-size: 13px; color: var(--ink2); animation: breathe 1s ease-in-out infinite alternate; }
+@keyframes breathe { to { opacity: .35; } }
+
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.actions button { font-size: 20px; padding: 16px 0; display: flex; align-items: center; justify-content: center; gap: 6px; }
+#noBtn { background: var(--no); }
+#yesBtn { background: var(--yes); }
+.actions.locked button { opacity: .4; pointer-events: none; }
+
+/* 踏板断了 */
+.shake { animation: shake .45s; }
+@keyframes shake { 20% { transform: translateX(-10px) rotate(-1.5deg); } 40% { transform: translateX(9px) rotate(1deg); } 60% { transform: translateX(-6px); } 80% { transform: translateX(4px); } }
+#crack { position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: 0; }
+
+/* ---------- 结束 ---------- */
+#over { align-items: center; justify-content: center; text-align: center; gap: 16px; overflow-y: auto; }
+.ocard { width: 100%; max-width: 380px; padding: 26px 22px 22px; display: grid; gap: 10px; justify-items: center; }
+.o-k { font-size: 13px; color: var(--ink2); letter-spacing: .12em; }
+.o-score { font-size: 80px; line-height: 1; font-weight: 900; font-variant-numeric: tabular-nums; }
+.o-unit { font-size: 15px; color: var(--ink2); }
+.o-title { font-size: 26px; font-weight: 900; padding: 8px 18px; border-radius: 18px; background: var(--ink); color: var(--gold); }
+.o-desc { font-size: 15px; color: var(--ink2); line-height: 1.5; }
+.o-last { font-size: 14px; line-height: 1.5; background: #f5effd; border-radius: 16px; padding: 10px 14px; width: 100%; }
+.o-btns { width: 100%; max-width: 380px; display: grid; gap: 12px; }
+#againBtn { background: var(--ink); font-size: 22px; padding: 16px 0; }
+.o-link { font-size: 14px; color: var(--ink2); text-decoration: underline; text-underline-offset: 3px; }
+.o-shot { font-size: 13px; color: var(--ink2); }
+
+@media (max-height: 700px) {
+  .big-title { font-size: 42px; }
+  .cname { font-size: 22px; }
+  .stats div { padding: 5px 10px; font-size: 14px; }
+  .ctag { font-size: 14px; }
+  .actions button { padding: 13px 0; font-size: 18px; }
+  .info { gap: 6px; padding-bottom: 14px; }
+}
+@media (min-width: 560px) {
+  #game .stack, #game .actions, #game .topbar, #game .combo { width: 420px; margin-left: auto; margin-right: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .shake { animation: none; } }
+</style>
+</head>
+<body>
+
+<!-- 开场 -->
+<section id="intro" class="screen">
+  <div class="brandline">樽界 V我800 · 刹车踏板质检部</div>
+  <div class="big-title">这脚<br><em>能踩吗？</em></div>
+  <div class="rule-n">踏板 1610N 就断</div>
+  <div class="howto">
+    <div class="clay l"><div class="arrow">←</div><div class="t">拦住</div><div class="s">他会把踏板<br>踩断</div></div>
+    <div class="clay r"><div class="arrow">→</div><div class="t">让他踩</div><div class="s">踏板<br>扛得住</div></div>
+  </div>
+  <div class="lives-note">来一个人，你左滑或右滑。猜错 3 次就结束。</div>
+  <button class="puffy" id="startBtn">开始质检</button>
+  <div class="best" id="bestLine"></div>
+</section>
+
+<!-- 游戏 -->
+<section id="game" class="screen hidden">
+  <div class="topbar">
+    <div class="hearts" id="hearts"></div>
+    <div class="scorebox"><div class="k">判断正确</div><div class="v" id="score">0</div></div>
+  </div>
+  <div class="combo" id="combo"></div>
+  <div class="stack" id="stack"></div>
+  <div class="actions" id="actions">
+    <button class="puffy" id="noBtn">← 拦住</button>
+    <button class="puffy" id="yesBtn">让他踩 →</button>
+  </div>
+</section>
+
+<!-- 结束 -->
+<section id="over" class="screen hidden">
+  <div class="ocard clay">
+    <div class="o-k">本次质检，判断正确</div>
+    <div class="o-score" id="oScore">0</div>
+    <div class="o-unit" id="oUnit">位</div>
+    <div class="o-title" id="oTitle">踏板粉碎机</div>
+    <div class="o-desc" id="oDesc"></div>
+    <div class="o-last" id="oLast"></div>
+  </div>
+  <div class="o-btns">
+    <button class="puffy" id="againBtn">再来一局</button>
+    <div class="o-shot">截个图，考考你朋友</div>
+    <a class="o-link" href="https://acpbj.cn/brake/">去玩另一款：极限刹车挑战</a>
+  </div>
+</section>
+
+<canvas id="crack"></canvas>
+
+<script>
+"use strict";
+const LIMIT = 1610;
+
+/* =========================================================
+   卡片：name 名字 / tag 一句话 / stats 三行数据 / n 这一脚多少牛 / q 揭晓后的一句话
+   art 用参数拼黏土小人：body 形状、c 颜色、face 表情、hat 帽子、foot 鞋、label 身上的字、count 数量
+   ========================================================= */
+const CARDS = [
+  { name: '一块嫩豆腐', tag: '刚从冰箱里拿出来，还在冒冷气', stats: [['体重', '0.4 kg'], ['硬度', '用筷子都夹不起来'], ['心情', '无所谓']], n: 3,
+    q: '踏板：你踩了吗？我怎么没感觉。', art: { body: 'square', c: '#fff6e0', face: 'calm', foot: 'none' } },
+  { name: '相扑横纲 · 山田', tag: '刚吃完一锅相扑火锅，顺路来试驾', stats: [['体重', '231 kg'], ['腿围', '比你腰还粗'], ['今天状态', '赢了三场']], n: 4380,
+    q: '踏板当场退役，碎片申请了工伤。', art: { body: 'wide', c: '#ffd2b0', face: 'grr', hat: 'topknot', foot: 'bare' } },
+  { name: '一只穿高跟鞋的鹅', tag: '鞋跟 12 厘米，脾气比鞋跟还高', stats: [['体重', '5 kg'], ['鞋跟', '12 cm'], ['和你的关系', '你欠它一个面包']], n: 1688,
+    q: '鹅的怒气不算体重，但算牛顿。', art: { body: 'tall', c: '#ffffff', face: 'angry', foot: 'heel', beak: true } },
+  { name: '1609 只蚂蚁', tag: '每只出力 1 牛，组织纪律性极强', stats: [['数量', '1609 只'], ['单只出力', '1 N'], ['口号', '团结就是力量']], n: 1609,
+    q: '差一只。那只去搬饼干了。', art: { body: 'ants', c: '#3b2a24', count: '×1609' } },
+  { name: '1610 只蚂蚁', tag: '上一批少了一只，这次点过名了', stats: [['数量', '1610 只'], ['单只出力', '1 N'], ['口号', '一个都不能少']], n: 1610,
+    q: '刚好 1610。蚂蚁们第一次觉得自己很重要。', art: { body: 'ants', c: '#3b2a24', count: '×1610' } },
+  { name: '牛顿本人', tag: '刚被苹果砸了头，顺手定义了"牛"', stats: [['发明', '1 牛顿'], ['手里', '一个苹果'], ['此刻想法', '这车为什么不往天上掉']], n: 1,
+    q: '他只踩了 1 牛，严谨地示范了单位。', art: { body: 'blob', c: '#e8d9c4', face: 'calm', hat: 'wig', foot: 'boot', prop: 'apple' } },
+  { name: '一头真的牛', tag: '体重 600 公斤，以为踏板是草', stats: [['体重', '612 kg'], ['动作', '低头闻了闻'], ['评价', '不好吃']], n: 20,
+    q: '一头牛，只用了 20 牛。', art: { body: 'wide', c: '#ffffff', face: 'calm', spots: true, horns: true, foot: 'hoof' } },
+  { name: '你奶奶', tag: '看见你开到 120，伸脚帮你刹', stats: [['年龄', '78 岁'], ['平时', '腿脚不好'], ['此刻', '护孙之力觉醒']], n: 2620,
+    q: '奶奶：我平时是腿脚不好，又不是不能踩。', art: { body: 'blob', c: '#c7b6ff', face: 'angry', hat: 'bun', foot: 'cloth' } },
+  { name: '樽界 V我800 金牌销售', tag: '每天站 12 小时，提成全靠这块踏板', stats: [['工龄', '3 年'], ['职业素养', '精确到牛'], ['口头禅', '我们这个刹车很稳的']], n: 1608,
+    q: '1608，差 2 牛。专业的就是专业的。', art: { body: 'tall', c: '#2d3a5c', face: 'smile', hat: 'tie', foot: 'leather' } },
+  { name: '量子态的脚', tag: '同时处于"踩了"和"没踩"两种状态', stats: [['位置', '无法确定'], ['速度', '无法确定'], ['你看它的时候', '它在踩']], n: 805,
+    q: '你一看，它就坍缩成了 805 牛。正好一半。', art: { body: 'cloud', c: '#9ee6ff', face: 'dizzy', foot: 'ghost' } },
+  { name: '早高峰的打工人', tag: '被挤上车，脚刚好落在踏板上', stats: [['体重', '62 kg'], ['身后人数', '43'], ['今天迟到', '第 3 次']], n: 2290,
+    q: '不是他踩的，是他身后 43 个人一起踩的。', art: { body: 'tall', c: '#a7b4c8', face: 'tired', foot: 'sneaker', crowd: true } },
+  { name: '一张 1610 元的发票', tag: '数字上刚好 1610', stats: [['重量', '1 克'], ['金额', '¥1610.00'], ['能否报销', '看领导心情']], n: 0.01,
+    q: '金额是 1610，重量是 1 克。别看数字，要看单位。', art: { body: 'sheet', c: '#ffffff', label: '¥1610' } },
+  { name: '刚做完美甲的小姨', tag: '指甲比脚贵，只肯用后跟碰一下', stats: [['体重', '50 kg'], ['美甲', '388 元'], ['踩法', '翘着脚趾']], n: 160,
+    q: '踏板很安全。美甲也很安全。', art: { body: 'tall', c: '#ffb3d1', face: 'smile', hat: 'curl', foot: 'heel' } },
+  { name: '练腿日的健身教练 Kevin', tag: '深蹲 200 公斤，今天还没练够', stats: [['体重', '92 kg'], ['深蹲', '200 kg'], ['问你', '办卡吗']], n: 2350,
+    q: 'Kevin：这个重量我热身都不够。', art: { body: 'blob', c: '#ffb36b', face: 'grr', hat: 'band', foot: 'sneaker', muscle: true } },
+  { name: '办了年卡从没去过的你', tag: '健身卡三年没刷，腿上是纯天然', stats: [['体重', '75 kg'], ['年卡', '3 张'], ['去过', '0 次']], n: 420,
+    q: '你很安全，因为你没有腿力。', art: { body: 'blob', c: '#ffe08a', face: 'tired', foot: 'slipper' } },
+  { name: '刚收到 OTA 通知的车主', tag: '升级说明写着"优化了刹车脚感"', stats: [['怒气', '99%'], ['已升级', '第 7 次'], ['脚感', '确实优化了']], n: 1650,
+    q: '优化之后，踏板脚感变成了"没有"。', art: { body: 'square', c: '#ff8a8a', face: 'angry', foot: 'leather', label: 'OTA' } },
+  { name: '一个产品经理', tag: '"这个需求很简单，踩一下就好"', stats: [['需求', '已改 14 版'], ['排期', '昨天上线'], ['自己踩过吗', '没有']], n: 1611,
+    q: '1611。他说只多 1 牛，问题不大。', art: { body: 'square', c: '#b8f0d8', face: 'smile', hat: 'glasses', foot: 'sneaker', label: '需求' } },
+  { name: '广东人的拖鞋', tag: '被祖传召唤，从三米外飞过来', stats: [['材质', '人字拖'], ['飞行距离', '3.2 m'], ['命中率', '100%']], n: 1980,
+    q: '拖鞋到了，踏板没了。', art: { body: 'flipflop', c: '#4aa3ff', face: 'angry' } },
+  { name: '连续加班 72 小时的程序员', tag: '穿着洞洞鞋，已经抬不起腿', stats: [['睡眠', '0 小时'], ['咖啡', '9 杯'], ['剩余力气', '一个回车键']], n: 90,
+    q: '踏板扛住了，程序员没扛住。', art: { body: 'blob', c: '#cfd8dc', face: 'dead', hat: 'hood', foot: 'croc' } },
+  { name: '武林高手 · 踏雪无痕', tag: '轻功练到最高层，踩雪不留脚印', stats: [['门派', '樽界派'], ['轻功', '十层'], ['体重', '保密']], n: 0.5,
+    q: '踩完踏板，踏板以为是风。', art: { body: 'tall', c: '#f2f2f2', face: 'calm', hat: 'bamboo', foot: 'cloth' } },
+  { name: '举重世界冠军', tag: '刚抓举完 160 公斤，手还在抖', stats: [['抓举', '160 kg'], ['挺举', '190 kg'], ['此刻', '腿还很有劲']], n: 2810,
+    q: '冠军说：抱歉，我以为是杠铃。', art: { body: 'wide', c: '#ffcf5a', face: 'grr', hat: 'medal', foot: 'boot', muscle: true } },
+  { name: '一个哈欠', tag: '传染性很强，但没有脚', stats: [['重量', '0'], ['传染性', '极强'], ['你现在', '想打哈欠']], n: 0,
+    q: '0 牛。但你刚才是不是也打了一个？', art: { body: 'cloud', c: '#fff3b0', face: 'yawn', foot: 'none' } },
+  { name: '你的前任', tag: '在一起的时候从来没为你踩过刹车', stats: [['认识', '5 年'], ['踩刹车次数', '0'], ['现在', '在开别人的车']], n: 0,
+    q: '他连这一脚都不愿意为你踩。', art: { body: 'blob', c: '#d0c4b8', face: 'cool', hat: 'glasses', foot: 'none' } },
+  { name: '看完成绩单的妈妈', tag: '数学 38 分，卷子还在手里', stats: [['分数', '38'], ['满分', '150'], ['血压', '180']], n: 2500,
+    q: '这一脚本来是给你的，踏板替你挨了。', art: { body: 'blob', c: '#ff9db0', face: 'angry', hat: 'curl', foot: 'slipper', label: '38' } },
+  { name: '一根山东大葱', tag: '1.5 米长，横着放在踏板上', stats: [['长度', '1.5 m'], ['重量', '1.2 kg'], ['产地', '章丘']], n: 12,
+    q: '踏板没事，就是车里有点辣眼睛。', art: { body: 'scallion', c: '#7bd36b' } },
+  { name: 'AI 智驾', tag: '"交给我，我来踩"', stats: [['算力', '2000 TOPS'], ['正在', '思考中'], ['预计踩下', '下个版本']], n: 0,
+    q: '它思考到车停，也没踩。踏板完好，车头没了。', art: { body: 'square', c: '#c3d0ff', face: 'loading', foot: 'none', label: 'AI' } },
+  { name: '中了彩票的大爷', tag: '刚对完号，五百万', stats: [['奖金', '500 万'], ['心率', '160'], ['马上要', '换车']], n: 2100,
+    q: '大爷：不修了，换一台！', art: { body: 'blob', c: '#ffd36b', face: 'star', hat: 'cap', foot: 'cloth' } },
+  { name: '踩了 30 年缝纫机的裁缝', tag: '节奏稳，力度准，一辈子没踩坏过', stats: [['工龄', '30 年'], ['踩坏缝纫机', '0 台'], ['控制精度', '±1 N']], n: 1200,
+    q: '老师傅一脚 1200，稳得像在锁边。', art: { body: 'blob', c: '#e2c7a8', face: 'calm', hat: 'glasses', foot: 'cloth' } },
+  { name: '测评博主', tag: '为了流量，专门来测 1610', stats: [['粉丝', '83 万'], ['标题', '震惊！'], ['目标', '踩断它']], n: 1612,
+    q: '1612，标题有了：《实测！1610 不是谣言》。', art: { body: 'tall', c: '#ffe066', face: 'star', hat: 'cap', foot: 'sneaker', prop: 'phone' } },
+  { name: '一只刚睡醒的橘猫', tag: '在踏板上伸了个懒腰', stats: [['体重', '9 kg'], ['对你', '不屑'], ['下一步', '打翻你的水杯']], n: 60,
+    q: '猫：这块地方我以后天天来躺。', art: { body: 'blob', c: '#ffad5a', face: 'sleepy', ears: true, foot: 'paw' } },
+  { name: '广场舞阿姨团（5 人）', tag: '以为踏板是新音响的开关', stats: [['人数', '5'], ['每人体重', '60 kg'], ['BGM', '最炫民族风']], n: 3050,
+    q: '动次打次，咔。', art: { body: 'blob', c: '#ff8fc8', face: 'smile', hat: 'curl', foot: 'cloth', count: '×5' } },
+  { name: '滑为园区保安', tag: '刚看到领导的车进门，立正太用力', stats: [['体重', '80 kg'], ['敬礼', '标准'], ['跺脚', '响亮']], n: 1640,
+    q: '立正那一跺，踏板没顶住。', art: { body: 'tall', c: '#3d5a80', face: 'grr', hat: 'police', foot: 'boot' } },
+  { name: '一只普通的脚', tag: '没有任何背景故事的成年人，正常踩一脚', stats: [['体重', '65 kg'], ['情况', '一切正常'], ['踩法', '正常刹车']], n: 450,
+    q: '正常人正常踩，踏板正常活着。这一张最难猜。', art: { body: 'blob', c: '#f3d2b4', face: 'calm', foot: 'sneaker' } },
+  { name: '紧急避险的新手司机', tag: '前面突然窜出一只狗，用尽全身力气', stats: [['驾龄', '3 天'], ['动作', '两只脚一起'], ['尖叫', '持续中']], n: 1720,
+    q: '狗没事，新手没事，踏板有事。', art: { body: 'blob', c: '#a0e7ff', face: 'scream', hat: 'l', foot: 'sneaker' } }
+];
+
+/* =========================================================
+   黏土小人生成（SVG）
+   ========================================================= */
+let gid = 0;
+function shadeHex(hex, k) {
+  const n = parseInt(hex.slice(1), 16);
+  let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  const f = v => Math.max(0, Math.min(255, Math.round(k > 0 ? v + (255 - v) * k : v * (1 + k))));
+  return '#' + [f(r), f(g), f(b)].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+function grad(c) {
+  const id = 'g' + (gid++);
+  return { id, def: `<radialGradient id="${id}" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="${shadeHex(c, .55)}"/><stop offset=".55" stop-color="${c}"/><stop offset="1" stop-color="${shadeHex(c, -.22)}"/></radialGradient>` };
+}
+const INK = '#2d2142';
+function face(type, cx, cy, s = 1) {
+  const e = (dx, el) => el.replace(/X/g, cx + dx * s).replace(/Y/g, cy);
+  const eyes = {
+    calm: e(-14, '<circle cx="X" cy="Y" r="4" fill="' + INK + '"/>') + e(14, '<circle cx="X" cy="Y" r="4" fill="' + INK + '"/>'),
+    smile: e(-14, '<path d="M X-6 Y+2 Q X Y-6 X+6 Y+2" stroke="' + INK + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>') + e(14, '<path d="M X-6 Y+2 Q X Y-6 X+6 Y+2" stroke="' + INK + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>'),
+    angry: e(-14, '<circle cx="X" cy="Y+2" r="4" fill="' + INK + '"/><path d="M X-8 Y-8 L X+5 Y-3" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>') + e(14, '<circle cx="X" cy="Y+2" r="4" fill="' + INK + '"/><path d="M X+8 Y-8 L X-5 Y-3" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>'),
+    grr: e(-14, '<rect x="X-6" y="Y-2" width="12" height="4" rx="2" fill="' + INK + '"/>') + e(14, '<rect x="X-6" y="Y-2" width="12" height="4" rx="2" fill="' + INK + '"/>'),
+    tired: e(-14, '<path d="M X-6 Y Q X Y+5 X+6 Y" stroke="' + INK + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>') + e(14, '<path d="M X-6 Y Q X Y+5 X+6 Y" stroke="' + INK + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>'),
+    sleepy: e(-14, '<path d="M X-6 Y L X+6 Y" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>') + e(14, '<path d="M X-6 Y L X+6 Y" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>'),
+    dead: e(-14, '<path d="M X-5 Y-5 L X+5 Y+5 M X+5 Y-5 L X-5 Y+5" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>') + e(14, '<path d="M X-5 Y-5 L X+5 Y+5 M X+5 Y-5 L X-5 Y+5" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>'),
+    dizzy: e(-14, '<path d="M X Y m-5 0 a5 5 0 1 0 5 -5 a3 3 0 1 0 3 3" stroke="' + INK + '" stroke-width="2.5" fill="none"/>') + e(14, '<path d="M X Y m-5 0 a5 5 0 1 0 5 -5 a3 3 0 1 0 3 3" stroke="' + INK + '" stroke-width="2.5" fill="none"/>'),
+    star: e(-14, '<path d="M X Y-7 L X+2 Y-2 L X+7 Y L X+2 Y+2 L X Y+7 L X-2 Y+2 L X-7 Y L X-2 Y-2 Z" fill="#ffb800" stroke="' + INK + '" stroke-width="1.5"/>') + e(14, '<path d="M X Y-7 L X+2 Y-2 L X+7 Y L X+2 Y+2 L X Y+7 L X-2 Y+2 L X-7 Y L X-2 Y-2 Z" fill="#ffb800" stroke="' + INK + '" stroke-width="1.5"/>'),
+    cool: `<rect x="${cx - 26 * s}" y="${cy - 6}" width="${22 * s}" height="11" rx="4" fill="${INK}"/><rect x="${cx + 4 * s}" y="${cy - 6}" width="${22 * s}" height="11" rx="4" fill="${INK}"/><rect x="${cx - 4}" y="${cy - 3}" width="8" height="3" fill="${INK}"/>`,
+    scream: e(-14, '<circle cx="X" cy="Y" r="6" fill="#fff" stroke="' + INK + '" stroke-width="3"/><circle cx="X" cy="Y" r="2" fill="' + INK + '"/>') + e(14, '<circle cx="X" cy="Y" r="6" fill="#fff" stroke="' + INK + '" stroke-width="3"/><circle cx="X" cy="Y" r="2" fill="' + INK + '"/>'),
+    loading: `<circle cx="${cx - 12}" cy="${cy}" r="4" fill="${INK}"/><circle cx="${cx}" cy="${cy}" r="4" fill="${INK}" opacity=".5"/><circle cx="${cx + 12}" cy="${cy}" r="4" fill="${INK}" opacity=".2"/>`,
+    yawn: e(-14, '<path d="M X-6 Y L X+6 Y" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>') + e(14, '<path d="M X-6 Y L X+6 Y" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>')
+  };
+  const ev = s2 => s2.replace(/(\d+(?:\.\d+)?)([+-])(\d+(?:\.\d+)?)/g, (m, a, op, b) => op === '+' ? (+a + +b) : (+a - +b));
+  let out = ev(eyes[type] || eyes.calm);
+  const my = cy + 18;
+  const mouth = {
+    calm: `<path d="M${cx - 6} ${my} Q${cx} ${my + 5} ${cx + 6} ${my}" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    smile: `<path d="M${cx - 10} ${my - 2} Q${cx} ${my + 10} ${cx + 10} ${my - 2}" stroke="${INK}" stroke-width="3.5" fill="#ff7b8a" stroke-linecap="round"/>`,
+    angry: `<path d="M${cx - 9} ${my + 4} Q${cx} ${my - 4} ${cx + 9} ${my + 4}" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
+    grr: `<rect x="${cx - 11}" y="${my - 3}" width="22" height="9" rx="3" fill="#fff" stroke="${INK}" stroke-width="3"/><path d="M${cx - 4} ${my - 3} V${my + 6} M${cx + 4} ${my - 3} V${my + 6}" stroke="${INK}" stroke-width="2"/>`,
+    tired: `<path d="M${cx - 7} ${my + 2} L${cx + 7} ${my + 1}" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`,
+    sleepy: `<circle cx="${cx}" cy="${my + 1}" r="3.5" fill="${INK}"/>`,
+    dead: `<path d="M${cx - 8} ${my + 2} Q${cx - 4} ${my - 3} ${cx} ${my + 2} Q${cx + 4} ${my + 7} ${cx + 8} ${my + 2}" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    dizzy: `<path d="M${cx - 8} ${my} Q${cx - 4} ${my + 5} ${cx} ${my} Q${cx + 4} ${my - 5} ${cx + 8} ${my}" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    star: `<path d="M${cx - 12} ${my - 3} Q${cx} ${my + 14} ${cx + 12} ${my - 3} Z" fill="#ff7b8a" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`,
+    cool: `<path d="M${cx - 6} ${my + 2} L${cx + 8} ${my - 1}" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`,
+    scream: `<ellipse cx="${cx}" cy="${my + 4}" rx="8" ry="11" fill="${INK}"/>`,
+    loading: `<path d="M${cx - 8} ${my} H${cx + 8}" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`,
+    yawn: `<ellipse cx="${cx}" cy="${my + 6}" rx="13" ry="16" fill="${INK}"/><ellipse cx="${cx}" cy="${my + 12}" rx="7" ry="5" fill="#ff7b8a"/>`
+  };
+  out += mouth[type] || mouth.calm;
+  if (['smile', 'star', 'calm'].includes(type)) out += `<ellipse cx="${cx - 24}" cy="${cy + 12}" rx="6" ry="3.5" fill="#ff8fa8" opacity=".55"/><ellipse cx="${cx + 24}" cy="${cy + 12}" rx="6" ry="3.5" fill="#ff8fa8" opacity=".55"/>`;
+  return out;
+}
+function shoe(type, x, y) {
+  // 一只踩下去的鞋，脚尖朝右
+  const S = {
+    heel: `<path d="M${x - 22} ${y - 10} Q${x - 22} ${y - 22} ${x - 8} ${y - 20} L${x + 22} ${y - 6} Q${x + 30} ${y - 2} ${x + 26} ${y + 2} L${x - 6} ${y + 2} Z" fill="#e8304a"/><rect x="${x - 22}" y="${y - 10}" width="5" height="16" rx="2" fill="#a51c32"/>`,
+    slipper: `<rect x="${x - 26}" y="${y - 4}" width="54" height="8" rx="4" fill="#3d8bff"/><path d="M${x - 2} ${y - 4} L${x + 8} ${y - 16} L${x + 18} ${y - 4}" stroke="#ffcf3a" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    sneaker: `<path d="M${x - 26} ${y - 14} Q${x - 26} ${y - 24} ${x - 12} ${y - 22} L${x + 4} ${y - 14} Q${x + 28} ${y - 12} ${x + 28} ${y} L${x - 26} ${y} Z" fill="#ffffff" stroke="${INK}" stroke-width="2.5"/><rect x="${x - 27}" y="${y - 2}" width="56" height="6" rx="3" fill="#ff6b6b"/><path d="M${x - 8} ${y - 16} l6 -3 M${x - 3} ${y - 13} l6 -3" stroke="${INK}" stroke-width="2"/>`,
+    leather: `<path d="M${x - 26} ${y - 12} Q${x - 26} ${y - 22} ${x - 10} ${y - 20} Q${x + 30} ${y - 14} ${x + 28} ${y + 2} L${x - 26} ${y + 2} Z" fill="#3a2418"/><path d="M${x - 14} ${y - 16} Q${x} ${y - 20} ${x + 10} ${y - 12}" stroke="#7a4f36" stroke-width="2.5" fill="none"/>`,
+    boot: `<path d="M${x - 24} ${y - 34} H${x - 4} V${y - 14} Q${x + 28} ${y - 14} ${x + 28} ${y + 2} H${x - 24} Z" fill="#4a3b2a"/><rect x="${x - 26}" y="${y - 2}" width="56" height="6" rx="3" fill="#20160e"/>`,
+    croc: `<path d="M${x - 26} ${y - 12} Q${x - 26} ${y - 24} ${x - 6} ${y - 22} Q${x + 30} ${y - 18} ${x + 28} ${y + 2} L${x - 26} ${y + 2} Z" fill="#4cd964"/><circle cx="${x + 2}" cy="${y - 12}" r="2.5" fill="#2a8f3c"/><circle cx="${x + 11}" cy="${y - 10}" r="2.5" fill="#2a8f3c"/><circle cx="${x + 19}" cy="${y - 7}" r="2.5" fill="#2a8f3c"/>`,
+    cloth: `<path d="M${x - 26} ${y - 10} Q${x - 24} ${y - 20} ${x - 6} ${y - 18} Q${x + 28} ${y - 14} ${x + 26} ${y + 2} L${x - 26} ${y + 2} Z" fill="#222"/><rect x="${x - 27}" y="${y - 1}" width="56" height="5" rx="2" fill="#f2f2f2"/>`,
+    bare: `<path d="M${x - 24} ${y - 14} Q${x - 26} ${y + 2} ${x - 10} ${y + 2} H${x + 22} Q${x + 30} ${y - 4} ${x + 20} ${y - 10} Q${x} ${y - 16} ${x - 24} ${y - 14} Z" fill="#ffc9a3"/><circle cx="${x + 23}" cy="${y - 8}" r="3.5" fill="#ffb68a"/><circle cx="${x + 16}" cy="${y - 11}" r="3" fill="#ffb68a"/>`,
+    hoof: `<rect x="${x - 14}" y="${y - 30}" width="20" height="26" rx="6" fill="#ffffff" stroke="#ddd"/><rect x="${x - 16}" y="${y - 8}" width="24" height="10" rx="3" fill="#3a3a3a"/>`,
+    paw: `<ellipse cx="${x}" cy="${y - 6}" rx="16" ry="10" fill="#ffad5a"/><circle cx="${x - 9}" cy="${y - 2}" r="3" fill="#ff8fa8"/><circle cx="${x}" cy="${y}" r="3" fill="#ff8fa8"/><circle cx="${x + 9}" cy="${y - 2}" r="3" fill="#ff8fa8"/>`,
+    ghost: `<path d="M${x - 24} ${y - 14} Q${x - 26} ${y + 2} ${x - 10} ${y + 2} H${x + 22} Q${x + 30} ${y - 4} ${x + 20} ${y - 10} Q${x} ${y - 16} ${x - 24} ${y - 14} Z" fill="#9ee6ff" opacity=".55" stroke="${INK}" stroke-width="2" stroke-dasharray="4 4"/>`
+  };
+  return S[type] || '';
+}
+function pedal(x, y) {
+  return `<g><rect x="${x - 34}" y="${y}" width="68" height="16" rx="7" fill="#4a4f5c"/><rect x="${x - 30}" y="${y + 3}" width="60" height="4" rx="2" fill="#6b7180"/><rect x="${x - 4}" y="${y + 16}" width="8" height="22" fill="#3a3e48"/></g>`;
+}
+function hat(type, cx, top, w) {
+  const H = {
+    topknot: `<ellipse cx="${cx}" cy="${top - 4}" rx="10" ry="8" fill="#1d1d1d"/><rect x="${cx - 4}" y="${top - 14}" width="8" height="10" rx="3" fill="#1d1d1d"/>`,
+    wig: `<g fill="#f4f1e8">${[-34, -18, 0, 18, 34].map(d => `<circle cx="${cx + d}" cy="${top + 4}" r="13"/>`).join('')}<circle cx="${cx - 40}" cy="${top + 26}" r="12"/><circle cx="${cx + 40}" cy="${top + 26}" r="12"/></g>`,
+    bun: `<circle cx="${cx}" cy="${top - 6}" r="14" fill="#e9e3f5"/><circle cx="${cx}" cy="${top - 6}" r="8" fill="#d6cdea"/>`,
+    curl: `<g fill="#3b2a24">${[-30, -15, 0, 15, 30].map(d => `<circle cx="${cx + d}" cy="${top + 2}" r="11"/>`).join('')}</g>`,
+    tie: `<path d="M${cx - 7} ${top + 100} L${cx + 7} ${top + 100} L${cx + 4} ${top + 130} L${cx} ${top + 136} L${cx - 4} ${top + 130} Z" fill="#e8304a"/><path d="M${cx - 18} ${top + 92} L${cx} ${top + 100} L${cx + 18} ${top + 92}" stroke="#fff" stroke-width="5" fill="none"/>`,
+    glasses: `<g stroke="${INK}" stroke-width="3" fill="rgba(255,255,255,.35)"><circle cx="${cx - 14}" cy="${top + 38}" r="10"/><circle cx="${cx + 14}" cy="${top + 38}" r="10"/><path d="M${cx - 4} ${top + 38} H${cx + 4}"/></g>`,
+    band: `<rect x="${cx - w / 2 + 6}" y="${top + 12}" width="${w - 12}" height="10" rx="5" fill="#ff4d6d"/>`,
+    hood: `<path d="M${cx - w / 2 - 4} ${top + 50} Q${cx - w / 2 - 6} ${top - 6} ${cx} ${top - 8} Q${cx + w / 2 + 6} ${top - 6} ${cx + w / 2 + 4} ${top + 50}" stroke="#4b5563" stroke-width="10" fill="none" stroke-linecap="round"/>`,
+    bamboo: `<path d="M${cx - 44} ${top + 8} L${cx} ${top - 18} L${cx + 44} ${top + 8} Z" fill="#d9b45a"/><path d="M${cx - 30} ${top} L${cx} ${top - 14} L${cx + 30} ${top}" stroke="#b18c3a" stroke-width="2" fill="none"/>`,
+    medal: `<path d="M${cx - 8} ${top + 66} L${cx} ${top + 80} L${cx + 8} ${top + 66}" stroke="#3d7bff" stroke-width="5" fill="none"/><circle cx="${cx}" cy="${top + 86}" r="9" fill="#ffc93c" stroke="#d99a00" stroke-width="2"/>`,
+    cap: `<path d="M${cx - 30} ${top + 10} Q${cx} ${top - 22} ${cx + 30} ${top + 10} Z" fill="#ff6b6b"/><rect x="${cx}" y="${top + 6}" width="42" height="7" rx="3" fill="#d94848"/>`,
+    police: `<rect x="${cx - 28}" y="${top - 6}" width="56" height="18" rx="6" fill="#1f2d4a"/><rect x="${cx - 32}" y="${top + 10}" width="64" height="6" rx="3" fill="#111a2e"/><circle cx="${cx}" cy="${top + 3}" r="5" fill="#ffc93c"/>`,
+    l: `<rect x="${cx + 18}" y="${top + 2}" width="24" height="24" rx="4" fill="#ffde3b" stroke="${INK}" stroke-width="2"/><text x="${cx + 30}" y="${top + 20}" text-anchor="middle" font-size="17" font-weight="900" fill="${INK}">实</text>`
+  };
+  return H[type] || '';
+}
+function art(c) {
+  const a = c.art;
+  let defs = '', body = '', extra = '';
+  const g = grad(a.c || '#ffffff');
+  defs += g.def;
+  const fill = `url(#${g.id})`;
+  const ground = `<ellipse cx="120" cy="228" rx="78" ry="10" fill="#2d2142" opacity=".10"/>`;
+  let fx = 120, fy = 112, top = 50, w = 100, footX = 150, footY = 210;
+  switch (a.body) {
+    case 'blob': body = `<ellipse cx="120" cy="118" rx="62" ry="66" fill="${fill}"/>`; top = 54; w = 110; break;
+    case 'wide': body = `<ellipse cx="120" cy="126" rx="84" ry="60" fill="${fill}"/>`; fy = 112; top = 68; w = 150; break;
+    case 'tall': body = `<rect x="78" y="34" width="84" height="170" rx="42" fill="${fill}"/>`; fy = 92; top = 36; w = 84; break;
+    case 'square': body = `<rect x="58" y="46" width="124" height="134" rx="30" fill="${fill}"/>`; fy = 104; top = 46; w = 124; break;
+    case 'cloud': body = [[90, 120, 40], [130, 104, 48], [162, 128, 36], [118, 140, 42]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}"/>`).join(''); fy = 116; top = 58; break;
+    case 'sheet':
+      body = `<g transform="rotate(-8 120 120)"><rect x="66" y="40" width="108" height="150" rx="8" fill="#fff" stroke="#e5ddf3" stroke-width="3"/>${[70, 86, 102].map(y => `<rect x="80" y="${y}" width="${y === 70 ? 50 : 80}" height="7" rx="3" fill="#e5ddf3"/>`).join('')}<text x="120" y="152" text-anchor="middle" font-size="30" font-weight="900" fill="#e8304a">${a.label}</text><circle cx="150" cy="172" r="12" fill="none" stroke="#e8304a" stroke-width="3"/></g>`;
+      a.face = null; a.label = null; footX = 0; break;
+    case 'ants': {
+      let s = '';
+      for (let i = 0; i < 70; i++) {
+        const x = 40 + ((i * 37) % 160), y = 70 + ((i * 53) % 130) + (i % 3) * 3;
+        s += `<g transform="translate(${x} ${y}) rotate(${(i * 47) % 360})"><ellipse cx="-5" cy="0" rx="4" ry="3" fill="${a.c}"/><ellipse cx="2" cy="0" rx="3" ry="2.5" fill="${a.c}"/><ellipse cx="8" cy="0" rx="4.5" ry="3.5" fill="${a.c}"/></g>`;
+      }
+      body = s; a.face = null; footX = 0; break;
+    }
+    case 'flipflop':
+      body = `<g transform="rotate(-18 120 120)"><ellipse cx="120" cy="124" rx="50" ry="88" fill="${fill}"/><path d="M120 70 L92 130 M120 70 L148 130" stroke="#ffcf3a" stroke-width="9" stroke-linecap="round"/></g>${[0, 1, 2].map(i => `<path d="M${30 + i * 8} ${70 + i * 22} H${56 + i * 6}" stroke="${INK}" stroke-width="4" stroke-linecap="round" opacity=".35"/>`).join('')}`;
+      fy = 150; footX = 0; break;
+    case 'scallion':
+      body = `<g transform="rotate(-28 120 130)"><rect x="104" y="20" width="32" height="210" rx="16" fill="#f6f7ef"/><rect x="104" y="20" width="32" height="110" rx="16" fill="${fill}"/><path d="M110 22 L96 -10 M120 20 L122 -16 M130 22 L146 -8" stroke="#5fbf4f" stroke-width="8" stroke-linecap="round"/><path d="M108 226 l-6 12 M118 228 l0 14 M128 226 l6 12" stroke="#d9d4c0" stroke-width="3" stroke-linecap="round"/></g>`;
+      a.face = null; footX = 0; break;
+  }
+  if (a.crowd) extra += [40, 66, 186, 208].map((x, i) => `<circle cx="${x}" cy="${78 + (i % 2) * 14}" r="22" fill="#b8bfd0" opacity=".7"/><rect x="${x - 20}" y="${100 + (i % 2) * 14}" width="40" height="120" rx="20" fill="#b8bfd0" opacity=".7"/>`).join('');
+  if (a.spots) body += `<ellipse cx="88" cy="110" rx="18" ry="12" fill="#2d2142" opacity=".85"/><ellipse cx="160" cy="140" rx="14" ry="10" fill="#2d2142" opacity=".85"/>`;
+  if (a.horns) body += `<path d="M62 84 Q48 60 60 52" stroke="#e9d9b4" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M178 84 Q192 60 180 52" stroke="#e9d9b4" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+  if (a.ears) body += `<path d="M76 74 L84 44 L104 62 Z" fill="${fill}"/><path d="M164 74 L156 44 L136 62 Z" fill="${fill}"/>`;
+  if (a.muscle) body += `<ellipse cx="54" cy="128" rx="18" ry="24" fill="${fill}"/><ellipse cx="186" cy="128" rx="18" ry="24" fill="${fill}"/>`;
+  if (a.beak) extra += `<path d="M162 86 L196 96 L162 104 Z" fill="#ff9f1c"/>`;
+  if (a.label) body += `<text x="120" y="${fy + 58}" text-anchor="middle" font-size="22" font-weight="900" fill="${INK}" opacity=".85">${a.label}</text>`;
+  let f = a.face ? face(a.face, fx, fy) : '';
+  let h = a.hat ? hat(a.hat, fx, top, w) : '';
+  let ft = '';
+  if (a.foot && a.foot !== 'none' && footX) ft = pedal(170, 206) + shoe(a.foot, 168, 204);
+  if (a.prop === 'apple') extra += `<circle cx="196" cy="70" r="14" fill="#ff4d4d"/><path d="M196 56 q4 -8 10 -6" stroke="#5a8f2f" stroke-width="3" fill="none"/>`;
+  if (a.prop === 'phone') extra += `<rect x="186" y="62" width="26" height="44" rx="6" fill="${INK}"/><circle cx="199" cy="74" r="5" fill="#ff4d4d"/>`;
+  let cnt = a.count ? `<g><rect x="150" y="16" width="${a.count.length * 13 + 16}" height="34" rx="17" fill="${INK}"/><text x="${158 + a.count.length * 6.5}" y="40" text-anchor="middle" font-size="20" font-weight="900" fill="#ffc93c">${a.count}</text></g>` : '';
+  return `<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg"><defs>${defs}</defs>${ground}${extra}${body}${f}${h}${ft}${cnt}</svg>`;
+}
+
+/* =========================================================
+   游戏状态
+   ========================================================= */
+const G = { deck: [], idx: 0, score: 0, lives: 3, combo: 0, locked: false, revealed: false, last: null };
+window.__G = G;
+const $ = id => document.getElementById(id);
+const BEST_KEY = 'foot_v800_best';
+const getBest = () => { try { return +localStorage.getItem(BEST_KEY) || 0; } catch (e) { return 0; } };
+const setBest = v => { try { localStorage.setItem(BEST_KEY, String(v)); } catch (e) {} };
+const BG = ['#fff1d6', '#e3f6ff', '#ffe3ef', '#e8ffe9', '#efe6ff', '#fff6c7'];
+
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function fmtN(n) { return n < 1 ? String(n) : Math.round(n).toLocaleString('en-US'); }
+
+function cardEl(c, i, cls) {
+  const el = document.createElement('div');
+  el.className = 'card clay ' + cls;
+  el.innerHTML = `
+    <div class="no-tag">拦住</div><div class="yes-tag">让他踩</div>
+    <div class="art" style="background:${BG[i % BG.length]}">${art(c)}</div>
+    <div class="info">
+      <div class="cno">第 ${i + 1} 位 · 共 ${G.deck.length} 位</div>
+      <div class="cname">${c.name}</div>
+      <div class="ctag">${c.tag}</div>
+      <div class="stats">${c.stats.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join('')}</div>
+    </div>
+    <div class="reveal">
+      <div class="rv-top"><div class="rv-n"><span class="num">0</span><small>N</small></div><div class="rv-lim">1610N 就断</div></div>
+      <div class="gauge"><i></i><b></b></div>
+      <div class="rv-verdict"></div>
+      <div class="rv-quip">${c.q}</div>
+      <div class="rv-me"><span></span><em>点一下，下一位</em></div>
+    </div>`;
+  return el;
+}
+
+function renderHearts() {
+  const h = $('hearts'); h.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    h.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 24 24" class="${i < G.lives ? '' : 'lost'}"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3 4.5 6.6 4.5c2.2 0 3.6 1.3 5.4 3.3 1.8-2 3.2-3.3 5.4-3.3 3.6 0 5.7 3.8 4.2 7.2C19.5 16.4 12 21 12 21z" fill="#ff5c7a"/><path d="M7 8.2c-1 .3-1.8 1.2-1.9 2.3" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/></svg>`);
+  }
+}
+
+function showCard() {
+  const st = $('stack'); st.innerHTML = '';
+  const c = G.deck[G.idx];
+  if (G.idx + 1 < G.deck.length) st.appendChild(cardEl(G.deck[G.idx + 1], G.idx + 1, 'back'));
+  const el = cardEl(c, G.idx, 'front');
+  st.appendChild(el);
+  G.revealed = false; G.locked = false;
+  $('actions').classList.remove('locked');
+  bindDrag(el);
+}
+
+function start() {
+  sfx.init();
+  G.deck = shuffle(CARDS.slice());
+  G.idx = 0; G.score = 0; G.lives = 3; G.combo = 0; G.last = null;
+  $('score').textContent = '0'; $('combo').textContent = '';
+  renderHearts();
+  $('intro').classList.add('hidden'); $('over').classList.add('hidden'); $('game').classList.remove('hidden');
+  showCard();
+}
+
+/* 做出判断：choice = 'yes'（让他踩）| 'no'（拦住） */
+function decide(choice) {
+  if (G.revealed) { next(); return; }
+  if (G.locked) return;
+  G.locked = true;
+  $('actions').classList.add('locked');
+  const c = G.deck[G.idx];
+  const snaps = c.n >= LIMIT;
+  const right = (choice === 'yes') === !snaps;
+  const el = document.querySelector('.card.front');
+  el.style.transition = 'transform .25s';
+  el.style.transform = `translateX(${choice === 'yes' ? 24 : -24}px) rotate(${choice === 'yes' ? 2 : -2}deg)`;
+  el.querySelector(choice === 'yes' ? '.yes-tag' : '.no-tag').style.opacity = 1;
+  setTimeout(() => { el.style.transform = ''; }, 260);
+  sfx.swipe();
+
+  const rv = el.querySelector('.reveal');
+  setTimeout(() => rv.classList.add('show'), 200);
+  const num = rv.querySelector('.num'), bar = rv.querySelector('.gauge i'), mark = rv.querySelector('.gauge b');
+  const maxShown = Math.max(LIMIT * 1.25, Math.min(c.n, LIMIT * 2.4));
+  mark.style.left = (LIMIT / maxShown * 100) + '%';
+  const target = c.n, dur = Math.min(1400, 500 + Math.sqrt(target) * 18);
+  const t0 = performance.now() + 380;
+  let snapped = false;
+  const tick = now => {
+    const k = Math.max(0, Math.min(1, (now - t0) / dur));
+    const e = 1 - Math.pow(1 - k, 3);
+    const v = target * e;
+    num.textContent = target < 1 && k >= 1 ? fmtN(target) : fmtN(v);
+    bar.style.width = Math.min(100, v / maxShown * 100) + '%';
+    if (k > 0 && k < 1 && Math.random() < .5) sfx.creak(v / LIMIT);
+    if (!snapped && v >= LIMIT) { snapped = true; snapFx(el, num); }
+    if (k < 1) requestAnimationFrame(tick); else finish();
+  };
+  requestAnimationFrame(tick);
+
+  function finish() {
+    if (snaps && !snapped) snapFx(el, num);
+    num.textContent = fmtN(target);
+    rv.querySelector('.rv-verdict').textContent = snaps ? (c.n === LIMIT ? '咔！刚好 1610，断了' : '咔！踏板断了') : (c.n >= LIMIT - 10 ? '踏板扛住了（差一点）' : '踏板扛住了');
+    rv.querySelector('.rv-verdict').style.color = snaps ? 'var(--no-d)' : 'var(--yes-d)';
+    const me = rv.querySelector('.rv-me span');
+    if (right) {
+      G.score++; G.combo++;
+      me.className = 'ok'; me.textContent = choice === 'no' ? '拦得好 +1' : '放得对 +1';
+      $('score').textContent = G.score;
+      $('combo').textContent = G.combo >= 3 ? `连对 ${G.combo} 次` : '';
+      sfx.good(G.combo);
+    } else {
+      G.lives--; G.combo = 0;
+      me.className = 'bad'; me.textContent = choice === 'no' ? '人家扛得住，你拦什么' : '你放他踩了';
+      $('combo').textContent = '';
+      renderHearts();
+      sfx.bad();
+      if (navigator.vibrate) try { navigator.vibrate(60); } catch (e) {}
+    }
+    G.last = { c, right, choice };
+    G.revealed = true;
+    $('actions').classList.remove('locked');
+    if (G.lives <= 0) me.nextElementSibling.textContent = '点一下，看结果';
+  }
+}
+
+function next() {
+  if (!G.revealed) return;
+  G.revealed = false;
+  const el = document.querySelector('.card.front');
+  const dir = G.last && G.last.choice === 'yes' ? 1 : -1;
+  el.style.transition = 'transform .32s ease-in, opacity .32s';
+  el.style.transform = `translateX(${dir * 140}%) rotate(${dir * 24}deg)`;
+  el.style.opacity = 0;
+  const back = document.querySelector('.card.back');
+  if (back) { back.style.transition = 'transform .3s, filter .3s'; back.style.transform = 'none'; back.style.filter = 'none'; }
+  setTimeout(() => {
+    G.idx++;
+    if (G.lives <= 0 || G.idx >= G.deck.length) gameOver(); else showCard();
+  }, 300);
+}
+
+/* 拖动 = 左右滑 */
+function bindDrag(el) {
+  let sx = 0, sy = 0, dx = 0, drag = false, id = null;
+  const noT = el.querySelector('.no-tag'), yesT = el.querySelector('.yes-tag');
+  el.addEventListener('pointerdown', e => {
+    if (G.revealed) { next(); return; }
+    if (G.locked) return;
+    drag = true; id = e.pointerId; sx = e.clientX; sy = e.clientY; dx = 0;
+    el.setPointerCapture(id); el.style.transition = 'none';
+  });
+  el.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== id) return;
+    dx = e.clientX - sx;
+    const dy = (e.clientY - sy) * .2;
+    el.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 18}deg)`;
+    yesT.style.opacity = Math.max(0, Math.min(1, dx / 90));
+    noT.style.opacity = Math.max(0, Math.min(1, -dx / 90));
+  });
+  const end = e => {
+    if (!drag || e.pointerId !== id) return;
+    drag = false;
+    if (Math.abs(dx) > 80) decide(dx > 0 ? 'yes' : 'no');
+    else { el.style.transition = 'transform .25s'; el.style.transform = ''; yesT.style.opacity = 0; noT.style.opacity = 0; }
+  };
+  el.addEventListener('pointerup', end);
+  el.addEventListener('pointercancel', end);
+}
+
+/* 踏板断裂特效 */
+function snapFx(card, num) {
+  num.parentElement.classList.add('snap');
+  card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+  sfx.snap();
+  if (navigator.vibrate) try { navigator.vibrate([40, 30, 90]); } catch (e) {}
+  const cv = $('crack'), dpr = Math.min(2, devicePixelRatio || 1);
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px';
+  const g = cv.getContext('2d'); g.scale(dpr, dpr);
+  g.strokeStyle = 'rgba(45,33,66,.85)'; g.lineWidth = 3; g.lineCap = 'round';
+  const ox = innerWidth * (.3 + Math.random() * .4), oy = innerHeight * (.35 + Math.random() * .2);
+  for (let i = 0; i < 9; i++) {
+    let x = ox, y = oy, a = i / 9 * Math.PI * 2 + Math.random() * .4;
+    g.beginPath(); g.moveTo(x, y);
+    for (let j = 0; j < 6; j++) { a += (Math.random() - .5) * .8; const L = 20 + Math.random() * 50; x += Math.cos(a) * L; y += Math.sin(a) * L; g.lineTo(x, y); }
+    g.stroke();
+  }
+  cv.style.transition = 'none'; cv.style.opacity = 1;
+  setTimeout(() => { cv.style.transition = 'opacity .6s'; cv.style.opacity = 0; }, 450);
+}
+
+const TITLES = [
+  [0, '踏板粉碎机', '你放进来的每一只脚，都在给维修部创收。'],
+  [4, '实习质检员', '能分清豆腐和相扑了，继续努力。'],
+  [9, '樽界踏板守门员', '大部分危险的脚，都被你拦在了门外。'],
+  [15, '滑为首席踏板官', '你比说明书更懂这块踏板。'],
+  [22, '1609N 本人', '精确到牛。销售都来找你取经。'],
+  [CARDS.length, '踏板之神', '全部判断正确。这块踏板应该写上你的名字。']
+];
+function gameOver() {
+  $('game').classList.add('hidden'); $('over').classList.remove('hidden');
+  const s = G.score;
+  const best = Math.max(getBest(), s); setBest(best);
+  let t = TITLES[0];
+  for (const x of TITLES) if (s >= x[0]) t = x;
+  $('oScore').textContent = s;
+  $('oUnit').textContent = `位（共看了 ${Math.min(G.idx, G.deck.length)} 位）· 最好成绩 ${best}`;
+  $('oTitle').textContent = t[1];
+  $('oDesc').textContent = t[2];
+  const L = G.last;
+  $('oLast').innerHTML = L && !L.right ? `最后栽在：<b>${L.c.name}</b>，这一脚 ${fmtN(L.c.n)}N。` : `全部看完了，${s} 位判断正确。`;
+  sfx.over();
+}
+
+/* =========================================================
+   音效（短促、可爱）
+   ========================================================= */
+const sfx = {
+  ctx: null,
+  init() { if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; } try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} },
+  tone(f, d, type = 'sine', v = .15, f2) {
+    if (!this.ctx) return; const c = this.ctx, t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+    g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + d); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + d);
+  },
+  noise(d, v, freq) {
+    if (!this.ctx) return; const c = this.ctx, len = c.sampleRate * d, b = c.createBuffer(1, len, c.sampleRate), x = b.getChannelData(0);
+    for (let i = 0; i < len; i++) x[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(); s.buffer = b; f.type = 'highpass'; f.frequency.value = freq; g.gain.value = v;
+    s.connect(f); f.connect(g); g.connect(c.destination); s.start();
+  },
+  swipe() { this.tone(520, .12, 'triangle', .1, 260); },
+  creak(u) { this.tone(140 + u * 220, .05, 'square', .025); },
+  snap() { this.noise(.25, .5, 1800); this.tone(900, .18, 'square', .12, 120); },
+  good(k) { this.tone(660 + Math.min(k, 8) * 40, .1, 'triangle', .14); setTimeout(() => this.tone(990 + Math.min(k, 8) * 40, .14, 'triangle', .12), 90); },
+  bad() { this.tone(240, .25, 'sawtooth', .08, 120); },
+  over() { [523, 440, 392, 523].forEach((f, i) => setTimeout(() => this.tone(f, .16, 'triangle', .12), i * 120)); }
+};
+
+/* 绑定 */
+$('startBtn').addEventListener('click', start);
+$('againBtn').addEventListener('click', start);
+$('noBtn').addEventListener('click', () => decide('no'));
+$('yesBtn').addEventListener('click', () => decide('yes'));
+$('stack').addEventListener('click', () => { if (G.revealed) next(); });
+window.addEventListener('keydown', e => {
+  if ($('game').classList.contains('hidden')) return;
+  if (e.key === 'ArrowLeft') decide('no');
+  else if (e.key === 'ArrowRight') decide('yes');
+  else if (e.key === ' ' || e.key === 'Enter') next();
+});
+document.addEventListener('contextmenu', e => e.preventDefault());
+const b0 = getBest(); if (b0) $('bestLine').textContent = `你的最好成绩：${b0} 位`;
+</script>
+</body>
+</html>
