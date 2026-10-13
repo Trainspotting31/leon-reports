@@ -79,7 +79,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 #flash { position: fixed; inset: 0; background: var(--red); opacity: 0; pointer-events: none; z-index: 30; }
 
 /* ---------- 结果 ---------- */
-#result { gap: 16px; justify-content: center; overflow-y: auto; }
+#result { gap: 16px; justify-content: flex-start; overflow-y: auto; }
 .rcard { padding: 18px 18px 16px; display: grid; gap: 8px; text-align: center; }
 .rcard .k { font-size: 13px; font-weight: 900; letter-spacing: .1em; color: var(--dim); }
 .rcard .big { font-family: var(--num); font-size: 84px; line-height: 1; letter-spacing: -.04em; }
@@ -94,6 +94,19 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .tries span.dead { background: var(--red); color: #fff; }
 .tries span.todo { background: transparent; border-style: dashed; color: var(--dim); }
 .share { padding: 12px 14px; font-size: 14px; font-weight: 700; line-height: 1.55; text-align: left; white-space: pre-line; user-select: text; -webkit-user-select: text; }
+.lb { padding: 10px 12px 8px; }
+.lb h3 { font-size: 14px; font-weight: 900; margin-bottom: 6px; display: flex; justify-content: space-between; }
+.lb h3 span { font-size: 12px; color: var(--dim); }
+.lb ol { list-style: none; display: grid; gap: 4px; }
+.lb li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 14px; font-weight: 700; padding: 5px 6px; border: 2px solid transparent; }
+.lb li .rk { font-family: var(--num); text-align: center; }
+.lb li .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb li .nm em { font-style: normal; font-size: 12px; color: var(--dim); margin-left: 4px; }
+.lb li .val { font-family: var(--num); font-variant-numeric: tabular-nums; }
+.lb li.king { background: var(--ink); color: var(--bg); }
+.lb li.king .nm em { color: #ffd2e8; }
+.lb li.king .val { color: var(--ink); background: var(--bg); padding: 0 6px; }
+.lb li.me { border-color: var(--ink); background: var(--pink); }
 .copied { font-size: 13px; font-weight: 900; text-align: center; min-height: 18px; }
 
 @media (max-height: 700px) {
@@ -148,6 +161,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
     <div class="quip" id="rQuip"></div>
     <div class="tries" id="rTries"></div>
   </div>
+  <div class="lb box"><h3>踏板排行榜 <span id="lbNote">按离 1609 多近排</span></h3><ol id="lbList"></ol></div>
   <div class="row2">
     <button class="btn blue" id="nextBtn">再踩一次</button>
     <div class="share box hidden" id="shareBox"></div>
@@ -340,6 +354,7 @@ function showResult(v) {
       tr.appendChild(s);
     }
   }
+  renderLB(daily ? bestOf(d.tries) : (v < LIMIT ? Math.floor(v) : null));
   const left = TRIES - d.tries.length;
   $('nextBtn').textContent = daily ? (left > 0 ? `再踩一次（还剩 ${left} 次）` : '今天用完了，去练练') : '再踩一次';
   $('nextBtn').onclick = () => startRound(daily && left > 0 ? 'daily' : 'free');
@@ -349,13 +364,33 @@ function showResult(v) {
   $('copied').textContent = '';
   if (done) $('shareBox').textContent = shareText(d);
   show('result');
+  $('result').scrollTop = 0;
 }
+/* 排行榜：李休闲大王 1609N 永远第一，你也踩到 1609 也只能排他后面 */
+const SEED_LB = [
+  ['樽界金牌销售', 1608], ['1611N边缘试探者', 1606], ['滑为首席试车官', 1603], ['ABS脉冲神脚', 1598],
+  ['踏板保全协会会长', 1590], ['秋名山老司机', 1581], ['樽界全款车主', 1566], ['滑为园区保安', 1542]
+];
+function renderLB(mine) {
+  const rows = SEED_LB.map(([n, v]) => ({ n, v }));
+  if (mine !== null && mine !== undefined) rows.push({ n: '你', v: mine, me: true });
+  rows.sort((a, b) => b.v - a.v);
+  let h = `<li class="king"><span class="rk">1</span><span class="nm">李休闲大王<em>永远第一</em></span><span class="val">1609N</span></li>`;
+  rows.slice(0, 9).forEach((r, i) => {
+    h += `<li class="${r.me ? 'me' : ''}"><span class="rk">${i + 2}</span><span class="nm">${r.n}</span><span class="val">${r.v}N</span></li>`;
+  });
+  const meIdx = rows.findIndex(r => r.me);
+  if (meIdx >= 9) h += `<li class="me"><span class="rk">${meIdx + 2}</span><span class="nm">你</span><span class="val">${mine}N</span></li>`;
+  if (mine === null || mine === undefined) h += `<li class="me"><span class="rk">–</span><span class="nm">你<em>踩断了不上榜</em></span><span class="val">断</span></li>`;
+  $('lbList').innerHTML = h;
+}
+
 function shareText(d) {
   const b = bestOf(d.tries);
   const date = today().slice(5).replace('-', '月') + '日';
   const marks = d.tries.map(x => x >= LIMIT ? '断' : x).join(' / ');
   const line = b === null ? '三脚全踩断了，踏板已报废' : b === TARGET ? '踩到 1609，满分' : `最好 ${b}N，差 ${TARGET - b} 牛`;
-  return `踩到 1609 · ${date}\n${line}\n三次：${marks}\n你也来踩一脚：acpbj.cn/brake/1609/`;
+  return `踩到 1609 · ${date}\n${line}\n三次：${marks}\n排行榜第一：李休闲大王 1609N\n你也来踩一脚：acpbj.cn/brake/1609/`;
 }
 
 /* 绑定 */
