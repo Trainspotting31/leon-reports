@@ -91,25 +91,22 @@ body {
 </style>
 </head>
 <body>
-
 <div class="header">
   <h1>Leon 的报告库</h1>
-  <div class="meta">自动归档 &middot; 最后更新 2026-10-12</div>
+  <div class="meta">自动归档 · 最后更新 2026-10-14</div>
   <div class="search-box">
     <span class="icon">&#128269;</span>
     <input type="text" id="search" placeholder="搜索报告..." oninput="applyFilters()">
   </div>
 </div>
-
 <div class="container">
   <div class="tabs">
-    <div class="tab active" onclick="filterCategory('all', this)">全部</div>
-    <div class="tab" onclick="filterCategory('brief', this)">AI 简报</div>
-    <div class="tab" onclick="filterCategory('stock', this)">股票分析</div>
-    <div class="tab" onclick="filterCategory('research', this)">调研报告</div>
-    <div class="tab" onclick="filterCategory('misc', this)">其他</div>
+    <div class="tab active" onclick="filterCategory(&#39;all&#39;, this)">全部</div>
+    <div class="tab" onclick="filterCategory(&#39;brief&#39;, this)">AI 简报</div>
+    <div class="tab" onclick="filterCategory(&#39;stock&#39;, this)">股票分析</div>
+    <div class="tab" onclick="filterCategory(&#39;research&#39;, this)">调研报告</div>
+    <div class="tab" onclick="filterCategory(&#39;misc&#39;, this)">其他</div>
   </div>
-
   <div id="content">
     <div class="section" data-category="brief">
       <div class="section-title">AI 简报 <span class="count">3</span></div>
@@ -138,17 +135,23 @@ body {
         </div>
       </a>
     </div>
-
     <div class="section" data-category="stock">
       <div class="section-title">股票分析 <span class="count">0</span></div>
       <div class="empty">暂无报告</div>
     </div>
-
     <div class="section" data-category="research">
-      <div class="section-title">调研报告 <span class="count">3</span></div>
+      <div class="section-title">调研报告 <span class="count">4</span></div>
+      <a class="card" href="research/acpbj-business-plan/index.html">
+        <div class="card-title">安巢评（acpbj.cn）落地营业商业计划</div>
+        <div class="card-desc">医小租轻资产合伙 + 机构入住转介绍双线启动 · 三种合作方式 · 展会一手价格 · 90天路线图 · 展会现场10问</div>
+        <div class="card-footer">
+          <span class="card-date">2026-10-14</span>
+          <span class="card-tag tag-research">调研</span>
+        </div>
+      </a>
       <a class="card" href="research/nobel-2026/index.html">
         <div class="card-title">2026 诺贝尔奖：给普通人的说明书</div>
-        <div class="card-desc">光遗传学 · 南极冰立方抓中微子 · 生命为何只用"左手" · 诗人安妮·卡森 · 国际法官皮莱 · 新凯恩斯模型 &middot; 大白话讲清六个奖</div>
+        <div class="card-desc">光遗传学 · 南极冰立方抓中微子 · 生命为何只用“左手” · 诗人安妮·卡森 · 国际法官皮莱 · 新凯恩斯模型 · 大白话讲清六个奖</div>
         <div class="card-footer">
           <span class="card-date">2026-10-12</span>
           <span class="card-tag tag-research">调研</span>
@@ -164,14 +167,13 @@ body {
       </a>
       <a class="card" href="research/tuanjiehu-food/index.html">
         <div class="card-title">团结湖街道养老助餐指南</div>
-        <div class="card-desc">福寿苑老年餐桌（水碓子驿站）&middot; 14-28元/餐 &middot; 养老卡88折 &middot; 饿了么送餐上门 &middot; 周一到周六</div>
+        <div class="card-desc">福寿苑老年餐桌（水碓子驿站）· 14-28元/餐 · 养老卡88折 · 饿了么送餐上门 · 周一到周六</div>
         <div class="card-footer">
           <span class="card-date">2026-10-12</span>
           <span class="card-tag tag-research">调研</span>
         </div>
       </a>
     </div>
-
     <div class="section" data-category="misc">
       <div class="section-title">其他 <span class="count">5</span></div>
       <a class="card" href="misc/1609/index.html">
@@ -217,32 +219,30 @@ body {
     </div>
   </div>
 </div>
-
 <script>
-let currentCategory = 'all';
+let currentCategory = &#39;all&#39;;
 function filterCategory(cat, el) {
   currentCategory = cat;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
+  document.querySelectorAll(&#39;.tab&#39;).forEach(t => t.classList.remove(&#39;active&#39;));
+  el.classList.add(&#39;active&#39;);
   applyFilters();
 }
 function applyFilters() {
-  const query = document.getElementById('search').value.toLowerCase();
-  document.querySelectorAll('.section').forEach(section => {
+  const query = document.getElementById(&#39;search&#39;).value.toLowerCase();
+  document.querySelectorAll(&#39;.section&#39;).forEach(section => {
     const cat = section.dataset.category;
-    const matchCat = currentCategory === 'all' || cat === currentCategory;
+    const matchCat = currentCategory === &#39;all&#39; || cat === currentCategory;
     let visible = false;
-    section.querySelectorAll('.card').forEach(card => {
+    section.querySelectorAll(&#39;.card&#39;).forEach(card => {
       const text = card.textContent.toLowerCase();
       const matchSearch = !query || text.includes(query);
-      card.style.display = matchSearch ? '' : 'none';
+      card.style.display = matchSearch ? &#39;&#39; : &#39;none&#39;;
       if (matchSearch) visible = true;
     });
-    const hasEmpty = !!section.querySelector('.empty');
-    section.style.display = (matchCat && (visible || hasEmpty)) ? '' : 'none';
+    const hasEmpty = !!section.querySelector(&#39;.empty&#39;);
+    section.style.display = (matchCat && (visible || hasEmpty)) ? &#39;&#39; : &#39;none&#39;;
   });
 }
 </script>
-
 </body>
 </html>
