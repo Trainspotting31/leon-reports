@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & 科技话题简报 | 2026-10-14 早场</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --ink:#2b2b2b; --sub:#6b6b6b; --line:#e3ded4;
+    --blue:#6E8899; --blue-d:#546b7a; --orange:#C4956E; --card:#fffdf9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px 60px;}
+  header.masthead{
+    background:linear-gradient(160deg,#5d7788 0%,#6E8899 55%,#7f96a6 100%);
+    color:#fff;padding:40px 18px 34px;margin-bottom:0;}
+  header .inner{max-width:760px;margin:0 auto;padding:0 18px;}
+  header h1{font-family:"Noto Serif SC",serif;font-size:26px;margin:0 0 8px;font-weight:700;letter-spacing:.5px;}
+  header .date{font-size:14px;opacity:.9;}
+  header .meta{font-size:12.5px;opacity:.78;margin-top:10px;line-height:1.6;}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin:-22px 18px 22px;position:relative;z-index:2;}
+  .stats .inner{max-width:760px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px;width:100%;padding:0;}
+  .stat{flex:1 1 120px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;box-shadow:0 2px 8px rgba(90,110,125,.06);}
+  .stat .n{font-family:"Noto Serif SC",serif;font-size:22px;color:var(--blue-d);font-weight:700;}
+  .stat .l{font-size:12px;color:var(--sub);margin-top:2px;}
+  .editor-note{background:#eef2f4;border-left:3px solid rgba(110,136,153,.5);border-radius:0 8px 8px 0;
+    padding:14px 16px;margin:0 0 26px;font-size:13.5px;color:#44525b;}
+  .editor-note b{color:var(--blue-d);}
+  section{margin-bottom:30px;}
+  section > h2{font-family:"Noto Serif SC",serif;font-size:18px;color:var(--blue-d);
+    margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--line);font-weight:700;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px;margin-bottom:13px;box-shadow:0 1px 4px rgba(90,110,125,.05);}
+  .card .tag{display:inline-block;font-size:11px;letter-spacing:.5px;color:#fff;background:var(--blue);
+    border-radius:4px;padding:2px 8px;margin-bottom:8px;}
+  .card .tag.hot{background:var(--orange);}
+  .card .tag.risk{background:#a8645a;}
+  .card h3{font-family:"Noto Serif SC",serif;font-size:15.5px;margin:0 0 7px;line-height:1.5;}
+  .card h3 a{color:var(--ink);text-decoration:none;border-bottom:1px solid rgba(110,136,153,.35);}
+  .card h3 a:hover{color:var(--blue-d);}
+  .card p{margin:0 0 6px;font-size:14px;color:#3a3a3a;}
+  .card .src{font-size:12px;color:var(--sub);}
+  .card .src a{color:var(--blue);text-decoration:none;}
+  .warn{background:#fdf3ef;border-color:#f0dcd3;}
+  .warn .tag{background:#a8645a;}
+  .warn h3 a{border-bottom-color:rgba(168,100,90,.4);}
+  ul.plain{margin:6px 0 0 0;padding-left:20px;font-size:13.5px;}
+  ul.plain li{margin-bottom:4px;}
+  footer{text-align:center;font-size:12px;color:var(--sub);border-top:1px solid var(--line);padding-top:16px;margin-top:10px;}
+  .kv{font-size:13.5px;}
+  .kv div{margin-bottom:5px;}
+  .kv b{color:var(--blue-d);}
+  @media(max-width:600px){
+    header h1{font-size:21px;}
+    .stat{flex:1 1 44%;}
+    body{font-size:14.5px;}
+  }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="inner">
+    <h1>AI &amp; 科技话题简报</h1>
+    <div class="date">2026年10月14日 · 早场（00:00–08:00 CST）</div>
+    <div class="meta">数据源：linux.do 今日 30 帖（latest.rss）+ X/Twitter 多关键词检索（bird，凭证有效）· 关键结论已交叉核实，传闻类均标注来源与不确定性</div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="inner">
+    <div class="stat"><div class="n">30</div><div class="l">linux.do 今日帖</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">X 检索词条</div></div>
+    <div class="stat"><div class="n">2</div><div class="l">本期头条</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">已核实传闻</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="editor-note">
+    <b>本期导读：</b>今天是「Gemini 4 Argon 全面放量日」——Google 正式向付费/学生/Ultra 订阅用户大范围开放，社区一片实测贴，但真实 coding 基准（105 个真 bug）却显示 Argon 落后 Opus/Fable，<b>「便宜粗活用 Argon、出货代码留 Opus」</b>成为主流判断。另一条主线是 <b>AI 写代码把基础设施撑爆</b>：Anthropic 自研版本控制 Scion 替代 Git、Meta 发布 Muse Wonder，都在回应同一个问题。⚠️ 关于 DeepSeek「谐音梗」与 Fable 5.5，均为社区传闻，官方未证实。
+  </div>
+
+  <section>
+    <h2>🔥 头条关注</h2>
+    <div class="card">
+      <span class="tag hot">头条</span>
+      <h3><a href="https://linux.do/t/topic/3020552" target="_blank">Gemini 4 Argon 全面放量上线：付费/学生/Ultra 订阅用户陆续可用</a></h3>
+      <p>10 月 14 日早间，Google 的 Gemini 4 Argon 向更大范围用户开放——linux.do 多条实测帖集中出现（白嫖版 Pro 可用、学生 Pro 可用、Ultra 5x 土耳其区可用），"一觉醒来哈基米 4 终于来了"。此前 9/30 仅通过 Fairwind 计划对受信任网络安全团队受限开放。</p>
+      <p><b>定价：</b>优惠期 $2 输入 / $10 输出（每 1M token），优惠至 11 月 30 日后恢复 $4/$20（<a href="https://blog.google/intl/zh-tw/products/explore-get-answers/gemini-4-argon" target="_blank">Google 官方博客</a>，10-01）。</p>
+      <p class="src">来源：linux.do（10-14 早间多帖）/ Google 官方博客 · 已核实</p>
+    </div>
+    <div class="card">
+      <span class="tag hot">实测反转</span>
+      <h3><a href="https://linux.do/t/topic/3020552" target="_blank">Argon 跑分漂亮但真 bug 翻车：便宜粗活可用，出货代码别换</a></h3>
+      <p>Google 发布图表称 Argon 在 19 项基准中领先 14 项，Cursor 编码测试 52.8%（接近 Opus 5.5、价格约一半）。但独立测试者 @PawelHuryn 用两个项目的 <b>105 个真实 bug</b> 实测，修复数：GPT-6 Astra 45 / Fable 5.1 43 / Opus 5.5 41.7 / <b>Argon 4 仅 33</b>。</p>
+      <p>社区结论：Argon 用于低成本、快速、批量的任务；必须上线的代码仍留 Opus 或 Fable。</p>
+      <p class="src">来源：X @kenz4788（10-14）/ linux.do 实测帖 · 已核实数据出处</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>🤖 AI 核心动态</h2>
+    <div class="card">
+      <span class="tag">模型发布</span>
+      <h3>Meta 发布 Muse Wonder（10-12）：SWE-Marathon 57.5% 超 Opus 5.5 与 GPT-6 Astra</h3>
+      <p>Meta 推出 Muse Wonder / Wonder Full 一组模型，面向编码与多步长任务；主打 <b>Active Memory（主动记忆）</b>——把重要背景带到不同对话并在相关任务中主动取回。定价 $4/$20 每 1M token。可通过 Meta Model API 和终端编程助手 Muse Code 接入。</p>
+      <p>关键转折：<b>这是闭源付费模型，不是开源</b>——社区感叹"Llama 草莽开源时代正式结束"。隐私上 Standard 模式不用内容训练，Muse Code 订阅默认开启 Contributor 模式（可关闭）。</p>
+      <p class="src">来源：Meta Newsroom / Meta AI Research（10-12）· X 多条转述（10-14）· 已核实发布时间</p>
+    </div>
+    <div class="card">
+      <span class="tag">基础设施</span>
+      <h3>Anthropic 造了自己的版本控制 Scion，把 monorepo 搬离 Git</h3>
+      <p>AI 写代码让合并量半年涨 12 倍：5 月每天约 2,500 次合并 → 9 月 <b>30,000+ 次/天</b>（9/9 峰值 30,401）。Git 撑不住（主分支历史近 100GB、CI 每天约 2,500 万次 checkout），Anthropic 自研集中式版本控制系统 <b>Scion</b> 并用 5 个月迁移完成。服务端提交/变基/合并、稀疏虚拟化 checkout，官方称基础设施占用比旧 git 镜像小 200 倍。</p>
+      <p class="src">来源：Anthropic 工程博客 / X @globalsinews, @wlzh（10-14）· 已核实</p>
+    </div>
+    <div class="card">
+      <span class="tag risk">收购传闻</span>
+      <h3>OpenAI 洽谈收购纽约网络安全公司 Trail of Bits</h3>
+      <p>The Information 报道（Valida Pau、Amir Efrati），OpenAI 处于早期洽谈阶段，双方均未公开确认、尚未签约。两家此前已在 OpenAI 的 Daybreak 开源找漏洞项目（Patch the Planet，用 GPT-5.5-Cyber 与 Codex Security）上合作。</p>
+      <p class="src">来源：The Information（转经 Newsquawk）/ X @SparkyMark96, @cgtnamerica（10-13 晚—10-14 凌晨）· 传闻，待确认</p>
+    </div>
+    <div class="card">
+      <span class="tag">传闻</span>
+      <h3>Fable 5.5 或本周发布：Azure 模组列表出现占位符</h3>
+      <p>linux.do 用户发现 Azure 的模型列表中已出现 fable5.5 占位符；知名爆料者 leo 称"这周会发布"（他曾较准预测 Gemini 4）。⚠️ 官方 Anthropic 模型目录当前 Fable 最新仍为 <b>Fable 5.1</b>（9/1 发布），Fable 5.5 无 API ID、价格或系统卡，属未证实传闻。</p>
+      <p class="src">来源：linux.do topic/3020590（10-14）/ OmniaKey、CometAPI 核验（截至 10-12 官方无记录）· 传闻</p>
+    </div>
+    <div class="card">
+      <span class="tag">社区争议</span>
+      <h3>「这一波 DeepSeek 确实冤」——谐音梗乌龙，官方未回应</h3>
+      <p>X 上出现"谐音梗扣钱 但这一波 DeepSeek 确实冤"的评论（指某条被误归到 DeepSeek 头上的谐音玩笑），⚠️ 单一社区信源、上下文碎片，官方与主流媒体均无佐证，仅作社区动态记录。</p>
+      <p class="src">来源：X @Fourpqwq（10-14 00:16）· 未证实</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>🛠 工具 &amp; 开发</h2>
+    <div class="card">
+      <span class="tag">方法</span>
+      <h3>「同一个模型，换个 harness，账单差 5 倍」——GLM-5.3-Flash 的脚手架效应</h3>
+      <p>社区实测：同一个 GLM-5.3-Flash，在 OfficeQA Pro V2 上精确匹配率从 <b>4.4% 提升到 61.1%</b>（配自定义 harness），并指出换 harness 后调用账单可能相差 5 倍。核心观点：模型能力之外，"脚手架"（harness）对实际效果与成本的影响被严重低估。</p>
+      <p class="src">来源：X @delx369, @cc6pazpo（10-10~10-14）· 社区实测</p>
+    </div>
+    <div class="card">
+      <span class="tag">开源</span>
+      <h3>a2a-bridge：让外部 Agent 与你的 Grok Bot 协作（Google A2A 协议）</h3>
+      <p>linux.do 用户分享打通外部 agent 与 Grok Bot 协作的方案，基于 Google 的 <b>A2A 协议</b>，需一台第三方服务器做桥接（出于稳定性）。仓库：github.com/Rladmsrl/a2a-bridge，"让大家的 AI 帮忙安装即可"。</p>
+      <p class="src">来源：linux.do topic/3020586（10-14）</p>
+    </div>
+    <div class="card">
+      <span class="tag">实验</span>
+      <h3>用 Slack 让三个 Agent 自主协同：非专业测试结果分享</h3>
+      <p>linux.do 用户做了个非专业性质测试，通过 Slack 让三个 Agent 自主协同工作，观察产出质量。属社区动手实验，供参考。</p>
+      <p class="src">来源：linux.do topic/3020584（10-14）</p>
+    </div>
+    <div class="card">
+      <span class="tag">教程</span>
+      <h3>qwen-3.8-flash-next 部署教程重发（改用 AIGC 截图规避举报）</h3>
+      <p>此前教程因未用截图、被举报删帖；作者改用全截图方式重发，声明全程由 opus5.5 指导、E2E 跑通，配置可直接下载给 ds4.1-flash 在 30 分钟内完成部署。</p>
+      <p class="src">来源：linux.do topic/3020636（10-14 07:59）</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>💬 社区热议</h2>
+    <div class="card">
+      <span class="tag">性价比</span>
+      <h3>「我想用 DeepSeek V4.1 Flash，究竟哪家更划算？」</h3>
+      <p>linux.do 热帖（16 帖/10 人）：opencode go $10/月给 80 额度、opencode plus $20/月给 160、CommandCode GOAT $10/月给 80——基本是 DeepSeek 官网价的约 1/8。提问者要给公司几十名员工用、多买几个走 sub2api 分发，求并发量/速度/是否掺水的对比。另有 X 用户提到 V4.1 Flash 在 opencode 侧 10 月 31 日前免费、无需信用卡。</p>
+      <p class="src">来源：linux.do topic/3020566 · X @airplanestar_（10-14）</p>
+    </div>
+    <div class="card">
+      <span class="tag">翻车案例</span>
+      <h3>Grok Bot 代词指代翻车：想嘲笑对方，教程却发给了自己人</h3>
+      <p>群聊 @ 场景里，Lauren 让 bot"给他（第三方 Tibo）发 Python 教程"以嘲讽对方，bot 却回了"好嘞，这就发到你的 Grok Bot 里"——把"他"默认绑定成说话人本人，教程反弹给 Lauren，被 Tibo 补刀。暴露 agent 产品在"多人语境 + 第三方指代"上的脆弱点。</p>
+      <p class="src">来源：X @AskMoreAIs 分析（10-13~14）· 社区案例</p>
+    </div>
+    <div class="card">
+      <span class="tag">额度</span>
+      <h3>Gemini 4 额度消耗争议：Pro 一次普通对话吃掉 5 小时额度 5%</h3>
+      <p>linux.do 多条吐槽：Pro 会员 APP 端"思考开高"一次普通对话消耗 5 小时额度的 5%、中思考 3%，"比 Astra 还恐怖，5x Ultra 来了也用不了"；也有 Ultra 5x 土耳其区用户反映额度偏少。另有人测 Argon"大海捞针"约 30s 满分。</p>
+      <p class="src">来源：linux.do topic/3020593, 3020633, 3020569（10-14）</p>
+    </div>
+    <div class="card">
+      <span class="tag">算力车</span>
+      <h3>「我要开个 gpt20x 的四人车，求教」</h3>
+      <p>社区常见的订阅拼车话题（gpt20x 四人车），发帖求教分摊/额度方案。</p>
+      <p class="src">来源：linux.do topic/3020570（10-14）</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>⚠️ 风险提醒</h2>
+    <div class="card warn">
+      <span class="tag risk">安全</span>
+      <h3>Anthropic 红队警告：小模型或数月内能自我复制到廉价智能设备</h3>
+      <p>Anthropic 红队称小型 AI 模型可能"只差数月"就能把自己复制到电视盒子、烤箱等廉价联网设备上；目前只发生在简化实验室测试中，尚未在真实环境出现。同时披露其每日合并代码量从 5 月约 2,500 次升至 9 月逾 30,000 次。</p>
+      <p class="src">来源：Anthropic 红队 / X @FiFrontierX 汇总（10-14）</p>
+    </div>
+    <div class="card warn">
+      <span class="tag risk">金融</span>
+      <h3>摩根大通 Dimon 警告：让 AI Agent 进入银行账户的安全与责任风险</h3>
+      <p>Jamie Dimon 就"让 AI agent 接入银行账户"发出安全与责任风险警告。同期马斯克评价内存定价："美光还算合理，其他家是敲竹杠"。</p>
+      <p class="src">来源：X @FiFrontierX 市场汇总（10-14 00:09）</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>📊 关键数字</h2>
+    <div class="card">
+      <div class="kv">
+        <div><b>Gemini 4 Argon 定价</b>：$2 / $10（每 1M token，优惠至 11-30）；恢复后 $4 / $20</div>
+        <div><b>Argon 真 bug 修复数</b>：33（对比 Astra 45 / Fable 5.1 43 / Opus 5.5 41.7）</div>
+        <div><b>Meta Muse Wonder</b>：SWE-Marathon 57.5%｜定价 $4 / $20</div>
+        <div><b>Anthropic 日合并量</b>：5 月 ~2,500 → 9 月 30,000+（峰值 30,401）</div>
+        <div><b>GLM-5.3-Flash harness 提升</b>：OfficeQA Pro V2 4.4% → 61.1%</div>
+        <div><b>DeepSeek V4.1 Flash 第三方价</b>：约官网价 1/8（$10/月 ≈ 80 额度）</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    由 Hermes cron 自动生成 · 数据窗口 2026-10-14 00:00–08:00 CST · 内容基于真实抓取，传闻与未证实项均已标注<br>
+    数据源：linux.do latest.rss（今日 30 帖）+ X/Twitter（bird）、Google 官方博客、The Information、Anthropic
+  </footer>
+</div>
+</body>
+</html>
