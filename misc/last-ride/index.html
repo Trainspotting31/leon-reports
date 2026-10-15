@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>最后一程 · The Last Ride</title>
+<meta name="description" content="生活已经很沉重，走的时候要轻松。">
+<style>
+:root{--ink:#111;--paper:#f3f1ec;--red:#d52b1e;--gray:#666;--blue:#2f5fa8}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:"Helvetica Neue",Helvetica,Arial,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.hidden{display:none!important}
+.btn{font:inherit;font-size:17px;font-weight:700;padding:14px 26px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:0;cursor:pointer;transition:font-size .4s,padding .4s}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:active{transform:translateY(1px)}
+.cross{display:inline-block;width:18px;height:18px;background:var(--red);position:relative;vertical-align:-3px;margin-right:8px}
+.cross::before,.cross::after{content:"";position:absolute;background:#fff;left:50%;top:50%;transform:translate(-50%,-50%)}
+.cross::before{width:11px;height:3.5px}.cross::after{width:3.5px;height:11px}
+
+.screen{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;padding:max(6vh,24px) 8vw;overflow:auto}
+#title{background:rgba(243,241,236,.86)}
+.co{font-size:12px;letter-spacing:.08em;color:#333;font-weight:600}
+h1{font-size:clamp(56px,14vw,128px);line-height:.95;margin:22px 0 6px;font-weight:800;letter-spacing:-.03em}
+.en{font-size:14px;letter-spacing:.3em;color:#333;font-weight:700}
+.slogan{font-size:clamp(19px,4.6vw,26px);margin:30px 0 26px;font-weight:600;line-height:1.5}
+.spec{display:grid;grid-template-columns:repeat(4,auto);gap:4px 26px;justify-content:start;margin:0 0 32px;font-size:13px}
+.spec dt{color:var(--gray);font-size:11px;letter-spacing:.1em}
+.spec dd{margin:0;font-weight:700;font-size:16px}
+@media (max-width:520px){.spec{grid-template-columns:repeat(2,auto)}}
+.fine{font-size:12px;color:var(--gray);margin-top:16px}
+
+#hud{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:max(16px,env(safe-area-inset-top)) 18px 0;z-index:2;pointer-events:none}
+.alt small{display:block;font-size:11px;letter-spacing:.14em;color:var(--gray);font-weight:600}
+.alt b{font-size:46px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1}
+.alt span{font-size:16px;font-weight:700;margin-left:3px}
+.meta{font-size:12px;color:var(--gray);line-height:1.8;text-align:right;font-variant-numeric:tabular-nums}
+#snd{pointer-events:auto;font:inherit;font-size:12px;background:none;border:1px solid #999;padding:3px 8px;cursor:pointer;color:#333}
+
+#sub{position:fixed;left:18px;right:18px;bottom:calc(88px + env(safe-area-inset-bottom));max-width:560px;font-size:18px;line-height:1.55;z-index:2;background:rgba(243,241,236,.9);padding:10px 14px;border-left:3px solid var(--red);opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s;pointer-events:none}
+#sub.on{opacity:1;transform:none}
+#sub::before{content:"乘务广播";display:block;font-size:11px;letter-spacing:.14em;color:var(--red);font-weight:700;margin-bottom:3px}
+#offBtn{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:3}
+
+#dlg{position:fixed;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;background:rgba(243,241,236,.55);padding:20px}
+.card{background:var(--paper);border:2px solid var(--ink);padding:22px 22px 20px;max-width:360px;width:100%;box-shadow:8px 8px 0 rgba(17,17,17,.12)}
+.card h3{margin:0 0 10px;font-size:12px;letter-spacing:.14em;color:var(--red)}
+.card .q{font-size:24px;font-weight:800;margin:0 0 8px}
+.card p{font-size:16px;line-height:1.6;margin:0 0 20px;color:#222}
+.card .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+
+#end{background:rgba(243,241,236,.93);justify-content:flex-start;padding-top:max(9vh,28px)}
+#end>*{opacity:0;animation:in .8s forwards}
+#end>*:nth-child(2){animation-delay:.6s}#end>*:nth-child(3){animation-delay:1.8s}#end>*:nth-child(4){animation-delay:2.6s}
+#end>*:nth-child(5){animation-delay:3.2s}#end>*:nth-child(6){animation-delay:3.6s}#end>*:nth-child(7){animation-delay:3.8s}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.kicker{font-size:13px;letter-spacing:.12em;color:#333;font-weight:700}
+#end h2{font-size:clamp(30px,7.5vw,60px);line-height:1.25;margin:18px 0 10px;font-weight:800;letter-spacing:-.01em}
+.note{font-size:16px;color:#333;margin:0 0 28px}
+.stats{display:grid;grid-template-columns:repeat(4,auto);gap:4px 28px;justify-content:start;margin:0 0 28px}
+.stats dt{color:var(--gray);font-size:11px;letter-spacing:.1em}
+.stats dd{margin:0;font-weight:700;font-size:17px}
+@media (max-width:520px){.stats{grid-template-columns:repeat(2,auto)}}
+#end .row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:30px}
+.credit{font-size:13px;line-height:1.7;color:#333;max-width:560px;margin:0 0 10px}
+.help{font-size:13px;line-height:1.7;color:var(--gray);max-width:560px;margin:0}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<div id="title" class="screen">
+  <div class="co"><i class="cross"></i>LETZTBAHN AG · 瑞士最后一程有限公司</div>
+  <h1>最后一程</h1>
+  <div class="en">THE LAST RIDE</div>
+  <div class="slogan">生活已经很沉重，<br>走的时候要轻松。</div>
+  <dl class="spec">
+    <div><dt>爬升</dt><dd>500 m</dd></div>
+    <div><dt>坡度</dt><dd>35°</dd></div>
+    <div><dt>时长</dt><dd>约 75 秒</dd></div>
+    <div><dt>往返票</dt><dd>不提供</dd></div>
+  </dl>
+  <div><button class="btn" id="start">上车</button></div>
+  <div class="fine">建议开声音。全程可随时下车。</div>
+</div>
+
+<div id="hud" class="hidden">
+  <div class="alt"><small>海拔 ALTITUDE</small><b id="alt">000</b><span>m</span></div>
+  <div class="meta">坡度 35° · 用时 <span id="time">0:00</span><br><button id="snd">声音：开</button></div>
+</div>
+<div id="sub"></div>
+<button class="btn hidden" id="offBtn">下车</button>
+
+<div id="dlg" class="hidden">
+  <div class="card">
+    <h3 id="dT">第 1 次确认</h3>
+    <div class="q">您确定吗？</div>
+    <p id="dP"></p>
+    <div class="row"><button class="btn ghost" id="go">继续</button><button class="btn" id="dOff">下车</button></div>
+  </div>
+</div>
+
+<div id="end" class="screen hidden">
+  <div class="kicker" id="eK"></div>
+  <h2>生活已经很沉重，<br>走的时候要轻松。</h2>
+  <p class="note" id="eN"></p>
+  <dl class="stats" id="eS"></dl>
+  <div class="row"><button class="btn" id="again">再坐一次</button><button class="btn ghost" id="share">分享给朋友</button></div>
+  <p class="credit">灵感来自立陶宛艺术家 Julijonas Urbonas 的概念作品《Euthanasia Coaster》（2010）。它只存在于图纸和模型里，本作也是。</p>
+  <p class="help">如果你最近真的觉得太沉重，可以打 12356 全国心理援助热线。有人接。</p>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const cv=$('#cv'),g=cv.getContext('2d');
+const FAST=+new URLSearchParams(location.search).get('x')||1;
+let W,H;
+function resize(){const d=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;g.setTransform(d,0,0,d,0,0)}
+addEventListener('resize',resize);resize();
+
+const ANG=35*Math.PI/180,TAN=Math.tan(ANG),TOP=500,XT=TOP/TAN,FLAT=40,XE=XT+FLAT,SPD=TOP/75;
+const ty=x=>x<=0?0:x>=XT?TOP:x*TAN;
+
+const SCRIPT=[
+  [4,'欢迎乘坐「最后一程」。本次爬升 500 米，约 75 秒。'],
+  [30,'您随时可以按右下角的「下车」。我们不会问为什么。'],
+  [70,'左手边是您的公司。今天是周一。'],
+  [120,'您的手机有 37 条未读消息。信号将在 200 米处消失。'],
+  [170,{c:1}],
+  [205,'信号已消失。现在没有人能找到您，包括您的领导。'],
+  [255,'右手边是阿尔卑斯山。它在这里四千万年了，对您没有意见。'],
+  [305,'房贷还剩 23 年。从这个高度看，它只有指甲盖那么大。'],
+  [345,{c:2}],
+  [380,'空气开始稀薄。有人在这个高度会突然想吃火锅。这很正常。'],
+  [430,{c:3}],
+  [470,'即将到达顶点。请收好随身物品。'],
+];
+const CONFIRMS={
+  1:'根据瑞士联邦规定，我们需要问您三次。这是第一次。',
+  2:'已记录。请注意，「下车」按钮比上次大了一点。这是设计。',
+  3:'最后一次。之后我们不再问了。我们也会累。'
+};
+
+let st='title',ending='',h=0,maxH=0,carX=0,si=0,elapsed=0,confirms=0,steps=0,personX=0,walkT=0,seq=null;
+let cam={x:22,y:28},S=3;
+
+/* ---------- audio ---------- */
+let ac=null,noise=null,muted=false,windG=null;
+function audioInit(){
+  if(ac){ac.resume();return}
+  try{
+    ac=new (window.AudioContext||window.webkitAudioContext)();
+    noise=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate);
+    const d=noise.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  }catch(e){ac=null}
+}
+function click(){
+  if(!ac||muted)return;
+  const s=ac.createBufferSource();s.buffer=noise;
+  const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=1500+Math.random()*400;f.Q.value=7;
+  const v=ac.createGain(),t=ac.currentTime;
+  v.gain.setValueAtTime(.6,t);v.gain.exponentialRampToValueAtTime(.001,t+.045);
+  s.connect(f).connect(v).connect(ac.destination);s.start(t,Math.random()*1.5,.05);
+}
+function ding(){
+  if(!ac||muted)return;
+  const o=ac.createOscillator(),v=ac.createGain(),t=ac.currentTime;
+  o.frequency.value=1046;v.gain.setValueAtTime(.12,t);v.gain.exponentialRampToValueAtTime(.001,t+.9);
+  o.connect(v).connect(ac.destination);o.start(t);o.stop(t+1);
+}
+function wind(on){
+  if(!ac)return;
+  if(on&&!windG){
+    const s=ac.createBufferSource();s.buffer=noise;s.loop=true;
+    const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=360;
+    windG=ac.createGain();windG.gain.value=0;s.connect(f).connect(windG).connect(ac.destination);s.start();
+  }
+  if(windG)windG.gain.setTargetAtTime(on&&!muted?.14:0,ac.currentTime,1.2);
+}
+$('#snd').onclick=()=>{muted=!muted;$('#snd').textContent='声音：'+(muted?'关':'开');wind(st==='top'&&!muted)};
+
+/* ---------- ui ---------- */
+let subTimer;
+function say(t){
+  const el=$('#sub');el.classList.remove('on');clearTimeout(subTimer);
+  subTimer=setTimeout(()=>{el.textContent=t;el.classList.add('on')},200);
+}
+function offScale(){const k=[1,1,1.3,1.7][Math.min(confirms,3)];return k}
+function applyOffScale(){
+  const k=offScale();
+  for(const b of [$('#offBtn'),$('#dOff')]){b.style.fontSize=17*k+'px';b.style.padding=`${14*k}px ${26*k}px`}
+}
+function openConfirm(n){
+  st='dialog';confirms=n;
+  $('#dT').textContent=`第 ${n} 次确认`;$('#dP').textContent=CONFIRMS[n];
+  applyOffScale();$('#dlg').classList.remove('hidden');ding();
+}
+$('#go').onclick=()=>{$('#dlg').classList.add('hidden');st='climb'};
+$('#dOff').onclick=getOff;
+$('#offBtn').onclick=getOff;
+addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&(st==='climb'||st==='dialog'))getOff();
+  if(e.key==='Enter'&&st==='dialog')$('#go').click();
+});
+
+function startRide(){
+  audioInit();
+  st='climb';ending='';h=0;maxH=0;carX=0;si=0;elapsed=0;confirms=0;steps=0;walkT=0;seq=null;
+  wind(false);applyOffScale();
+  for(const id of ['#title','#end','#dlg'])$(id).classList.add('hidden');
+  $('#hud').classList.remove('hidden');$('#offBtn').classList.remove('hidden');
+  $('#sub').classList.remove('on');
+}
+$('#start').onclick=startRide;
+$('#again').onclick=startRide;
+
+function runSeq(items){seq={t:0,i:0,items}}
+function getOff(){
+  if(st!=='climb'&&st!=='dialog')return;
+  st='off';$('#dlg').classList.add('hidden');$('#offBtn').classList.add('hidden');
+  personX=carX;steps=Math.round(h/.17);
+  const L=h<3
+    ?[[.3,'您还没出站。'],[2.8,'这也算一种决定。'],[5.5,'山下的火锅店开到凌晨两点。'],[8.5,()=>showEnd('off')]]
+    :[[.3,'您已下车。'],[2.8,'门票不退。'],[5.5,`楼梯在轨道旁边，共 ${steps} 级。扶手是新的。`],[9.5,'山下的火锅店开到凌晨两点。'],[13,()=>showEnd('off')]];
+  runSeq(L);
+}
+function reachTop(){
+  st='top';$('#offBtn').classList.add('hidden');wind(true);
+  runSeq([[.8,'500 米。天气晴，能见度 80 公里。'],[4.5,'……'],[7,'各位乘客，非常抱歉。'],
+    [10,'下坡段从 2010 年起就一直在图纸上。'],[13.5,'至今没有建。'],[16.5,'所以您只是上来看了一会儿风景。'],
+    [20,'下山电梯在右手边。票价已包含。'],[24,()=>showEnd('top')]]);
+}
+const fmt=s=>{s=Math.floor(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function showEnd(kind){
+  st='end';ending=kind;$('#sub').classList.remove('on');$('#hud').classList.add('hidden');
+  $('#eK').textContent=kind==='top'?'感谢乘坐。本次行程已结束。':'您已安全离场。';
+  $('#eN').textContent=kind==='top'?'（这里的「走」，指坐电梯下山。）':'（这里的「走」，指走楼梯下山。慢慢走。）';
+  const rows=[['最高海拔',Math.round(maxH)+' m'],['用时',fmt(elapsed)],['被问「确定吗」',confirms+' 次'],
+    ['下山方式',kind==='top'?'电梯（含票价）':`楼梯 ${steps} 级`]];
+  $('#eS').innerHTML=rows.map(r=>`<div><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('');
+  const e=$('#end');e.classList.add('hidden');void e.offsetWidth;e.classList.remove('hidden');e.scrollTop=0;
+  $('#share').textContent='分享给朋友';
+}
+$('#share').onclick=async()=>{
+  const d={title:'最后一程',text:'生活已经很沉重，走的时候要轻松。',url:location.href};
+  if(navigator.share){try{await navigator.share(d)}catch(e){}return}
+  try{await navigator.clipboard.writeText(location.href);$('#share').textContent='链接已复制'}catch(e){}
+};
+
+/* ---------- update ---------- */
+function update(dt){
+  if(st==='climb'){
+    elapsed+=dt;const ph=h;h=Math.min(TOP,h+SPD*dt);maxH=h;carX=h/TAN;
+    if(Math.floor(h)>Math.floor(ph))click();
+    while(si<SCRIPT.length&&h>=SCRIPT[si][0]){
+      const it=SCRIPT[si++][1];
+      if(typeof it==='string')say(it);else{openConfirm(it.c);break}
+    }
+    if(h>=TOP)reachTop();
+  }
+  if(st==='top'||(st==='end'&&ending==='top')){
+    if(carX<XE-4){const p=carX;carX=Math.min(XE-4,carX+5*dt);if(Math.floor(p)!==Math.floor(carX))click()}
+  }
+  if(st==='off'||(st==='end'&&ending==='off')){
+    if(personX>-30){personX-=.9*dt;walkT+=dt}
+  }
+  if(seq){
+    seq.t+=dt;
+    while(seq&&seq.i<seq.items.length&&seq.t>=seq.items[seq.i][0]){
+      const f=seq.items[seq.i++][1];typeof f==='string'?say(f):f();
+    }
+    if(seq&&seq.i>=seq.items.length)seq=null;
+  }
+  if(st!=='title'&&st!=='end'){
+    const a=st==='off'?ty(personX):h;
+    $('#alt').textContent=String(Math.round(a)).padStart(3,'0');
+    $('#time').textContent=fmt(elapsed);
+  }
+  const t=camTarget(),k=1-Math.exp(-dt*2.2);
+  cam.x+=(t.x-cam.x)*k;cam.y+=(t.y-cam.y)*k;S+=(t.s-S)*k;
+}
+const baseS=()=>Math.min(H/220,W/160);
+function camTarget(){
+  if(st==='top'||(st==='end'&&ending==='top')){
+    const bw=W>H?980:520,x0=XE-90;return{x:x0+bw/2,y:275,s:Math.min(W/bw,H/600)};
+  }
+  if(st==='off'||(st==='end'&&ending==='off'))return{x:personX+10,y:ty(personX)+20,s:baseS()};
+  return{x:carX+22,y:ty(carX)+28,s:baseS()};
+}
+
+/* ---------- draw ---------- */
+const w2s=(x,y)=>[W/2+(x-cam.x)*S,H/2-(y-cam.y)*S];
+function line(x1,y1,x2,y2){const a=w2s(x1,y1),b=w2s(x2,y2);g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke()}
+function rng(i){const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s)}
+function mountains(px,py,sc,hmin,hmax,col,seed){
+  const k=S*sc,ox=cam.x*px,oy=cam.y*py,step=110;
+  const sx=x=>W/2+(x-ox)*k,sy=y=>H/2-(y-oy)*k;
+  const i0=Math.floor((ox-W/2/k)/step)-2,i1=Math.ceil((ox+W/2/k)/step)+2;
+  g.fillStyle=col;g.beginPath();g.moveTo(sx(i0*step),H);
+  for(let i=i0;i<=i1;i++)g.lineTo(sx(i*step+rng(i*3+seed)*50),sy(hmin+(hmax-hmin)*rng(i+seed)));
+  g.lineTo(sx(i1*step),H);g.closePath();g.fill();
+}
+const TOWN=[[-340,26,40],[-308,18,26],[-284,36,120,'公司'],[-242,22,60],[-214,32,16,'火锅店 · 营业至 02:00'],[-176,16,46],[-154,28,30],[-118,20,72],[-92,26,22]];
+function text(t,x,y,size,col,align){g.font=`${align==='b'?700:500} ${size}px "Helvetica Neue",Helvetica,Arial,"PingFang SC","Noto Sans CJK SC",sans-serif`;g.fillStyle=col;g.textAlign=align==='c'?'center':'left';g.fillText(t,x,y)}
+
+function draw(){
+  g.fillStyle='#f3f1ec';g.fillRect(0,0,W,H);
+  mountains(.05,.25,.45,90,230,'#e6e1d7',7);
+  mountains(.12,.4,.6,40,150,'#dad4c9',2);
+
+  g.strokeStyle='rgba(17,17,17,.07)';g.lineWidth=1;
+  for(let y=50;y<=800;y+=50){const sy=w2s(0,y)[1];if(sy>0&&sy<H){g.beginPath();g.moveTo(0,sy);g.lineTo(W,sy);g.stroke()}}
+
+  const gy=w2s(0,0)[1];
+  if(gy<H){g.fillStyle='#e7e3da';g.fillRect(0,gy,W,H-gy);g.strokeStyle='#111';g.lineWidth=1.5;g.beginPath();g.moveTo(0,gy);g.lineTo(W,gy);g.stroke()}
+
+  const xa=cam.x-W/2/S-40,xb=cam.x+W/2/S+40;
+
+  // town
+  for(const [x,w,hh,lab] of TOWN){
+    if(x+w<xa||x>xb)continue;
+    const p=w2s(x,hh);g.fillStyle='#ece8e0';g.strokeStyle='#111';g.lineWidth=1;
+    g.fillRect(p[0],p[1],w*S,hh*S);g.strokeRect(p[0],p[1],w*S,hh*S);
+    if(S>1.6){g.fillStyle='#c4bdb1';for(let wy=hh-6;wy>3;wy-=6)for(let wx=3;wx<w-3;wx+=5){const q=w2s(x+wx,wy);g.fillRect(q[0],q[1],2*S,2.6*S)}}
+    if(lab)text(lab,p[0],p[1]-6,12,'#333');
+  }
+  // station
+  if(xa<0){
+    const a=w2s(-44,3);g.fillStyle='#cfc9be';g.fillRect(a[0],a[1],40*S,3*S);
+    g.strokeStyle='#111';g.lineWidth=2;line(-46,15,-2,15);g.lineWidth=1;line(-42,0,-42,15);line(-6,0,-6,15);
+    const s=w2s(-24,17);text('始发站',s[0],s[1],12,'#111','c');
+  }
+  // elevator
+  if(xb>XT&&xa<XT+30){
+    g.strokeStyle='#555';g.lineWidth=1;g.fillStyle='rgba(255,255,255,.45)';
+    const a=w2s(XT+14,TOP+16);g.fillRect(a[0],a[1],8*S,(TOP+16)*S);g.strokeRect(a[0],a[1],8*S,(TOP+16)*S);
+    const lb=w2s(XT+22,TOP*.62);text('下山电梯',lb[0]+6,lb[1],12,'#333');
+  }
+  // pillars & bracing
+  const pa=Math.max(0,Math.floor(xa/25)*25),pb=Math.min(XE,xb);
+  for(let x=pa;x<=pb;x+=25){
+    if(x<=0)continue;
+    g.strokeStyle='#999';g.lineWidth=.8;const nx=x+25;
+    if(nx<=XE){line(x,0,nx,ty(nx));line(x,ty(x),nx,0)}
+    g.strokeStyle='#444';g.lineWidth=1.2;line(x,ty(x),x,0);
+  }
+  // rail
+  const ra=Math.max(-46,xa),rb=Math.min(XE,xb);
+  if(rb>ra){
+    g.strokeStyle='#111';g.lineWidth=Math.max(1.6,Math.min(4,S*.9));g.lineJoin='round';
+    g.beginPath();let first=true;
+    const pts=[];for(let x=ra;x<rb;x+=4)pts.push(x);pts.push(rb);if(XT>ra&&XT<rb)pts.push(XT);if(ra<0&&rb>0)pts.push(0);pts.sort((a,b)=>a-b);
+    for(const x of pts){const p=w2s(x,ty(x));first?g.moveTo(p[0],p[1]):g.lineTo(p[0],p[1]);first=false}
+    g.stroke();
+    if(S>1.8){
+      g.lineWidth=1;
+      for(let x=Math.ceil(ra/3)*3;x<rb;x+=3){
+        const a=x>0&&x<XT?ANG:0,nx=-Math.sin(a)*1.6,ny=Math.cos(a)*1.6,y=ty(x);
+        line(x+nx,y+ny,x-nx,y-ny);
+      }
+    }
+  }
+  // blueprint of the descent
+  if(xb>XE-30){
+    g.save();g.setLineDash([7,6]);g.strokeStyle='#2f5fa8';g.lineWidth=1.6;g.beginPath();
+    let p=w2s(XE,TOP);g.moveTo(p[0],p[1]);
+    const c1=w2s(XE+45,TOP),c2=w2s(XE+70,10),e=w2s(XE+150,8);g.bezierCurveTo(c1[0],c1[1],c2[0],c2[1],e[0],e[1]);
+    for(const [dx,r] of [[220,70],[360,56],[480,44],[580,34],[660,26],[725,20],[778,15]]){
+      p=w2s(XE+dx,8);g.lineTo(p[0],p[1]);const c=w2s(XE+dx,8+r);
+      g.arc(c[0],c[1],r*S,Math.PI/2,Math.PI/2-2*Math.PI+1e-4,true);
+    }
+    p=w2s(XE+860,8);g.lineTo(p[0],p[1]);g.stroke();g.restore();
+    const l1=w2s(XE+22,TOP+22);text('下坡段 · 设计图 rev.0（2010）',l1[0],l1[1],12,'#2f5fa8','b');
+    const l2=w2s(XE+60,TOP-30);text('待建',l2[0],l2[1],12,'#2f5fa8');
+  }
+  // car
+  {
+    const p=w2s(carX,ty(carX)),a=carX>0&&carX<XT?ANG:0;
+    g.save();g.translate(p[0],p[1]);g.rotate(-a);
+    g.fillStyle='#111';g.beginPath();g.arc(-10,-3,3,0,7);g.arc(10,-3,3,0,7);g.fill();
+    if(st!=='off'&&!(st==='end'&&ending==='off')){g.beginPath();g.arc(1,-20,4.5,0,7);g.fill();g.fillRect(-2,-16,6,6)}
+    g.fillStyle='#d52b1e';g.fillRect(-16,-15,32,10);g.fillStyle='#111';g.fillRect(-16,-17,4,12);
+    g.restore();
+  }
+  // person walking down
+  if(st==='off'||(st==='end'&&ending==='off')){
+    const p=w2s(personX,ty(personX)),sw=Math.sin(walkT*7)*4;
+    g.save();g.translate(p[0]-6,p[1]-4);g.strokeStyle='#111';g.fillStyle='#111';g.lineWidth=2;g.lineCap='round';
+    g.beginPath();g.arc(0,-19,3.6,0,7);g.fill();
+    g.beginPath();g.moveTo(0,-15);g.lineTo(0,-6);g.moveTo(0,-6);g.lineTo(-sw,0);g.moveTo(0,-6);g.lineTo(sw,0);
+    g.moveTo(0,-12);g.lineTo(-sw*.8,-8);g.moveTo(0,-12);g.lineTo(sw*.8,-8);g.stroke();g.restore();
+  }
+  // altitude labels
+  for(let y=100;y<=800;y+=100){const sy=w2s(0,y)[1];if(sy>70&&sy<H-20)text(y+' m',12,sy-4,11,'#666')}
+}
+
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(.05,(now-last)/1000)*FAST;last=now;
+  update(dt);draw();requestAnimationFrame(loop);
+}
+cam={...camTarget()};S=cam.s;
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
