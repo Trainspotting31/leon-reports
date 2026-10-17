@@ -228,8 +228,16 @@ function updateRoad(dt) {
 }
 function spawnDrone() {
   const dir = Math.random() < .5 ? 1 : -1, [top, bot] = skyBand();
-  G.drones.push({ x: dir > 0 ? -20 * U : W + 20 * U, y: rnd(top - 20 * U, bot + 30 * U), vx: rnd(70, 110) * U * dir * G.speedMul, t: Math.random() * 6 });
+  const y = rnd(top - 20 * U, bot + 30 * U);
+  G.drones.push({ x: dir > 0 ? -20 * U : W + 20 * U, y, vx: rnd(70, 110) * U * dir * G.speedMul, t: Math.random() * 6,
+    ax: dir > 0 ? -40 * U : W + 40 * U, ay: clamp(y + rnd(-50, 70) * U, top - 30 * U, GY - 20 * U) });
 }
+// 拉线：从放飞点到无人机的一根下垂的线（二次曲线）
+function droneLine(d) {
+  const mx = (d.ax + d.x) / 2, my = (d.ay + d.y) / 2, sag = Math.min(70 * U, Math.abs(d.x - d.ax) * .12);
+  return [d.ax, d.ay, mx, my + sag, d.x, d.y];
+}
+function linePt(L, t) { const u = 1 - t; return [u * u * L[0] + 2 * u * t * L[2] + t * t * L[4], u * u * L[1] + 2 * u * t * L[3] + t * t * L[5]]; }
 function pop(x, y, text, color, size = 17) { G.pops.push({ x, y, text, color, size, t: 0 }); }
 function part(p) { if (G.parts.length < 520) G.parts.push(p); }
 
@@ -371,10 +379,17 @@ function update(dt) {
   const sx0 = st.x - SW() / 2, sx1 = st.x + SW() / 2, sy0 = st.y - PH() / 2 - CT() - SIGNH(), sy1 = st.y + PH() / 2;
   for (const d of G.drones) {
     d.t += dt; d.x += d.vx * dt; d.y += Math.sin(d.t * 2.4) * 18 * U * dt;
-    if (playing && G.stun <= 0 && d.x > sx0 - 8 * U && d.x < sx1 + 8 * U && d.y > sy0 - 6 * U && d.y < sy1 + 6 * U) {
+    if (!playing || G.stun > 0) continue;
+    let hit = null;
+    if (d.x > sx0 - 8 * U && d.x < sx1 + 8 * U && d.y > sy0 - 6 * U && d.y < sy1 + 6 * U) hit = [d.x, d.y, '撞上拉线无人机'];
+    else {
+      const L = droneLine(d);
+      for (let t = 0; t <= 1; t += .04) { const [lx, ly] = linePt(L, t); if (lx > sx0 && lx < sx1 && ly > sy0 && ly < sy1) { hit = [lx, ly, '被拉线缠住']; break; } }
+    }
+    if (hit) {
       d.dead = 1; G.stun = .8; G.combo = 0; G.shake = .4;
-      pop(d.x, d.y - 10 * U, '撞上无人机', '#ff8a8a', 16); noiseHit(.35, .3); tone(180, .3, 'square', .08, 60);
-      for (let i = 0; i < 18; i++) part({ k: 'k', x: d.x, y: d.y, vx: rnd(-220, 220) * U, vy: rnd(-260, 120) * U, life: 0, max: rnd(.4, .8) });
+      pop(hit[0], hit[1] - 10 * U, hit[2], '#ff8a8a', 16); noiseHit(.35, .3); tone(180, .3, 'square', .08, 60);
+      for (let i = 0; i < 18; i++) part({ k: 'k', x: hit[0], y: hit[1], vx: rnd(-220, 220) * U, vy: rnd(-260, 120) * U, life: 0, max: rnd(.4, .8) });
     }
   }
   G.drones = G.drones.filter(d => !d.dead && d.x > -60 * U && d.x < W + 60 * U);
@@ -638,6 +653,10 @@ function drawGround(c) {
   ctx.restore();
 }
 function drawDrone(d, now) {
+  const L = droneLine(d);
+  ctx.strokeStyle = 'rgba(200,215,235,.55)'; ctx.lineWidth = 1.2 * U;
+  ctx.beginPath(); ctx.moveTo(L[0], L[1]); ctx.quadraticCurveTo(L[2], L[3], L[4], L[5]); ctx.stroke();
+  ctx.fillStyle = '#5a616c'; ctx.fillRect(d.x - Math.sign(d.vx) * 9 * U - 3 * U, d.y + 1 * U, 6 * U, 5 * U);
   ctx.fillStyle = '#20242b'; ctx.fillRect(d.x - 11 * U, d.y - 1.5 * U, 22 * U, 3 * U); ctx.fillRect(d.x - 4 * U, d.y - 3 * U, 8 * U, 5 * U);
   ctx.fillStyle = 'rgba(180,190,200,.5)';
   for (const s of [-1, 1]) ctx.fillRect(d.x + s * 11 * U - 6 * U * Math.abs(Math.sin(now * .06)), d.y - 3.5 * U, 12 * U * Math.abs(Math.sin(now * .06)), 1.2 * U);
