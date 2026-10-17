@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="description" content="高速费这块肥肉，怎么可能让它飞掉。">
+<title>你飞我也飞 · 飞天收费站</title>
+<style>
+html,body{margin:0;height:100%;background:#05070d;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;font-family:-apple-system,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;color:#eee}
+canvas{display:block;position:fixed;inset:0;width:100%;height:100%}
+.ov{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(3,5,10,.66);z-index:5}
+.ov.hide{display:none}
+.card{width:min(86vw,370px);text-align:center;padding:20px 18px}
+h1{font-size:42px;margin:0 0 8px;color:#ffb347;text-shadow:0 0 18px rgba(255,150,40,.55);letter-spacing:3px}
+.sub{color:#aaa;font-size:15px;margin:0 0 22px;line-height:1.6}
+.rule{font-size:16px;line-height:1.8;color:#ddd;text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;margin-bottom:24px}
+.rule b{color:#ffb347;font-weight:600}
+button{font:inherit;font-size:18px;font-weight:700;border:0;border-radius:999px;padding:13px 36px;background:#ff9d2e;color:#1a1004;cursor:pointer;box-shadow:0 0 20px rgba(255,157,46,.4)}
+button.ghost{background:transparent;color:#ccc;border:1px solid #555;box-shadow:none;font-size:15px;font-weight:500;padding:10px 24px;margin-top:12px}
+.lbl{color:#999;font-size:14px;margin-top:4px}
+.big{font-size:48px;font-weight:800;color:#ffd27a;margin:2px 0 10px}
+.stat{color:#ccc;font-size:16px;line-height:1.9}
+.rank{display:inline-block;margin:12px 0 22px;font-size:15px;color:#9fd6a0;border:1px solid #3d6b3e;border-radius:6px;padding:4px 12px}
+.best{color:#777;font-size:13px;margin-top:16px}
+#mute{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:6;width:40px;height:40px;border-radius:50%;padding:0;font-size:16px;font-weight:500;background:rgba(0,0,0,.5);color:#ccc;border:1px solid #444;box-shadow:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div class="ov" id="menu"><div class="card">
+  <h1>你飞我也飞</h1>
+  <p class="sub">特斯拉学会了飞。<br>高速费这块肥肉，不能让它飞掉。</p>
+  <div class="rule">
+    你是一座<b>装了火箭的收费站</b>。<br>
+    拖动收费站，让飞过来的特斯拉<b>从顶棚底下穿过去</b>，就算缴费。<br>
+    地上开的不用管。漏收 <b>5</b> 辆，下班。
+  </div>
+  <button id="startBtn">点火上岗</button>
+  <div class="best" id="bestMenu"></div>
+</div></div>
+
+<div class="ov hide" id="over"><div class="card">
+  <div class="lbl">本班次收费</div>
+  <div class="big" id="oScore">¥0</div>
+  <div class="stat" id="oStat"></div>
+  <div class="rank" id="oRank"></div><br>
+  <button id="againBtn">再上一班</button><br>
+  <button class="ghost" id="copyBtn">复制战绩</button>
+  <div class="best" id="bestOver"></div>
+</div></div>
+
+<button id="mute" aria-label="静音">♪</button>
+
+<script>
+'use strict';
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const $ = id => document.getElementById(id);
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const rnd = (a, b) => a + Math.random() * (b - a);
+const ss = t => t * t * (3 - 2 * t);
+
+let W, H, DPR, U, GY, stars = [], hills = [], city = [], lamps = [];
+const G = { phase: 'menu', score: 0, caught: 0, escaped: 0, maxEsc: 5, combo: 0, bestCombo: 0, lastCatch: -9,
+  t: 0, cars: [], parts: [], pops: [], drones: [], spawnT: 1.5, groundT: 0, droneT: 0, stun: 0, shake: 0,
+  redFlash: 0, endT: 0, speedMul: 1 };
+const st = { x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0, tilt: 0 };
+window.__G = G; window.__st = st;
+
+const SW = () => 168 * U, PH = () => 72 * U, CT = () => 14 * U, SIGNH = () => 24 * U;
+
+// ── 预渲染光斑 ──
+function glowSprite(rgb) {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const g = c.getContext('2d'), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(.35, `rgba(${rgb},.45)`); gr.addColorStop(1, `rgba(${rgb},0)`);
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return c;
+}
+const GL = { white: glowSprite('255,255,255'), warm: glowSprite('255,214,150'), orange: glowSprite('255,150,50'),
+  red: glowSprite('255,40,40'), blue: glowSprite('120,180,255'), green: glowSprite('80,255,140') };
+function glow(spr, x, y, r, a = 1) { ctx.globalAlpha = a; ctx.drawImage(spr, x - r, y - r, r * 2, r * 2); ctx.globalAlpha = 1; }
+
+// ── 尺寸 ──
+function resize() {
+  const ow = W || 0, oh = H || 0;
+  DPR = Math.min(window.devicePixelRatio || 1, 2.5);
+  W = innerWidth; H = innerHeight;
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  U = Math.min(W, H * 0.62, 620) / 390;
+  GY = H - Math.max(112 * U, H * 0.13);
+  stars = []; for (let i = 0; i < 140; i++) stars.push({ x: Math.random() * W, y: Math.random() * GY * 0.85, r: Math.random() * 1.3 + .3, p: Math.random() * 6 });
+  hills = []; for (let x = 0; x <= W + 20; x += 20) hills.push(GY - 18 * U - (Math.sin(x * .011) * 10 + Math.sin(x * .027 + 1) * 6 + 10) * U);
+  city = []; for (let i = 0; i < W / 6; i++) city.push({ x: Math.random() * W, y: GY - rnd(14, 34) * U, c: Math.random() < .7 ? 'warm' : 'blue', a: rnd(.15, .5) });
+  lamps = []; for (let x = 60 * U; x < W; x += 150 * U) lamps.push(x);
+  if (ow) { st.x *= W / ow; st.tx *= W / ow; st.y *= H / oh; st.ty *= H / oh; clampSt(); }
+  else { st.x = st.tx = W / 2; st.y = st.ty = GY - PH() / 2 + 2 * U; }
+}
+function bounds() {
+  return { x0: SW() * .42, x1: W - SW() * .42, y0: 62 * U + SIGNH() + CT() + PH() / 2, y1: GY - PH() / 2 + 2 * U };
+}
+function clampSt() {
+  const b = bounds();
+  st.x = clamp(st.x, b.x0, b.x1); st.y = clamp(st.y, b.y0, b.y1);
+  st.tx = clamp(st.tx, b.x0, b.x1); st.ty = clamp(st.ty, b.y0, b.y1);
+}
+function setT(x, y) { const b = bounds(); st.tx = clamp(x, b.x0, b.x1); st.ty = clamp(y, b.y0, b.y1); }
+G.setTarget = setT;
+G.step = (n, dt = 1 / 60) => { for (let i = 0; i < n; i++) update(dt); };
+
+// ── 输入 ──
+let ptr = null; const keys = {};
+cv.addEventListener('pointerdown', e => {
+  initAudio();
+  if (G.phase !== 'play') return;
+  if (e.pointerType === 'mouse') { ptr = { id: e.pointerId, ox: 0, oy: 0 }; setT(e.clientX, e.clientY); }
+  else ptr = { id: e.pointerId, ox: st.tx - e.clientX, oy: st.ty - e.clientY };
+});
+window.addEventListener('pointermove', e => {
+  if (G.phase !== 'play') return;
+  if (e.pointerType === 'mouse') { setT(e.clientX, e.clientY); return; }
+  if (ptr && ptr.id === e.pointerId) setT(e.clientX + ptr.ox, e.clientY + ptr.oy);
+});
+const endPtr = e => { if (ptr && ptr.id === e.pointerId) ptr = null; };
+window.addEventListener('pointerup', endPtr); window.addEventListener('pointercancel', endPtr);
+window.addEventListener('keydown', e => { keys[e.key.toLowerCase()] = 1; if (e.key.startsWith('Arrow') || e.key === ' ') e.preventDefault(); });
+window.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = 0; });
+document.addEventListener('gesturestart', e => e.preventDefault());
+
+// ── 声音 ──
+let AC = null, master = null, rumbleG = null, rumbleF = null, muted = localStorage.getItem('ft_mute') === '1';
+function initAudio() {
+  if (AC) { if (AC.state === 'suspended') AC.resume(); return; }
+  try {
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+    master = AC.createGain(); master.gain.value = muted ? 0 : .7; master.connect(AC.destination);
+    const len = AC.sampleRate * 2, buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0);
+    let l = 0; for (let i = 0; i < len; i++) { l = (l + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = l * 3.5; }
+    const src = AC.createBufferSource(); src.buffer = buf; src.loop = true;
+    rumbleF = AC.createBiquadFilter(); rumbleF.type = 'lowpass'; rumbleF.frequency.value = 300;
+    rumbleG = AC.createGain(); rumbleG.gain.value = 0;
+    src.connect(rumbleF).connect(rumbleG).connect(master); src.start();
+  } catch (e) { AC = null; }
+}
+function tone(f, dur, type = 'sine', vol = .22, f2, delay = 0) {
+  if (!AC) return;
+  const t = AC.currentTime + delay, o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .008); g.gain.exponentialRampToValueAtTime(.001, t + dur);
+  o.connect(g).connect(master); o.start(t); o.stop(t + dur + .02);
+}
+function noiseHit(vol = .3, dur = .25) {
+  if (!AC) return;
+  const len = AC.sampleRate * dur, b = AC.createBuffer(1, len, AC.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) ** 2;
+  const s = AC.createBufferSource(), g = AC.createGain(); s.buffer = b; g.gain.value = vol; s.connect(g).connect(master); s.start();
+}
+$('mute').textContent = muted ? '×' : '♪';
+$('mute').addEventListener('click', e => {
+  e.stopPropagation(); initAudio(); muted = !muted; localStorage.setItem('ft_mute', muted ? '1' : '0');
+  $('mute').textContent = muted ? '×' : '♪'; if (master) master.gain.value = muted ? 0 : .7;
+});
+
+// ── 生成 ──
+const KIND = {
+  std:   { v: 150, val: 45,  w: 64, body: ['#f5f7f9', '#aeb6bf'], name: '' },
+  plaid: { v: 265, val: 90,  w: 60, body: ['#ec4a43', '#8d1714'], name: '' },
+  dodge: { v: 185, val: 120, w: 64, body: ['#3a3e46', '#101114'], name: '' },
+};
+function laneY(dir) { return dir > 0 ? GY + 76 * U : GY + 36 * U; }
+function skyBand() { return [bounds().y0 - 8 * U, GY - 100 * U]; }
+function spawnTesla(kind, o = {}) {
+  const k = KIND[kind], dir = o.dir || (Math.random() < .5 ? 1 : -1), w = k.w * U, h = w * .3;
+  const [top, bot] = skyBand();
+  const c = { type: 'tesla', kind, dir, w, h, vx: k.v * U * G.speedMul * rnd(.9, 1.1) * dir, vy: 0,
+    x: (dir > 0 ? -w : W + w) - dir * (o.off || 0), y: laneY(dir), lane: laneY(dir), state: 'drive', t: 0, dist: -(o.off || 0),
+    liftAt: o.liftAt ?? W * rnd(.06, .42), cruise: o.cruise ?? rnd(top, bot), ph: Math.random() * 6.3,
+    amp: rnd(6, 20) * U, val: k.val, ly: 0 };
+  if (o.air) { c.state = 'fly'; c.y = c.cruise; }
+  G.cars.push(c); return c;
+}
+const GCOL = ['#7c8794', '#2f4e7a', '#8a6d3b', '#5a5f66', '#c9ccd1', '#3f6b4b', '#6b2f36'];
+function spawnGround() {
+  const dir = Math.random() < .5 ? 1 : -1, truck = Math.random() < .22, w = (truck ? 96 : rnd(58, 66)) * U;
+  G.cars.push({ type: 'ground', truck, dir, w, h: w * (truck ? .42 : .3), x: dir > 0 ? -w : W + w, y: laneY(dir),
+    vx: (truck ? 95 : rnd(120, 175)) * U * dir, col: GCOL[(Math.random() * GCOL.length) | 0], state: 'drive' });
+}
+function spawnDrone() {
+  const dir = Math.random() < .5 ? 1 : -1, [top, bot] = skyBand();
+  G.drones.push({ x: dir > 0 ? -20 * U : W + 20 * U, y: rnd(top - 20 * U, bot + 30 * U), vx: rnd(70, 110) * U * dir * G.speedMul, t: Math.random() * 6 });
+}
+function pop(x, y, text, color, size = 17) { G.pops.push({ x, y, text, color, size, t: 0 }); }
+function part(p) { if (G.parts.length < 520) G.parts.push(p); }
+
+// ── 游戏流程 ──
+function startGame() {
+  initAudio();
+  Object.assign(G, { phase: 'play', score: 0, caught: 0, escaped: 0, combo: 0, bestCombo: 0, lastCatch: -9, t: 0,
+    pops: [], drones: [], spawnT: 1.6, droneT: 0, stun: 0, shake: 0, redFlash: 0, endT: 0, speedMul: 1 });
+  G.cars = G.cars.filter(c => c.type === 'ground');
+  setT(W / 2, GY * .55);
+  $('menu').classList.add('hide'); $('over').classList.add('hide');
+  tone(90, 1.2, 'sawtooth', .12, 220);
+}
+function rankOf(s) {
+  if (s < 200) return '实习收费员';
+  if (s < 900) return '正式收费员';
+  if (s < 2500) return '班长';
+  if (s < 6000) return '站长';
+  if (s < 12000) return '路政系统先进个人';
+  return '马斯克拉黑名单';
+}
+function gameOver() {
+  G.phase = 'over';
+  const best = Math.max(+localStorage.getItem('ft_best') || 0, G.score);
+  localStorage.setItem('ft_best', best);
+  $('oScore').textContent = '¥' + G.score.toLocaleString();
+  $('oStat').innerHTML = `拦下飞行特斯拉 <b>${G.caught}</b> 辆<br>最高连收 <b>×${G.bestCombo}</b> · 坚持 <b>${G.t | 0}</b> 秒`;
+  $('oRank').textContent = rankOf(G.score);
+  $('bestOver').textContent = '个人最好 ¥' + best.toLocaleString();
+  $('copyBtn').textContent = '复制战绩';
+  $('over').classList.remove('hide');
+}
+function copyText() {
+  const t = `我开着火箭收费站，从会飞的特斯拉身上收了 ¥${G.score.toLocaleString()} 通行费，拦下 ${G.caught} 辆，评级「${rankOf(G.score)}」。你飞我也飞：${location.href.split('#')[0]}`;
+  const done = () => { $('copyBtn').textContent = '已复制'; };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done, () => fallback());
+  else fallback();
+  function fallback() { const a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); done(); } catch (e) {} a.remove(); }
+}
+$('startBtn').addEventListener('click', startGame);
+$('againBtn').addEventListener('click', startGame);
+$('copyBtn').addEventListener('click', copyText);
+const best0 = +localStorage.getItem('ft_best') || 0;
+if (best0) $('bestMenu').textContent = '个人最好 ¥' + best0.toLocaleString();
+
+// ── 更新 ──
+function update(dt) {
+  const playing = G.phase === 'play';
+  if (playing) G.t += dt;
+  G.speedMul = 1 + Math.min(G.t / 150, 1) * .55;
+
+  // 收费站
+  if (playing && G.stun <= 0) {
+    const kx = (keys.arrowright || keys.d ? 1 : 0) - (keys.arrowleft || keys.a ? 1 : 0);
+    const ky = (keys.arrowdown || keys.s ? 1 : 0) - (keys.arrowup || keys.w ? 1 : 0);
+    if (kx || ky) setT(st.tx + kx * 620 * U * dt, st.ty + ky * 620 * U * dt);
+  }
+  if (G.phase === 'menu') { st.tx = W / 2; st.ty = bounds().y1; }
+  const maxV = 760 * U;
+  let wvx = clamp((st.tx - st.x) * 7, -maxV, maxV), wvy = clamp((st.ty - st.y) * 7, -maxV, maxV);
+  if (G.stun > 0) { G.stun -= dt; wvx = st.vx * .9; wvy = 160 * U; }
+  const k = Math.min(1, dt * 9);
+  st.vx += (wvx - st.vx) * k; st.vy += (wvy - st.vy) * k;
+  st.x += st.vx * dt; st.y += st.vy * dt;
+  const b = bounds(); st.x = clamp(st.x, b.x0, b.x1); st.y = clamp(st.y, b.y0, b.y1);
+  st.tilt = clamp(st.vx / maxV * .16, -.16, .16) + (G.stun > 0 ? Math.sin(G.t * 40) * .05 : 0);
+
+  // 喷气烟雾
+  const landed = st.y >= b.y1 - 1 && G.phase === 'menu';
+  const thrust = landed ? .25 : 1 + clamp(-st.vy / maxV, 0, 1) * 1.2;
+  const pb = st.y + PH() / 2;
+  for (const px of pillarXs()) {
+    if (Math.random() < dt * 26 * thrust) part({ k: 's', x: px + rnd(-3, 3) * U, y: pb + 30 * U * thrust, vx: st.vx * .15 + rnd(-25, 25) * U,
+      vy: (230 + rnd(0, 90)) * U + Math.max(0, st.vy * .3), r: 7 * U, gr: rnd(26, 40) * U, life: 0, max: rnd(.9, 1.3), a: .32 });
+  }
+
+  // 生成
+  if (playing) {
+    G.spawnT -= dt;
+    if (G.spawnT <= 0) {
+      const r = Math.random();
+      if (G.t > 55 && r < .22) spawnTesla('dodge');
+      else if (G.t > 25 && r < .45) spawnTesla('plaid');
+      else if (G.t > 38 && r < .58) {
+        const dir = Math.random() < .5 ? 1 : -1, [top, bot] = skyBand(), cr = rnd(top, bot), la = W * rnd(.05, .2);
+        for (let i = 0; i < 3; i++) spawnTesla('std', { dir, cruise: cr + (i - 1) * 6 * U, liftAt: la, off: i * 82 * U });
+      }
+      else spawnTesla('std', { air: G.t > 45 && Math.random() < .3 });
+      G.spawnT = Math.max(.8, 2.3 - G.t * .018) * rnd(.75, 1.25);
+    }
+    if (G.t > 35) {
+      G.droneT -= dt;
+      if (G.droneT <= 0) { const n = G.t > 80 ? 2 : 1; for (let i = 0; i < n; i++) spawnDrone(); G.droneT = rnd(5, 9) * (G.t > 90 ? .7 : 1); }
+    }
+  } else if (G.phase === 'menu') {
+    G.spawnT -= dt; if (G.spawnT <= 0) { spawnTesla('std'); G.spawnT = rnd(2.5, 4); }
+  }
+  G.groundT -= dt; if (G.groundT <= 0) { spawnGround(); G.groundT = rnd(1, 2.6); }
+
+  // 车辆
+  const [top, bot] = skyBand();
+  const zx0 = st.x - SW() / 2, zx1 = st.x + SW() / 2, zy0 = st.y - PH() / 2 - 2 * U, zy1 = st.y + PH() / 2 + 4 * U;
+  for (const c of G.cars) {
+    c.x += c.vx * dt;
+    if (c.type !== 'tesla') continue;
+    c.t += dt; c.dist += Math.abs(c.vx) * dt;
+    if (c.state === 'drive' && c.dist >= c.liftAt) { c.state = 'lift'; c.t = 0; c.ly = c.y; if (playing || G.phase === 'menu') tone(70, .5, 'sawtooth', .05, 160); }
+    if (c.kind === 'dodge' && (c.state === 'fly' || c.state === 'lift')) {
+      const dx = st.x - c.x;
+      if (Math.sign(dx) === c.dir && Math.abs(dx) < 220 * U) {
+        const away = c.y < st.y ? -1 : 1;
+        c.cruise = clamp(c.cruise + away * 130 * U * dt, top, bot);
+      }
+    }
+    const py = c.y;
+    if (c.state === 'lift') {
+      const p = Math.min(1, c.t / 1.1); c.y = c.ly + (c.cruise - c.ly) * ss(p);
+      if (p >= 1) { c.state = 'fly'; c.t = 0; }
+    } else if (c.state === 'fly') {
+      c.y += ((c.cruise + Math.sin(c.t * 1.7 + c.ph) * c.amp) - c.y) * Math.min(1, dt * 4);
+    } else if (c.state === 'paid') {
+      const p = Math.min(1, c.t / 1.6); c.y = c.ly + (c.lane - c.ly) * ss(p);
+      c.vx += (c.dir * 110 * U - c.vx) * dt; if (p >= 1) c.state = 'parked';
+    }
+    c.vy = (c.y - py) / Math.max(dt, 1e-4);
+    const air = c.state === 'fly' || c.state === 'lift';
+    if (air) {
+      if (Math.random() < dt * 30) part({ k: 's', x: c.x - c.dir * c.w * .5, y: c.y, vx: -c.vx * .3 + rnd(-20, 20) * U, vy: rnd(-15, 25) * U, r: 3 * U, gr: 14 * U, life: 0, max: .6, a: .28 });
+      if (playing && c.x > zx0 && c.x < zx1 && c.y > zy0 && c.y < zy1) collect(c);
+    }
+    if (air && playing && (c.x < -c.w * .8 || c.x > W + c.w * .8) && Math.sign(c.vx) === (c.x < 0 ? -1 : 1)) {
+      c.state = 'gone'; escape(c);
+    }
+  }
+  G.cars = G.cars.filter(c => c.state !== 'gone' && c.x > -c.w * 2.5 - 300 * U && c.x < W + c.w * 2.5 + 300 * U);
+
+  // 无人机
+  const sx0 = st.x - SW() / 2, sx1 = st.x + SW() / 2, sy0 = st.y - PH() / 2 - CT() - SIGNH(), sy1 = st.y + PH() / 2;
+  for (const d of G.drones) {
+    d.t += dt; d.x += d.vx * dt; d.y += Math.sin(d.t * 2.4) * 18 * U * dt;
+    if (playing && G.stun <= 0 && d.x > sx0 - 8 * U && d.x < sx1 + 8 * U && d.y > sy0 - 6 * U && d.y < sy1 + 6 * U) {
+      d.dead = 1; G.stun = .8; G.combo = 0; G.shake = .4;
+      pop(d.x, d.y - 10 * U, '撞上无人机', '#ff8a8a', 16); noiseHit(.35, .3); tone(180, .3, 'square', .08, 60);
+      for (let i = 0; i < 18; i++) part({ k: 'k', x: d.x, y: d.y, vx: rnd(-220, 220) * U, vy: rnd(-260, 120) * U, life: 0, max: rnd(.4, .8) });
+    }
+  }
+  G.drones = G.drones.filter(d => !d.dead && d.x > -60 * U && d.x < W + 60 * U);
+
+  // 粒子
+  for (const p of G.parts) {
+    p.life += dt; p.x += p.vx * dt; p.y += p.vy * dt;
+    if (p.k === 's') {
+      p.vx *= 1 - dt * .8; p.vy *= 1 - dt * 1.6; p.r += p.gr * dt;
+      if (p.y > GY + 8 * U) { p.y = GY + 8 * U; p.vx += Math.sign(p.vx || rnd(-1, 1)) * 260 * U * dt; p.vy = 0; }
+    } else p.vy += 500 * U * dt;
+  }
+  G.parts = G.parts.filter(p => p.life < p.max);
+  for (const p of G.pops) p.t += dt;
+  G.pops = G.pops.filter(p => p.t < 1.2);
+  G.shake = Math.max(0, G.shake - dt); G.redFlash = Math.max(0, G.redFlash - dt);
+
+  if (G.phase === 'ending') { G.endT -= dt; if (G.endT <= 0) gameOver(); }
+
+  if (rumbleG) {
+    const on = G.phase === 'play' || G.phase === 'ending';
+    rumbleG.gain.setTargetAtTime(on ? .16 + clamp(Math.hypot(st.vx, st.vy) / maxV, 0, 1) * .22 : 0, AC.currentTime, .1);
+    rumbleF.frequency.setTargetAtTime(240 + thrust * 120, AC.currentTime, .1);
+  }
+}
+function collect(c) {
+  c.state = 'paid'; c.t = 0; c.ly = c.y;
+  G.combo = G.t - G.lastCatch < 2.6 ? G.combo + 1 : 1; G.lastCatch = G.t;
+  G.bestCombo = Math.max(G.bestCombo, G.combo);
+  const m = Math.min(G.combo, 5), v = c.val * m;
+  G.score += v; G.caught++;
+  pop(c.x, c.y - 26 * U, 'ETC 扣费 ¥' + v, '#ffd27a', 18);
+  if (m > 1) pop(c.x, c.y - 6 * U, '连收 ×' + m, '#9fe8a6', 14);
+  tone(1850 + m * 120, .13, 'sine', .2); tone(1850 + m * 120, .1, 'sine', .12, null, .16);
+}
+function escape(c) {
+  G.escaped++; G.combo = 0; G.redFlash = .45;
+  pop(clamp(c.x, 50 * U, W - 50 * U), c.y, '逃费 ¥' + c.val, '#ff6b6b', 18);
+  tone(320, .4, 'sawtooth', .1, 110);
+  if (G.escaped >= G.maxEsc) { G.phase = 'ending'; G.endT = 1.1; }
+}
+
+// ── 绘制 ──
+function pillarXs() { const sw = SW() - 18 * U, a = []; for (let i = 0; i < 5; i++) a.push(st.x + (i / 4 - .5) * sw); return a; }
+
+function drawBg(now) {
+  const g = ctx.createLinearGradient(0, 0, 0, GY);
+  g.addColorStop(0, '#03050b'); g.addColorStop(.7, '#0a1222'); g.addColorStop(1, '#16203a');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, GY);
+  for (const s of stars) { ctx.globalAlpha = .35 + .35 * Math.sin(now * .0015 + s.p); ctx.fillStyle = '#fff'; ctx.fillRect(s.x, s.y, s.r, s.r); }
+  ctx.globalAlpha = 1;
+  const mx = W * .8, my = GY * .14;
+  glow(GL.warm, mx, my, 60 * U, .25); ctx.fillStyle = '#f3ead2'; ctx.beginPath(); ctx.arc(mx, my, 13 * U, 0, 7); ctx.fill();
+  for (const c of city) glow(GL[c.c], c.x, c.y, 3 * U, c.a);
+  ctx.fillStyle = '#070a12'; ctx.beginPath(); ctx.moveTo(0, GY);
+  hills.forEach((y, i) => ctx.lineTo(i * 20, y)); ctx.lineTo(W, GY); ctx.fill();
+  // 路
+  const r = ctx.createLinearGradient(0, GY, 0, H); r.addColorStop(0, '#1b1e25'); r.addColorStop(1, '#0d0f13');
+  ctx.fillStyle = r; ctx.fillRect(0, GY, W, H - GY);
+  ctx.fillStyle = '#5b6170'; ctx.fillRect(0, GY, W, 2 * U);
+  ctx.fillStyle = '#c9cdd4'; ctx.fillRect(0, GY + 6 * U, W, 1.5 * U);
+  ctx.fillStyle = 'rgba(230,230,230,.55)';
+  for (let x = (now * 0) % 1; x < W; x += 46 * U) ctx.fillRect(x, GY + 56 * U, 24 * U, 2.5 * U);
+  ctx.fillStyle = '#c9cdd4'; ctx.fillRect(0, GY + 96 * U, W, 1.5 * U);
+  // 路灯
+  for (const x of lamps) {
+    ctx.fillStyle = '#3a404b'; ctx.fillRect(x - 1.5 * U, GY - 92 * U, 3 * U, 92 * U); ctx.fillRect(x - 1.5 * U, GY - 92 * U, 18 * U, 3 * U);
+    ctx.globalCompositeOperation = 'lighter';
+    const cg = ctx.createLinearGradient(0, GY - 90 * U, 0, GY + 40 * U); cg.addColorStop(0, 'rgba(255,210,140,.13)'); cg.addColorStop(1, 'rgba(255,210,140,0)');
+    ctx.fillStyle = cg; ctx.beginPath(); ctx.moveTo(x + 13 * U, GY - 89 * U); ctx.lineTo(x + 50 * U, GY + 40 * U); ctx.lineTo(x - 24 * U, GY + 40 * U); ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+    glow(GL.warm, x + 14 * U, GY - 88 * U, 14 * U, .9);
+  }
+  // 路牌：收费站已升空
+  const sx = Math.max(54 * U, W * .1);
+  ctx.fillStyle = '#4b525e'; ctx.fillRect(sx - 1.5 * U, GY - 62 * U, 3 * U, 62 * U);
+  ctx.fillStyle = '#0d7a43'; rr(sx - 30 * U, GY - 92 * U, 60 * U, 34 * U, 3 * U); ctx.fill();
+  ctx.strokeStyle = '#e8f3ec'; ctx.lineWidth = 1.2 * U; rr(sx - 27.5 * U, GY - 89.5 * U, 55 * U, 29 * U, 2 * U); ctx.stroke();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `700 ${10.5 * U}px sans-serif`; ctx.fillText('收费站', sx - 5 * U, GY - 80.5 * U);
+  ctx.font = `${8 * U}px sans-serif`; ctx.fillText('请抬头', sx - 5 * U, GY - 68.5 * U);
+  ctx.font = `700 ${14 * U}px sans-serif`; ctx.fillText('↑', sx + 18 * U, GY - 75 * U);
+}
+function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+
+function drawSmoke() {
+  for (const p of G.parts) {
+    const f = p.life / p.max;
+    if (p.k === 's') glow(GL.white, p.x, p.y, p.r, p.a * (1 - f) * (f < .1 ? f * 10 : 1));
+    else { ctx.globalAlpha = 1 - f; ctx.fillStyle = '#ffb04a'; ctx.fillRect(p.x, p.y, 2.5 * U, 2.5 * U); ctx.globalAlpha = 1; }
+  }
+}
+
+function flame(x, y, len, wid, now, seed) {
+  const fl = 1 + Math.sin(now * .05 + seed) * .08 + Math.random() * .08; len *= fl;
+  ctx.globalCompositeOperation = 'lighter';
+  let g = ctx.createLinearGradient(x, y, x, y + len);
+  g.addColorStop(0, 'rgba(255,190,110,.95)'); g.addColorStop(.5, 'rgba(255,120,40,.45)'); g.addColorStop(1, 'rgba(255,90,20,0)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x - wid, y); ctx.quadraticCurveTo(x - wid * 1.1, y + len * .45, x, y + len); ctx.quadraticCurveTo(x + wid * 1.1, y + len * .45, x + wid, y); ctx.fill();
+  g = ctx.createLinearGradient(x, y, x, y + len * .6);
+  g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(1, 'rgba(170,210,255,0)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x - wid * .5, y); ctx.quadraticCurveTo(x - wid * .5, y + len * .3, x, y + len * .6); ctx.quadraticCurveTo(x + wid * .5, y + len * .3, x + wid * .5, y); ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+  glow(GL.orange, x, y + 6 * U, wid * 3.2, .55);
+}
+
+function drawStation(now) {
+  const sw = SW(), x = st.x, yb = st.y - PH() / 2, yt = yb - CT(), pb = st.y + PH() / 2;
+  const landed = G.phase === 'menu' && st.y >= bounds().y1 - 1;
+  ctx.save(); ctx.translate(x, st.y); ctx.rotate(st.tilt); ctx.translate(-x, -st.y);
+  const thrust = landed ? .35 : 1 + clamp(-st.vy / (760 * U), 0, 1) * .9;
+  // 柱子 + 喷口
+  pillarXs().forEach((px, i) => {
+    const pg = ctx.createLinearGradient(px - 4 * U, 0, px + 4 * U, 0);
+    pg.addColorStop(0, '#6f7784'); pg.addColorStop(.5, '#c4cad3'); pg.addColorStop(1, '#4a515c');
+    ctx.fillStyle = pg; ctx.fillRect(px - 3.5 * U, yb, 7 * U, PH() - 9 * U);
+    ctx.fillStyle = '#2a2e35'; ctx.beginPath();
+    ctx.moveTo(px - 4 * U, pb - 10 * U); ctx.lineTo(px + 4 * U, pb - 10 * U); ctx.lineTo(px + 7 * U, pb); ctx.lineTo(px - 7 * U, pb); ctx.fill();
+    ctx.fillStyle = '#ff9a3c'; ctx.fillRect(px - 6 * U, pb - 1.5 * U, 12 * U, 1.5 * U);
+    flame(px, pb, (34 + thrust * 18) * U * (landed ? .5 : 1), 6.5 * U, now, i * 1.7);
+  });
+  // 顶棚底面灯
+  ctx.fillStyle = '#0c0e12'; ctx.fillRect(x - sw / 2 + 2 * U, yb, sw - 4 * U, 5 * U);
+  for (let i = 0; i < 11; i++) { const lx = x - sw / 2 + 10 * U + i * (sw - 20 * U) / 10; glow(GL.warm, lx, yb + 3 * U, 7 * U, .9); ctx.fillStyle = '#fff6e0'; ctx.fillRect(lx - 1.5 * U, yb + 2 * U, 3 * U, 2 * U); }
+  // 檐口
+  const fg = ctx.createLinearGradient(0, yt, 0, yb);
+  fg.addColorStop(0, '#59616e'); fg.addColorStop(1, '#2a2f37');
+  ctx.fillStyle = fg; ctx.fillRect(x - sw / 2, yt, sw, CT());
+  ctx.fillStyle = '#9aa3b0'; ctx.fillRect(x - sw / 2, yt, sw, 1.2 * U);
+  ctx.fillStyle = 'rgba(200,230,255,.9)'; ctx.fillRect(x - sw / 2, yb - 1.5 * U, sw, 1.5 * U);
+  ctx.fillStyle = '#e8ebef'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.font = `600 ${8.5 * U}px sans-serif`; ctx.fillText('G4 京港澳高速', x - sw / 2 + 6 * U, yt + CT() / 2 + .5 * U);
+  ctx.fillStyle = '#0f9b55'; rr(x + sw / 2 - 30 * U, yt + 2.5 * U, 24 * U, CT() - 5 * U, 2 * U); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = `700 ${7.5 * U}px sans-serif`; ctx.fillText('ETC', x + sw / 2 - 18 * U, yt + CT() / 2 + .5 * U);
+  // 招牌
+  const bw = 64 * U, bh = 19 * U, by = yt - SIGNH();
+  ctx.fillStyle = '#3a404a'; ctx.fillRect(x - bw / 2 + 8 * U, by + bh, 2.5 * U, SIGNH() - bh); ctx.fillRect(x + bw / 2 - 10.5 * U, by + bh, 2.5 * U, SIGNH() - bh);
+  ctx.fillStyle = '#14171c'; rr(x - bw / 2, by, bw, bh, 2 * U); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,170,80,.5)'; ctx.lineWidth = 1 * U; ctx.stroke();
+  glow(GL.orange, x, by + bh / 2, 46 * U, .22);
+  ctx.save(); ctx.shadowColor = '#ff8a1e'; ctx.shadowBlur = 10 * U; ctx.fillStyle = '#ffb45c';
+  ctx.font = `800 ${14 * U}px "PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('收 费 站', x, by + bh / 2 + .5 * U); ctx.restore();
+  ctx.restore();
+  // 收费口提示框（开局几秒）
+  if (G.phase === 'play' && G.t < 6) {
+    ctx.globalAlpha = .5 * (1 - G.t / 6) * (.6 + .4 * Math.sin(now * .008));
+    ctx.strokeStyle = '#ffd27a'; ctx.setLineDash([5 * U, 4 * U]); ctx.lineWidth = 1.5 * U;
+    ctx.strokeRect(x - sw / 2, yb + 2 * U, sw, PH() - 2 * U); ctx.setLineDash([]); ctx.globalAlpha = 1;
+  }
+}
+
+function carBody(w, h) {
+  const L = w / 2;
+  ctx.beginPath();
+  ctx.moveTo(-L, h * .25); ctx.lineTo(-L, -h * .15);
+  ctx.quadraticCurveTo(-L * .96, -h * .4, -L * .8, -h * .44);
+  ctx.quadraticCurveTo(-L * .42, -h * 1.06, -L * .02, -h * 1.08);
+  ctx.quadraticCurveTo(L * .3, -h * 1.04, L * .52, -h * .52);
+  ctx.quadraticCurveTo(L * .86, -h * .4, L, -h * .08);
+  ctx.lineTo(L, h * .25); ctx.closePath();
+}
+function wheels(w, h) {
+  const L = w / 2;
+  for (const wx of [-L * .58, L * .6]) {
+    ctx.fillStyle = '#0a0a0c'; ctx.beginPath(); ctx.arc(wx, h * .28, h * .36, 0, 7); ctx.fill();
+    ctx.fillStyle = '#6d737c'; ctx.beginPath(); ctx.arc(wx, h * .28, h * .19, 0, 7); ctx.fill();
+  }
+}
+function drawTesla(c, now) {
+  const k = KIND[c.kind], w = c.w, h = c.h, L = w / 2, air = c.state === 'fly' || c.state === 'lift';
+  ctx.save(); ctx.translate(c.x, c.y);
+  ctx.rotate(clamp(Math.atan2(c.vy, Math.abs(c.vx)) * .6, -.35, .35) * c.dir);
+  ctx.scale(c.dir, 1);
+  if (air) {
+    flame(-L * .58, h * .55, 26 * U, 4.5 * U, now, c.ph); flame(L * .6, h * .55, 26 * U, 4.5 * U, now, c.ph + 2);
+    ctx.save(); ctx.translate(-L, -h * .05); ctx.rotate(Math.PI / 2); flame(0, 0, 30 * U, 4 * U, now, c.ph + 4); ctx.restore();
+  }
+  wheels(w, h);
+  const g = ctx.createLinearGradient(0, -h, 0, h * .3);
+  g.addColorStop(0, k.body[0]); g.addColorStop(1, k.body[1]);
+  carBody(w, h); ctx.fillStyle = g; ctx.fill();
+  if (c.kind === 'dodge') { ctx.strokeStyle = 'rgba(170,185,205,.55)'; ctx.lineWidth = 1 * U; ctx.stroke(); }
+  // 车窗
+  ctx.beginPath(); ctx.moveTo(-L * .66, -h * .46); ctx.quadraticCurveTo(-L * .38, -h * .95, -L * .02, -h * .96);
+  ctx.quadraticCurveTo(L * .26, -h * .94, L * .42, -h * .5); ctx.closePath();
+  const wg = ctx.createLinearGradient(0, -h, 0, -h * .45); wg.addColorStop(0, '#2b3a4f'); wg.addColorStop(1, '#0b1018');
+  ctx.fillStyle = wg; ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(-L * .05, -h * .95, 1.2 * U, h * .5);
+  // 灯
+  ctx.fillStyle = '#ff3b30'; ctx.fillRect(-L, -h * .14, 3 * U, h * .16); glow(GL.red, -L, -h * .06, 8 * U, .8);
+  ctx.fillStyle = '#f2f6ff'; ctx.fillRect(L - 3 * U, -h * .08, 3 * U, h * .12); glow(GL.white, L + 2 * U, -h * .02, 9 * U, .6);
+  ctx.restore();
+  if (c.state === 'paid' || c.state === 'parked') {
+    if (c.t < 2.2) {
+      ctx.globalAlpha = Math.min(1, (2.2 - c.t) * 2);
+      ctx.fillStyle = '#0f9b55'; rr(c.x - 19 * U, c.y - h - 20 * U, 38 * U, 14 * U, 3 * U); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = `600 ${9 * U}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('已缴费', c.x, c.y - h - 12.5 * U); ctx.globalAlpha = 1;
+    }
+  }
+}
+function drawGround(c) {
+  const w = c.w, h = c.h, L = w / 2;
+  ctx.save(); ctx.translate(c.x, c.y); ctx.scale(c.dir, 1);
+  if (c.truck) {
+    wheels(w * .9, h * .5);
+    ctx.fillStyle = '#d7dadf'; ctx.fillRect(-L, -h * 1.15, w * .7, h * 1.2);
+    ctx.fillStyle = c.col; ctx.fillRect(L - w * .28, -h * .75, w * .28, h * .8);
+    ctx.fillStyle = '#111a26'; ctx.fillRect(L - w * .14, -h * .68, w * .12, h * .3);
+  } else {
+    wheels(w, h);
+    ctx.fillStyle = c.col; ctx.beginPath();
+    ctx.moveTo(-L, h * .25); ctx.lineTo(-L, -h * .35); ctx.lineTo(-L * .55, -h * .4); ctx.lineTo(-L * .35, -h * .95);
+    ctx.lineTo(L * .25, -h * .95); ctx.lineTo(L * .5, -h * .42); ctx.lineTo(L, -h * .3); ctx.lineTo(L, h * .25); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#111a26'; ctx.beginPath(); ctx.moveTo(-L * .45, -h * .42); ctx.lineTo(-L * .3, -h * .84); ctx.lineTo(L * .2, -h * .84); ctx.lineTo(L * .38, -h * .42); ctx.closePath(); ctx.fill();
+  }
+  ctx.fillStyle = '#ff3b30'; ctx.fillRect(-L, -h * .2, 2.5 * U, h * .15);
+  glow(GL.white, L + 2 * U, -h * .05, 10 * U, .55);
+  ctx.restore();
+}
+function drawDrone(d, now) {
+  ctx.fillStyle = '#20242b'; ctx.fillRect(d.x - 11 * U, d.y - 1.5 * U, 22 * U, 3 * U); ctx.fillRect(d.x - 4 * U, d.y - 3 * U, 8 * U, 5 * U);
+  ctx.fillStyle = 'rgba(180,190,200,.5)';
+  for (const s of [-1, 1]) ctx.fillRect(d.x + s * 11 * U - 6 * U * Math.abs(Math.sin(now * .06)), d.y - 3.5 * U, 12 * U * Math.abs(Math.sin(now * .06)), 1.2 * U);
+  const on = Math.sin(now * .012 + d.t) > 0;
+  glow(on ? GL.red : GL.green, d.x, d.y + 2 * U, 9 * U, .9);
+}
+
+function drawHUD(now) {
+  const p = 14 * U, top = 12 * U;
+  ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+  ctx.fillStyle = '#9aa3b0'; ctx.font = `${12 * U}px sans-serif`; ctx.fillText('通行费', p, top);
+  ctx.fillStyle = '#ffd27a'; ctx.font = `800 ${27 * U}px sans-serif`; ctx.fillText('¥' + G.score.toLocaleString(), p, top + 15 * U);
+  ctx.textAlign = 'right'; ctx.fillStyle = '#9aa3b0'; ctx.font = `${12 * U}px sans-serif`;
+  ctx.fillText(`逃费 ${G.escaped}/${G.maxEsc}`, W - p, top);
+  for (let i = 0; i < G.maxEsc; i++) {
+    const bx = W - p - (G.maxEsc - i) * 15 * U + 3 * U, by = top + 21 * U;
+    if (i < G.escaped) { ctx.fillStyle = '#ff5a52'; ctx.fillRect(bx, by, 11 * U, 16 * U); }
+    else { ctx.strokeStyle = '#5c6470'; ctx.lineWidth = 1.2 * U; ctx.strokeRect(bx + .6 * U, by + .6 * U, 9.8 * U, 14.8 * U); }
+  }
+  if (G.combo > 1 && G.t - G.lastCatch < 2.6) {
+    ctx.textAlign = 'center'; ctx.fillStyle = `rgba(159,232,166,${1 - (G.t - G.lastCatch) / 2.6})`;
+    ctx.font = `700 ${16 * U}px sans-serif`; ctx.fillText('连收 ×' + Math.min(G.combo, 5), W / 2, top + 18 * U);
+  }
+  if (G.phase === 'play' && G.t < 5) {
+    ctx.textAlign = 'center'; ctx.globalAlpha = Math.min(1, (5 - G.t) * .8);
+    ctx.fillStyle = '#e6e8ec'; ctx.font = `600 ${15 * U}px sans-serif`;
+    ctx.fillText(matchMedia('(pointer:fine)').matches ? '移动鼠标操控收费站' : '按住屏幕任意处拖动收费站', W / 2, GY * .2);
+    ctx.fillStyle = '#9aa3b0'; ctx.font = `${13 * U}px sans-serif`;
+    ctx.fillText('让飞起来的特斯拉从顶棚底下穿过', W / 2, GY * .2 + 22 * U);
+    ctx.globalAlpha = 1;
+  }
+}
+function drawPops() {
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (const p of G.pops) {
+    const f = p.t / 1.2;
+    ctx.globalAlpha = f < .7 ? 1 : (1 - f) / .3;
+    ctx.font = `800 ${p.size * U}px sans-serif`;
+    ctx.lineWidth = 3 * U; ctx.strokeStyle = 'rgba(0,0,0,.7)'; ctx.strokeText(p.text, p.x, p.y - f * 40 * U);
+    ctx.fillStyle = p.color; ctx.fillText(p.text, p.x, p.y - f * 40 * U);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function draw(now) {
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  if (G.shake > 0) ctx.translate(rnd(-1, 1) * G.shake * 14 * U, rnd(-1, 1) * G.shake * 14 * U);
+  drawBg(now);
+  const lowCars = [], highCars = [];
+  for (const c of G.cars) (c.type === 'ground' || c.state === 'drive' || c.state === 'parked' ? lowCars : highCars).push(c);
+  lowCars.sort((a, b) => a.y - b.y);
+  for (const c of lowCars) c.type === 'ground' ? drawGround(c) : drawTesla(c, now);
+  drawSmoke();
+  drawStation(now);
+  for (const c of highCars) drawTesla(c, now);
+  for (const d of G.drones) drawDrone(d, now);
+  drawPops();
+  if (G.phase !== 'menu') drawHUD(now);
+  if (G.redFlash > 0) {
+    const g = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .3, W / 2, H / 2, Math.max(W, H) * .75);
+    g.addColorStop(0, 'rgba(255,40,40,0)'); g.addColorStop(1, `rgba(255,40,40,${G.redFlash * .8})`);
+    ctx.fillStyle = g; ctx.fillRect(-20, -20, W + 40, H + 40);
+  }
+}
+
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  if (!document.hidden) { update(dt); draw(now); }
+  requestAnimationFrame(frame);
+}
+document.addEventListener('visibilitychange', () => { last = performance.now(); if (AC) document.hidden ? AC.suspend() : AC.resume(); });
+window.addEventListener('resize', resize);
+resize();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
