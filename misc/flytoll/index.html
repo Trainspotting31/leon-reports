@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="robots" content="noindex">
 <meta name="description" content="高速费这块肥肉，怎么可能让它飞掉。">
-<title>你飞我也飞 · 飞天收费站</title>
+<title>收费站能飞</title>
 <style>
 html,body{margin:0;height:100%;background:#05070d;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;font-family:-apple-system,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;color:#eee}
 canvas{display:block;position:fixed;inset:0;width:100%;height:100%}
@@ -22,6 +22,7 @@ button.ghost{background:transparent;color:#ccc;border:1px solid #555;box-shadow:
 .big{font-size:48px;font-weight:800;color:#ffd27a;margin:2px 0 10px}
 .stat{color:#ccc;font-size:16px;line-height:1.9}
 .rank{display:inline-block;margin:12px 0 22px;font-size:15px;color:#9fd6a0;border:1px solid #3d6b3e;border-radius:6px;padding:4px 12px}
+.order{color:#ff8a80;font-size:15px;margin-bottom:18px;border-bottom:1px dashed #5a3a3a;padding-bottom:12px}
 .best{color:#777;font-size:13px;margin-top:16px}
 #mute{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:6;width:40px;height:40px;border-radius:50%;padding:0;font-size:16px;font-weight:500;background:rgba(0,0,0,.5);color:#ccc;border:1px solid #444;box-shadow:none}
 </style>
@@ -30,18 +31,18 @@ button.ghost{background:transparent;color:#ccc;border:1px solid #555;box-shadow:
 <canvas id="c"></canvas>
 
 <div class="ov" id="menu"><div class="card">
-  <h1>你飞我也飞</h1>
+  <h1>收费站能飞</h1>
   <p class="sub">特斯拉学会了飞。<br>高速费这块肥肉，不能让它飞掉。</p>
   <div class="rule">
-    你是一座<b>装了火箭的收费站</b>。<br>
-    拖动收费站，让飞过来的特斯拉<b>从顶棚底下穿过去</b>，就算缴费。<br>
-    地上开的不用管。漏收 <b>5</b> 辆，下班。
+    你是一名<b>收费站劳模</b>，控制好收费站，不放过一辆特斯拉。<br>
+    漏掉 <b>5</b> 辆，立即调往<b>大兴机场收费站</b>！
   </div>
   <button id="startBtn">点火上岗</button>
   <div class="best" id="bestMenu"></div>
 </div></div>
 
 <div class="ov hide" id="over"><div class="card">
+  <div class="order" id="oOrder">漏掉 5 辆 · 即日起调往大兴机场收费站</div>
   <div class="lbl">本班次收费</div>
   <div class="big" id="oScore">¥0</div>
   <div class="stat" id="oStat"></div>
@@ -94,10 +95,10 @@ function resize() {
   city = []; for (let i = 0; i < W / 6; i++) city.push({ x: Math.random() * W, y: GY - rnd(14, 34) * U, c: Math.random() < .7 ? 'warm' : 'blue', a: rnd(.15, .5) });
   lamps = []; for (let x = 60 * U; x < W; x += 150 * U) lamps.push(x);
   if (ow) { st.x *= W / ow; st.tx *= W / ow; st.y *= H / oh; st.ty *= H / oh; clampSt(); }
-  else { st.x = st.tx = W / 2; st.y = st.ty = GY - PH() / 2 + 2 * U; }
+  else { st.x = st.tx = W / 2; st.y = st.ty = bounds().y1; }
 }
 function bounds() {
-  return { x0: SW() * .42, x1: W - SW() * .42, y0: 62 * U + SIGNH() + CT() + PH() / 2, y1: GY - PH() / 2 + 2 * U };
+  return { x0: SW() * .42, x1: W - SW() * .42, y0: 62 * U + SIGNH() + CT() + PH() / 2, y1: GY - 92 * U - PH() / 2 };
 }
 function clampSt() {
   const b = bounds();
@@ -168,13 +169,14 @@ const KIND = {
   dodge: { v: 185, val: 120, w: 64, body: ['#3a3e46', '#101114'], name: '' },
 };
 function laneY(dir) { return dir > 0 ? GY + 76 * U : GY + 36 * U; }
-function skyBand() { return [bounds().y0 - 8 * U, GY - 100 * U]; }
+function skyBand() { return [bounds().y0 - 8 * U, GY - 125 * U]; }
 function spawnTesla(kind, o = {}) {
   const k = KIND[kind], dir = o.dir || (Math.random() < .5 ? 1 : -1), w = k.w * U, h = w * .3;
   const [top, bot] = skyBand();
-  const c = { type: 'tesla', kind, dir, w, h, vx: k.v * U * G.speedMul * rnd(.9, 1.1) * dir, vy: 0,
+  const spd = k.v * U * G.speedMul * rnd(.9, 1.1);
+  const c = { type: 'tesla', kind, dir, w, h, spd, v: spd, vx: spd * dir, vy: 0,
     x: (dir > 0 ? -w : W + w) - dir * (o.off || 0), y: laneY(dir), lane: laneY(dir), state: 'drive', t: 0, dist: -(o.off || 0),
-    liftAt: o.liftAt ?? W * rnd(.06, .42), cruise: o.cruise ?? rnd(top, bot), ph: Math.random() * 6.3,
+    liftAt: o.liftAt ?? liftDist(w), cruise: o.cruise ?? rnd(top, bot), ph: Math.random() * 6.3,
     amp: rnd(6, 20) * U, val: k.val, ly: 0 };
   if (o.air) { c.state = 'fly'; c.y = c.cruise; }
   G.cars.push(c); return c;
@@ -182,8 +184,47 @@ function spawnTesla(kind, o = {}) {
 const GCOL = ['#7c8794', '#2f4e7a', '#8a6d3b', '#5a5f66', '#c9ccd1', '#3f6b4b', '#6b2f36'];
 function spawnGround() {
   const dir = Math.random() < .5 ? 1 : -1, truck = Math.random() < .22, w = (truck ? 96 : rnd(58, 66)) * U;
-  G.cars.push({ type: 'ground', truck, dir, w, h: w * (truck ? .42 : .3), x: dir > 0 ? -w : W + w, y: laneY(dir),
-    vx: (truck ? 95 : rnd(120, 175)) * U * dir, col: GCOL[(Math.random() * GCOL.length) | 0], state: 'drive' });
+  const x = dir > 0 ? -w : W + w;
+  if (G.cars.some(c => onRoad(c) && c.dir === dir && Math.abs(c.x - x) < (c.w + w) / 2 + 14 * U)) return;
+  const spd = (truck ? 95 : rnd(120, 175)) * U;
+  G.cars.push({ type: 'ground', truck, dir, w, h: w * (truck ? .42 : .3), x, y: laneY(dir), spd, v: spd, vx: spd * dir,
+    col: GCOL[(Math.random() * GCOL.length) | 0], state: 'drive', paid: false, wait: 0, fee: truck ? 120 : 35 });
+}
+// 地面收费站
+const gsX = () => W / 2, GSW = () => 150 * U;
+const gates = { '1': { a: 0, hold: 0 }, '-1': { a: 0, hold: 0 } };
+function onRoad(c) { return c.type === 'ground' || c.state === 'drive' || c.state === 'parked'; }
+// 特斯拉在地面站前起飞：车头到达地面站顶棚前就离地
+function liftDist(w) { return Math.max(20 * U, gsX() - GSW() / 2 - 12 * U + w / 2) * rnd(.2, 1); }
+function updateRoad(dt) {
+  for (const dir of [1, -1]) {
+    const list = G.cars.filter(c => onRoad(c) && c.dir === dir).sort((a, b) => dir * (b.x - a.x));
+    const gate = gates[dir];
+    list.forEach((c, i) => {
+      let v = c.spd;
+      if (i > 0) { const L = list[i - 1], gap = dir * (L.x - c.x) - (L.w + c.w) / 2; v = Math.min(v, Math.max(0, (gap - 10 * U) * 3)); }
+      if (c.type === 'ground' && !c.paid) {
+        const stopX = gsX() - dir * (c.w / 2 + 5 * U), d = dir * (stopX - c.x);
+        if (d < -3 * U) c.paid = true;
+        else if (d < 220 * U) {
+          v = Math.min(v, Math.sqrt(2 * 330 * U * Math.max(0, d)));
+          if (d < 2 * U) {
+            v = 0; c.wait += dt;
+            if (c.wait > .5) gate.hold = 1.1;
+            if (c.wait > .5 && gate.a > .85) {
+              c.paid = true;
+              if (G.phase !== 'menu') pop(gsX(), c.y - 30 * U, '¥' + c.fee, '#8fd19e', 12);
+              tone(1500, .07, 'sine', .05);
+            }
+          }
+        }
+      }
+      c.v += clamp(v - c.v, -700 * U * dt, 240 * U * dt);
+      c.vx = c.v * dir;
+    });
+    gate.hold -= dt;
+    gate.a = clamp(gate.a + (gate.hold > 0 ? 1 : -1) * dt * 3.5, 0, 1);
+  }
 }
 function spawnDrone() {
   const dir = Math.random() < .5 ? 1 : -1, [top, bot] = skyBand();
@@ -222,7 +263,7 @@ function gameOver() {
   $('over').classList.remove('hide');
 }
 function copyText() {
-  const t = `我开着火箭收费站，从会飞的特斯拉身上收了 ¥${G.score.toLocaleString()} 通行费，拦下 ${G.caught} 辆，评级「${rankOf(G.score)}」。你飞我也飞：${location.href.split('#')[0]}`;
+  const t = `我开着火箭收费站，从会飞的特斯拉身上收了 ¥${G.score.toLocaleString()} 通行费，拦下 ${G.caught} 辆，评级「${rankOf(G.score)}」。《收费站能飞》：${location.href.split('#')[0]}`;
   const done = () => { $('copyBtn').textContent = '已复制'; };
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done, () => fallback());
   else fallback();
@@ -273,7 +314,7 @@ function update(dt) {
       if (G.t > 55 && r < .22) spawnTesla('dodge');
       else if (G.t > 25 && r < .45) spawnTesla('plaid');
       else if (G.t > 38 && r < .58) {
-        const dir = Math.random() < .5 ? 1 : -1, [top, bot] = skyBand(), cr = rnd(top, bot), la = W * rnd(.05, .2);
+        const dir = Math.random() < .5 ? 1 : -1, [top, bot] = skyBand(), cr = rnd(top, bot), la = liftDist(64 * U) * rnd(.3, .6);
         for (let i = 0; i < 3; i++) spawnTesla('std', { dir, cruise: cr + (i - 1) * 6 * U, liftAt: la, off: i * 82 * U });
       }
       else spawnTesla('std', { air: G.t > 45 && Math.random() < .3 });
@@ -291,11 +332,12 @@ function update(dt) {
   // 车辆
   const [top, bot] = skyBand();
   const zx0 = st.x - SW() / 2, zx1 = st.x + SW() / 2, zy0 = st.y - PH() / 2 - 2 * U, zy1 = st.y + PH() / 2 + 4 * U;
+  updateRoad(dt);
   for (const c of G.cars) {
     c.x += c.vx * dt;
     if (c.type !== 'tesla') continue;
     c.t += dt; c.dist += Math.abs(c.vx) * dt;
-    if (c.state === 'drive' && c.dist >= c.liftAt) { c.state = 'lift'; c.t = 0; c.ly = c.y; if (playing || G.phase === 'menu') tone(70, .5, 'sawtooth', .05, 160); }
+    if (c.state === 'drive' && c.dist >= c.liftAt) { c.state = 'lift'; c.t = 0; c.ly = c.y; c.v = c.spd; c.vx = c.spd * c.dir; if (playing || G.phase === 'menu') tone(70, .5, 'sawtooth', .05, 160); }
     if (c.kind === 'dodge' && (c.state === 'fly' || c.state === 'lift')) {
       const dx = st.x - c.x;
       if (Math.sign(dx) === c.dir && Math.abs(dx) < 220 * U) {
@@ -311,7 +353,7 @@ function update(dt) {
       c.y += ((c.cruise + Math.sin(c.t * 1.7 + c.ph) * c.amp) - c.y) * Math.min(1, dt * 4);
     } else if (c.state === 'paid') {
       const p = Math.min(1, c.t / 1.6); c.y = c.ly + (c.lane - c.ly) * ss(p);
-      c.vx += (c.dir * 110 * U - c.vx) * dt; if (p >= 1) c.state = 'parked';
+      c.vx += (c.dir * 110 * U - c.vx) * dt; if (p >= 1) { c.state = 'parked'; c.spd = 110 * U; c.v = Math.abs(c.vx); }
     }
     c.vy = (c.y - py) / Math.max(dt, 1e-4);
     const air = c.state === 'fly' || c.state === 'lift';
@@ -418,6 +460,47 @@ function drawBg(now) {
 }
 function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 
+function drawGSBack() {
+  const x = gsX(), w = GSW(), yb = GY - 36 * U, yt = yb - 10 * U;
+  for (const s of [-1, 1]) {
+    const px = x + s * (w / 2 - 8 * U);
+    ctx.fillStyle = '#7d8592'; ctx.fillRect(px - 3 * U, yb, 6 * U, GY + 8 * U - yb);
+    ctx.fillStyle = '#e8c33a'; for (let k = 0; k < 3; k++) ctx.fillRect(px - 3 * U, GY - 2 * U - k * 6 * U, 6 * U, 3 * U);
+  }
+  ctx.fillStyle = '#0c0e12'; ctx.fillRect(x - w / 2 + 2 * U, yb, w - 4 * U, 3 * U);
+  for (let i = 0; i < 9; i++) { const lx = x - w / 2 + 10 * U + i * (w - 20 * U) / 8; glow(GL.warm, lx, yb + 2 * U, 6 * U, .8); }
+  ctx.globalCompositeOperation = 'lighter';
+  const cg = ctx.createLinearGradient(0, yb, 0, GY + 60 * U); cg.addColorStop(0, 'rgba(255,225,170,.12)'); cg.addColorStop(1, 'rgba(255,225,170,0)');
+  ctx.fillStyle = cg; ctx.fillRect(x - w / 2, yb, w, GY + 60 * U - yb);
+  ctx.globalCompositeOperation = 'source-over';
+  const fg = ctx.createLinearGradient(0, yt, 0, yb); fg.addColorStop(0, '#4f5765'); fg.addColorStop(1, '#262b33');
+  ctx.fillStyle = fg; ctx.fillRect(x - w / 2, yt, w, 10 * U);
+  ctx.fillStyle = 'rgba(200,230,255,.85)'; ctx.fillRect(x - w / 2, yb - 1.2 * U, w, 1.2 * U);
+  ctx.fillStyle = '#e8ebef'; ctx.font = `600 ${7 * U}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('地面车辆 · 人工 / ETC', x, yt + 5 * U);
+  const bw = 46 * U, bh = 13 * U, by = yt - bh - 3 * U;
+  ctx.fillStyle = '#3a404a'; ctx.fillRect(x - 1.2 * U, by + bh, 2.4 * U, 3 * U);
+  ctx.fillStyle = '#14171c'; rr(x - bw / 2, by, bw, bh, 2 * U); ctx.fill();
+  ctx.fillStyle = '#ffb45c'; ctx.font = `800 ${9.5 * U}px sans-serif`; ctx.fillText('收 费 站', x, by + bh / 2 + .5 * U);
+}
+function drawKiosk() {
+  const x = gsX(), base = GY + 57 * U, h = 34 * U, w = 20 * U;
+  ctx.fillStyle = '#e8c33a'; ctx.fillRect(x - w / 2 - 4 * U, base - 4 * U, w + 8 * U, 5 * U);
+  ctx.fillStyle = '#d9dde3'; ctx.fillRect(x - w / 2, base - h, w, h - 4 * U);
+  ctx.fillStyle = '#1f5fae'; ctx.fillRect(x - w / 2 - 2 * U, base - h - 4 * U, w + 4 * U, 5 * U);
+  ctx.fillStyle = '#ffe2a0'; ctx.fillRect(x - w / 2 + 3 * U, base - h + 5 * U, w - 6 * U, 11 * U);
+  glow(GL.warm, x, base - h + 10 * U, 16 * U, .35);
+  ctx.fillStyle = '#5b4a2e'; ctx.fillRect(x - 2.5 * U, base - h + 9 * U, 5 * U, 7 * U);
+}
+function drawGate(dir) {
+  const g = gates[dir], ly = laneY(dir), x = gsX() + dir * 2 * U, top = ly - 6 * U, bot = ly + 13 * U;
+  ctx.fillStyle = '#c9cdd4'; ctx.fillRect(x - 2 * U, top, 4 * U, bot - top);
+  glow(g.a > .5 ? GL.green : GL.red, x, top - 3 * U, 6 * U, .9);
+  ctx.save(); ctx.translate(x, top + 2 * U); ctx.rotate(dir * g.a * 1.35); ctx.scale(-dir, 1);
+  const len = 34 * U;
+  for (let k = 0; k < 5; k++) { ctx.fillStyle = k % 2 ? '#f2f2f2' : '#e0352b'; ctx.fillRect(k * len / 5, -1.6 * U, len / 5, 3.2 * U); }
+  ctx.restore();
+}
 function drawSmoke() {
   for (const p of G.parts) {
     const f = p.life / p.max;
@@ -603,10 +686,12 @@ function draw(now) {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   if (G.shake > 0) ctx.translate(rnd(-1, 1) * G.shake * 14 * U, rnd(-1, 1) * G.shake * 14 * U);
   drawBg(now);
+  drawGSBack();
   const lowCars = [], highCars = [];
-  for (const c of G.cars) (c.type === 'ground' || c.state === 'drive' || c.state === 'parked' ? lowCars : highCars).push(c);
+  for (const c of G.cars) (onRoad(c) ? lowCars : highCars).push(c);
+  lowCars.push({ y: laneY(-1) + .1, fx: () => drawGate(-1) }, { y: GY + 57 * U, fx: drawKiosk }, { y: laneY(1) + .1, fx: () => drawGate(1) });
   lowCars.sort((a, b) => a.y - b.y);
-  for (const c of lowCars) c.type === 'ground' ? drawGround(c) : drawTesla(c, now);
+  for (const c of lowCars) c.fx ? c.fx() : c.type === 'ground' ? drawGround(c) : drawTesla(c, now);
   drawSmoke();
   drawStation(now);
   for (const c of highCars) drawTesla(c, now);
