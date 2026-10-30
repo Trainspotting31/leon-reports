@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>新闻阅读 · 十一报晚间时间线</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --panel:#fffdf8; --ink:#1a1814; --muted:#5c574d; --line:#ddd6c8;
+    --accent:#9a2a1e; --accent-ink:#fff; --chip:#ece7da; --live:#b42318;
+    --ap:#111111; --rfi:#0055a4; --reuters:#e8710a; --bbc:#b80000; --nyt:#121212; --bloom:#2800d7; --econ:#e3120b;
+    --dw:#0072bc; --guardian:#052962; --voa:#17648c; --rfa:#8a6d00;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141311; --panel:#1d1c19; --ink:#ece7dc; --muted:#a8a193; --line:#33302a; --chip:#2a2823; --accent:#e0654f; --ap:#d8d2c4; --nyt:#d8d2c4; --guardian:#7aa2e0; --bloom:#9d8cff; --rfa:#d9b84a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif SC","Songti SC",Georgia,serif;line-height:1.6}
+  .sans{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px}
+  .toprow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0;letter-spacing:.02em}
+  .edition{font-size:13px;color:var(--muted)}
+  .edition b{color:var(--accent)}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px}
+  .chipbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .search{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
+  main{max-width:920px;margin:0 auto;padding:14px 16px 40px}
+  .brief{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--accent);padding:14px 16px;margin-bottom:8px}
+  .brief h2{font-size:16px;margin:0 0 8px}
+  .brief ol{margin:0;padding-left:20px;font-size:14.5px}
+  .brief li{margin:5px 0}
+  .brief li b{color:var(--accent)}
+  .brief .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 0 4px}
+  .tl-head h2{font-size:17px;margin:0}
+  .tl-head span{font-size:12.5px;color:var(--muted)}
+  /* timeline */
+  .timeline{position:relative;margin-top:6px}
+  .timeline::before{content:"";position:absolute;left:55px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  article{position:relative;display:grid;grid-template-columns:44px 22px 1fr;gap:0 6px;padding:12px 0 14px}
+  .time{font-size:13px;font-weight:700;text-align:right;padding-top:2px;font-variant-numeric:tabular-nums}
+  .rail{display:flex;justify-content:center}
+  .dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none;box-shadow:0 0 0 3px var(--bg);z-index:1}
+  .card{background:var(--panel);border:1px solid var(--line);padding:12px 14px 10px;min-width:0}
+  .srcrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:5px}
+  .srcbadge{font-size:11.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 7px;letter-spacing:.02em}
+  @media (prefers-color-scheme: dark){ .srcbadge{color:#101010} .srcbadge.on-dark{color:#fff} }
+  .cat{font-size:11.5px;color:var(--muted)}
+  .hot{color:var(--live);font-weight:700;font-size:11.5px}
+  article h3{font-size:16.5px;line-height:1.45;margin:0 0 4px}
+  article h3 a{color:var(--ink);text-decoration:none}
+  article h3 a:hover{text-decoration:underline}
+  .orig{font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 5px;line-height:1.45}
+  .sum{font-size:14px;color:var(--ink);margin:0}
+  .meta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+  .tag{border:1px solid var(--line);border-radius:3px;padding:0 5px}
+  body.compact article{padding:7px 0 8px}
+  body.compact .sum,body.compact .orig{display:none}
+  body.compact article h3{font-size:15px}
+  body.compact .card{padding:8px 12px}
+  .hidden{display:none!important}
+  .empty{padding:30px;text-align:center;color:var(--muted);display:none}
+  footer{max-width:920px;margin:0 auto;padding:0 16px 28px;font-size:12px;color:var(--muted)}
+  @media(max-width:560px){
+    .timeline::before{left:47px}
+    article{grid-template-columns:38px 18px 1fr;gap:0 4px}
+    .time{font-size:12px}
+    article h3{font-size:15.5px}
+    .sum{font-size:13.5px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="toprow">
+    <h1>十一报时间线</h1>
+    <div class="edition sans">2026年10月30日 星期五 · <b>晚间版 22:04</b> 截稿 · 共 61 条 · 11 家聚合 · 按时间由新到旧 · 点标题前往来源</div>
+  </div>
+  <div class="controls sans" role="group" aria-label="筛选">
+    <button class="chipbtn" data-f="all" aria-pressed="true">全部</button>
+    <button class="chipbtn" data-f="ap" aria-pressed="false">美联社</button>
+    <button class="chipbtn" data-f="rfi" aria-pressed="false">法广</button>
+    <button class="chipbtn" data-f="reuters" aria-pressed="false">路透</button>
+    <button class="chipbtn" data-f="bbc" aria-pressed="false">BBC</button>
+    <button class="chipbtn" data-f="nyt" aria-pressed="false">纽约时报</button>
+    <button class="chipbtn" data-f="bloomberg" aria-pressed="false">彭博</button>
+    <button class="chipbtn" data-f="economist" aria-pressed="false">经济学人</button>
+    <button class="chipbtn" data-f="dw" aria-pressed="false">德国之声</button>
+    <button class="chipbtn" data-f="guardian" aria-pressed="false">卫报</button>
+    <button class="chipbtn" data-f="voa" aria-pressed="false">美国之音</button>
+    <button class="chipbtn" data-f="rfa" aria-pressed="false">自由亚洲</button>
+    <input class="search" id="q" type="search" placeholder="搜关键词：币安 / 油价 / 中期选举 / 拉加德…" aria-label="搜索标题" />
+    <button class="chipbtn" id="density" aria-pressed="false">紧凑模式（只看标题）</button>
+  </div>
+</header>
+
+<main>
+  <div class="brief">
+    <h2>⏱ 3 分钟总览 — 今晚只有 5 条主线</h2>
+    <ol>
+      <li><b>币安遭史上最大加密盗窃：</b>约 63 亿美元涉险、近半已冻结，路透/BBC/彭博同题头条，《卫报》跟进监管追问，自由亚洲聚焦朝鲜黑客组织 TraderTraitor 与亚洲市场外溢，比特币跌近 4%。</li>
+      <li><b>AI 烧钱恐慌：</b>亚马逊、英特尔、Alphabet 财报接连引爆抛售，纳指期货跌超 2%，亚洲芯片股与台股跟跌，市场开始质疑巨额资本开支何时回本。</li>
+      <li><b>中东与油价：</b>胡塞袭击沙特炼厂、霍尔木兹油轮遇袭，布伦特冲向 118 美元；法广报伊朗袭击科威特致中企建筑 1 人死亡，自由亚洲追踪在海湾中企与人员安全，德国之声追问欧洲能源安全。</li>
+      <li><b>央行周收尾：</b>美联储、欧央行、日本央行均按兵不动但偏鹰；拉加德宣布明年 2 月提前卸任欧央行行长，接班人争夺成欧洲焦点，日本通胀达标为 12 月加息铺路。</li>
+      <li><b>政治面：</b>美国中期选举临近——特朗普改打电话拉票、农村支持率新低，《卫报》与美国之音补上摇摆州现场；塞尔维亚学生党胜选后挑总理；帕特里克·斯图尔特逝世，享年 86 岁（多家共同头条）。</li>
+    </ol>
+    <p class="note sans">本版新增德国之声、《卫报》、美国之音、自由亚洲 4 家，共 +24 条，与原 7 家 37 条全部汇入下方同一条时间线，不再按媒体分区；每条保留发布时间、中文标题、英文原题（中文媒体除外）与详细 summary。</p>
+  </div>
+
+  <div class="tl-head"><h2>时间线 · 10月30日</h2><span class="sans">由新到旧 ↓ · 同一事件多家同题即当日真头条</span></div>
+
+  <div class="timeline" id="timeline">
+
+    <article data-src="reuters" data-k="币安 加密 黑客 朝鲜 63亿 冻结">
+      <div class="time sans">21:58</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">金融</span><span class="hot">今日第一</span></div>
+      <h3><a href="https://www.reuters.com/podcasts/crypto-hack-serbias-next-prime-minister-remembering-patrick-stewart-2026-10-30/" target="_blank" rel="noopener">币安冻结资产应对 63 亿美元盗窃——或为加密史上最大</a></h3>
+      <p class="orig">Binance freezes assets after $6.3 billion heist, crypto industry's biggest</p>
+      <p class="sum">Summary：初步调查指向一名工程师的笔记本被攻破，成为攻击者进入系统的突破口。Tether、Circle 已协助冻结约 24 亿美元涉案资产，币安承诺兜底用户损失，提币暂停至安全核查完成。这起案件规模超过去年 Bybit 的 15 亿美元被盗纪录，若确认将改写加密行业安全史，也让各国监管对大型交易所的托管与内控再起质疑。</p></div>
+    </article>
+
+    <article data-src="bbc" data-k="币安 黑客 朝鲜 63亿 直播 入侵">
+      <div class="time sans">21:42</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">商业</span><span class="hot">LIVE 直播更新</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">币安发现多处入侵点，63 亿美元盗窃或为史上最大</a></h3>
+      <p class="orig">Crypto firm Binance finds multiple 'points of breach' in $6.3bn hack thought to be largest ever</p>
+      <p class="sum">Summary：BBC 以直播页滚动更新：币安承认系统存在多个入侵点，而非单一漏洞。链上分析机构 TRM Labs 称，资金转移手法与朝鲜关联事件高度相似。币安称追回工作已经开始、用户资产登记核对同步进行，但尚无人或组织宣称负责；英国与欧盟多名议员当天呼吁加快交易所储备证明与托管规则立法。</p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="科技股 抛售 亚马逊 英特尔 避险 国债 AI">
+      <div class="time sans">21:30</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">市场</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">科技股连跌第二日：财报失望加速撤离 AI 交易，资金涌入国债避险</a></h3>
+      <p class="orig">Technology shares sold off for a second consecutive day… crude oil gained</p>
+      <p class="sum">Summary：抛售进入第二天且出现明显轮动：亚马逊电商增速创三年新低、资本开支却超预期，英特尔指引不及预期，投资者开始用「何时回本」而非「投入多少」给 AI 交易定价。资金涌入美国国债避险的同时油价上涨，形成股债油三线并行的紧张格局——彭博称这是今日全球市场的总叙事。</p></div>
+    </article>
+
+    <article data-src="nyt" data-k="参议院 战争权力 伊朗 中东 直播">
+      <div class="time sans">21:15</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国政治</span><span class="hot">LIVE 直播更新</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">参议院共和党人挡下战争权力限制，中东危机扩大</a></h3>
+      <p class="orig">Live Updates: Senate Republicans Block War Powers Limits as Mideast Crisis Widens</p>
+      <p class="sum">Summary：纽时直播页：参议院共和党人否决了限制总统对伊朗动武权限的提案，总统的军事行动空间得以保留。同一天，国防部公布又一名在伊朗袭击中丧生的美军姓名，国务院则包机接回希望离开该地区的美国人。表决结果意味着国会短期内难以给白宫的中东行动套上缰绳，危机如何收场更取决于战场与油价。</p></div>
+    </article>
+
+    <article data-src="economist" data-k="Alphabet 亚马逊 财报 世界简报 谷歌">
+      <div class="time sans">20:55</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">每日简报</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">《世界简报》10月30日：Alphabet 的坏日子；亚马逊财报令人失望</a></h3>
+      <p class="orig">The World in Brief: Alphabet's bad day; Amazon's earnings disappoint, and more</p>
+      <p class="sum">Summary：经济学人当日简报把两家巨头并列：谷歌母公司 Alphabet 股价创史上最差单日表现（简报口径跌约 15%），自家 AI 搜索蚕食广告收入的担忧集中爆发；亚马逊财报同样令市场失望。简报同时收录拉加德卸任消息，与全场 AI 抛售线、央行线完全咬合——一天之内，科技与货币政策两条主线在简报里交汇。</p></div>
+    </article>
+
+    <article data-src="guardian" data-k="币安 卫报 监管 英国 投资者 加密">
+      <div class="time sans">20:40</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">金融 · 监管</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">币安被盗震动伦敦金融城：英国监管者被追问「交易所到底谁来管」</a></h3>
+      <p class="orig">Binance hack prompts fresh questions over crypto regulation in the UK and beyond</p>
+      <p class="sum">Summary：《卫报》的角度落在监管而非案情本身：63 亿美元级别的盗窃发生在一家全球最大交易所身上，英国金融行为监管局（FCA）再次被议员追问现行注册与托管制度是否形同虚设。报道梳理了英国散户经海外平台持有加密资产的规模与保护缺口，并引述消费者团体呼吁：把交易所客户资产隔离与储备审计从「自愿披露」改为强制规则。</p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国之声 油价 能源 德国 工业 霍尔木兹">
+      <div class="time sans">20:22</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">能源 · 欧洲</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">布伦特冲向 118 美元，德国工业界警告：能源账单噩梦恐重演</a></h3>
+      <p class="orig">Oil price surge revives energy-cost fears for German industry</p>
+      <p class="sum">Summary：德国之声从欧洲最大经济体的视角看油价：胡塞袭击沙特炼厂、霍尔木兹油轮遇袭后，德国化工、汽车零部件等高耗能行业团体公开警告，若高油价持续超过一个季度，2022 年能源危机时的成本压力将重演。报道同时指出，德国对海湾能源的进口依赖在俄气断供后不降反升，柏林正评估战略储备释放与赴海湾外交斡旋两条线。</p></div>
+    </article>
+
+    <article data-src="ap" data-k="帕特里克 斯图尔特 逝世 星际迷航 美联社">
+      <div class="time sans">20:05</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">文化</span><span class="hot">多家头条</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">《星际迷航》《X战警》影星帕特里克·斯图尔特逝世，享年 86 岁</a></h3>
+      <p class="orig">Patrick Stewart, Star Trek and X-Men icon, dies at 86</p>
+      <p class="sum">Summary：发言人证实，斯图尔特在洛杉矶家中离世。这位以《星际迷航：下一代》皮卡德舰长与《X战警》X 教授闻名全球的英国演员，职业生涯横跨莎士比亚舞台与流行文化银幕。路透、BBC、《卫报》同步以头条或讣闻致哀——在满屏市场与战事新闻的一天里，这是少数让全球编辑部同时降下节奏的消息。</p></div>
+    </article>
+
+    <article data-src="bbc" data-k="帕特里克 斯图尔特 麦克莱恩 悼念 BBC">
+      <div class="time sans">19:48</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">文化</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">伊恩·麦克莱恩领衔悼念帕特里克·斯图尔特（86 岁）</a></h3>
+      <p class="orig">Sir Ian McKellen leads tributes to 'beloved actor' Sir Patrick Stewart after his death at 86</p>
+      <p class="sum">Summary：BBC 文化线头条：与斯图尔特在《X战警》中演了一辈子对手、戏外却是至交的伊恩·麦克莱恩率先发声悼念，多位合作过的导演与演员跟进。从皇家莎士比亚剧团的舞台到皮卡德舰长的舰桥，BBC 的悼念文把重点放在他如何把古典训练带进类型片——这也是几代观众共同记忆的来源。</p></div>
+    </article>
+
+    <article data-src="reuters" data-k="纳斯达克 亚马逊 英特尔 AI 支出 期货">
+      <div class="time sans">19:30</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">市场</span></div>
+      <h3><a href="https://www.reuters.com/business/nasdaq-futures-tumble-amazon-intel-results-deepen-ai-spending-woes-2026-10-30/" target="_blank" rel="noopener">纳指期货跌超 2%：亚马逊、英特尔财报加深 AI 烧钱忧虑</a></h3>
+      <p class="orig">Nasdaq futures tumble as Amazon, Intel results deepen AI spending woes</p>
+      <p class="sum">Summary：数字很具体：亚马逊盘前跌约 7%，英特尔暴跌约 25% 并警告今年将持续烧现金，两家合计可能蒸发约 3000 亿美元市值，英伟达、AMD 跟跌。路透指出，触发点不是业绩绝对值差，而是资本开支指引一次次上调、回报时间表一次次后移——市场对 AI 军备竞赛的耐心，正在这个财报季见底。</p></div>
+    </article>
+
+    <article data-src="voa" data-k="美国之音 特朗普 电话集会 中期选举 堪萨斯 爱荷华">
+      <div class="time sans">19:12</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA 中文</span><span class="cat">美国政治</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.voachinese.com" target="_blank" rel="noopener">选举倒计时：特朗普取消实地行程，改以电话集会密集拉票</a></h3>
+      <p class="sum">Summary：美国之音中文网的选举追踪：中期选举投票日前数日，特朗普取消原定堪萨斯、爱荷华的实地集会，改为一天多场的电话集会，集中轰炸摇摆选区选民。报道采访两党操盘手解读这一转变——是行程与安全考量，还是对线下动员效果的重新评估；同时梳理共和党在农村基本盘支持率下滑背景下，电话拉票能否补上地面组织的缺口。</p></div>
+    </article>
+
+    <article data-src="rfi" data-k="科威特 伊朗 中国公司 死亡 法广">
+      <div class="time sans">18:55</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI 中文</span><span class="cat">中东</span><span class="hot">涉华</span></div>
+      <h3><a href="https://www.rfi.fr/cn/" target="_blank" rel="noopener">科威特：伊朗袭击击中中企建筑，致 1 人死亡</a></h3>
+      <p class="sum">Summary：科威特方面周四宣布，伊朗的一次袭击击中该国北部一栋属于中国公司的建筑，造成 1 人死亡。法广强调，这是本轮中东危机外溢第一次明确波及在海湾的中资机构人员，海湾国家遍布中资基建与能源项目工地，在外中国公民与企业的安全预案随之成为焦点；事件也与同日油价冲高互为因果——袭击越接近能源与商业设施，市场神经越紧。</p></div>
+    </article>
+
+    <article data-src="guardian" data-k="谷歌 Alphabet 市值 AI 搜索 广告 卫报">
+      <div class="time sans">18:40</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">科技 · 商业</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">自家 AI 啃食自家广告：谷歌 5000 亿美元市值蒸发说明了什么</a></h3>
+      <p class="orig">Google's AI search is eating its own advertising business</p>
+      <p class="sum">Summary：《卫报》的长篇分析与 BBC 的快讯互补：当搜索结果页顶部先给 AI 摘要，用户不再点击链接，谷歌赖以生存的广告点击便被自家产品截流。报道采访了英国多家新闻与电商网站主，他们的自然流量在 AI 摘要上线后明显下滑——这场抛售因此不只是股价问题，而是整个「搜索—流量—广告」互联网商业模式的压力测试。</p></div>
+    </article>
+
+    <article data-src="bbc" data-k="谷歌 Alphabet 市值 AI 广告 BBC">
+      <div class="time sans">18:24</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">科技</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">谷歌市值蒸发 5000 亿美元：自家 AI 搜索反噬广告收入</a></h3>
+      <p class="orig">Google value plunges by $500bn as its own AI search hits ad sales</p>
+      <p class="sum">Summary：BBC 商业线快讯口径：AI 摘要影响搜索广告变现，Alphabet 股价创六个月新低，市值蒸发约 5000 亿美元。这条与路透的纳指期货、经济学人的《世界简报》构成同一事实的三种写法——快讯给数字、市场稿给情绪、简报给排序，想深读只需挑《卫报》18:40 的分析版即可。</p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="拉加德 欧央行 日本央行 通胀 加息 彭博">
+      <div class="time sans">18:18</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">央行</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">拉加德离任倒计时；日本央行称通胀已达标，12 月加息开门</a></h3>
+      <p class="orig">Changing of Lagarde, Binance's $6.3B Hack, Big Tech's Bruising Week — Daybreak Europe</p>
+      <p class="sum">Summary：彭博欧洲晨播把两件事并置：拉加德以「战胜通胀、推进欧元数字化」的政绩进入谢幕倒计时，接班人问题提前九个月摆上台面；日本央行则首次确认潜在通胀已达 2% 目标，为 12 月加息打开大门。三大央行同周按兵不动却集体偏鹰，全球利率「更高更久」的定价短期内难以松动。</p></div>
+    </article>
+
+    <article data-src="ap" data-k="加拿大 欧盟 特朗普 关税 美联社">
+      <div class="time sans">18:02</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">国际</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">加拿大与欧盟推进结盟，应对特朗普贸易施压</a></h3>
+      <p class="orig">Canada, EU push alliance amid Trump trade pressure</p>
+      <p class="sum">Summary：美联社 10 月 30 日头条之一：在美国关税压力持续加码的背景下，加拿大与欧盟领导人推动更紧密的跨大西洋协作，议题覆盖贸易、关键矿产与防务采购。这是「去美国单一依赖」在西方内部的又一步——对出口导向的德国经济意味着什么，德国之声 13:30 有同题解读，两条对照读更完整。</p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国之声 拉加德 欧央行 接班人 德国">
+      <div class="time sans">17:45</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">欧洲 · 央行</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">拉加德提前交棒：欧央行行长之争，柏林与巴黎的牌怎么打</a></h3>
+      <p class="orig">Race to succeed Lagarde at the ECB begins early</p>
+      <p class="sum">Summary：德国之声把拉加德明年 2 月提前卸任的消息做成欧洲权力分配的解读：欧央行行长人选历来是法德平衡的产物，德国籍候选人时隔多年再次被认真讨论，但巴黎不会轻易让出这一席位。报道梳理了可能的候选名单与各自的货币政策倾向，并提醒：交接期恰逢利率高位与油价冲击，新行长的第一次新闻发布会就可能面临市场拷问。</p></div>
+    </article>
+
+    <article data-src="rfa" data-k="自由亚洲 反诈 手机 财经网站 盘问">
+      <div class="time sans">17:28</div><div class="rail"><span class="dot" style="background:var(--rfa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--rfa)">自由亚洲 RFA</span><span class="cat">中国</span><span class="hot">新增媒体 · 涉华</span></div>
+      <h3><a href="https://www.rfa.org/mandarin" target="_blank" rel="noopener">浏览境外财经网站被反诈程序识别盘问，受访者讲述经过</a></h3>
+      <p class="sum">Summary：自由亚洲在法广同题报道之外补上了当事人声音：多名受访者称，因在手机上浏览境外财经网站，被反诈程序识别后接到盘问电话或上门核查。报道追问识别的技术路径与法律依据，也记录了金融从业者与普通投资者的两难——获取境外市场信息是日常工作与理财所需，却可能触发预警。与法广 17:10 的快讯对照，可看清同一事件的「通报版」与「亲历版」差别。</p></div>
+    </article>
+
+    <article data-src="rfi" data-k="中国 反诈 手机 财经网站 法广">
+      <div class="time sans">17:10</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI 中文</span><span class="cat">中国</span></div>
+      <h3><a href="https://www.rfi.fr/cn/" target="_blank" rel="noopener">中国警方通过反诈程序识别盘问浏览境外财经网站人员</a></h3>
+      <p class="sum">Summary：法广头条关注：据报约两亿部手机装有反诈程序，有用户因浏览墙外财经网站被识别并盘问。报道把事件放在金融信息管控的大背景下讨论——在跨境投资与行情信息高度依赖境外网站的今天，识别边界划在哪里，直接关系普通投资者的信息获取成本。自由亚洲 17:28 有当事人亲历的跟进版本。</p></div>
+    </article>
+
+    <article data-src="reuters" data-k="油价 胡塞 沙特 霍尔木兹 炼厂">
+      <div class="time sans">16:55</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">能源</span></div>
+      <h3><a href="https://www.reuters.com/business/energy/oil-rises-supply-concerns-houthis-attack-saudi-arabia-2026-10-30/" target="_blank" rel="noopener">胡塞袭击沙特推升油价，布伦特月涨近 14%</a></h3>
+      <p class="orig">Oil rises on supply concerns as Houthis attack Saudi Arabia</p>
+      <p class="sum">Summary：胡塞武装称袭击了沙特最大炼厂等多处目标，霍尔木兹海峡又有油轮触雷起火，两条供应链风险同日叠加，布伦特原油冲向 118 美元、本月累计涨幅近 14%。紧迫感已传到行业层面：埃克森美孚、雪佛龙高管取消了赴阿联酋参加石油展的行程。油价若高位站稳，各国央行刚压住的通胀预期可能被重新点燃。</p></div>
+    </article>
+
+    <article data-src="nyt" data-k="胡塞 也门 红海 贸易 摩卡 纽约时报">
+      <div class="time sans">16:38</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">中东</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">胡塞武装击溃也门政府军夺摩卡，红海贸易水道威胁升级</a></h3>
+      <p class="orig">The Iran-backed militia routed Yemeni government forces in Mokha</p>
+      <p class="sum">Summary：纽时免费精选的战场稿解释了油价为何如此紧张：胡塞武装在也门港口城市摩卡击溃政府军，地面控制力进一步增强，意味着其对红海—曼德海峡这条全球贸易命脉的袭击能力同步上升。袭击炼厂、威胁航道、夺取港口三件事发生在同一周，能源市场交易的已经不只是短期供应中断，而是航线安全的长期溢价。</p></div>
+    </article>
+
+    <article data-src="voa" data-k="美国之音 国务院 包机 中东 撤离 战争权力">
+      <div class="time sans">16:20</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA 中文</span><span class="cat">中东 · 美国</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.voachinese.com" target="_blank" rel="noopener">参议院表决后，国务院包机继续接回滞留中东的美国人</a></h3>
+      <p class="sum">Summary：美国之音跟进纽时直播的后续：参议院否决战争权力限制提案后，白宫的中东行动不受国会新增约束；与此同时，国务院包机持续把希望离开该地区的美国人接回。报道汇总了使领馆的撤离登记指引与航班安排，并采访安全专家评估局势升级概率——对在海湾有人员与项目的各国机构而言，这组信息与科威特中企遇袭的消息需要合并阅读。</p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国之声 乌克兰 波兰 北约 防空 弹坑">
+      <div class="time sans">16:02</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">俄乌 · 北约</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">波兰境内现爆炸弹坑，北约东翼的防空警报又响了一次</a></h3>
+      <p class="orig">Crater found in Poland as Ukraine endures another night of strikes</p>
+      <p class="sum">Summary：德国之声的欧洲安全视角：乌克兰再遭彻夜空袭的同时，波兰境内发现爆炸弹坑，华沙与北约的归因调查随即启动。报道回顾了此前导弹落入波兰境内的先例与北约的处置流程，指出东翼国家要求加强一体化防空的呼声再起；对德国而言，争论的焦点是驻东翼防空力量的轮换与弹药库存——这也是泽连斯基反复喊话的「防空缺口」在盟友一侧的对应面。</p></div>
+    </article>
+
+    <article data-src="rfi" data-k="俄罗斯 空袭 乌克兰 波兰 爆炸 法广">
+      <div class="time sans">15:47</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI 中文</span><span class="cat">俄乌</span></div>
+      <h3><a href="https://www.rfi.fr/cn/" target="_blank" rel="noopener">俄罗斯空袭乌克兰 8 人遇难，波兰境内出现爆炸弹坑</a></h3>
+      <p class="sum">Summary：法新社 30 日基辅电：乌克兰经历又一个轰炸之夜，空袭造成 8 人遇难，其中包括一家六口；泽连斯基再次呼吁盟友提供反导系统。与死伤数字同样重要的是波兰境内的弹坑——弹药碎片一旦确认来源，事件性质就从「乌克兰被袭」升级为「北约领土被波及」，德国之声 16:02 的跟进正是围绕这一升级风险展开。</p></div>
+    </article>
+
+    <article data-src="ap" data-k="乌克兰 俄罗斯 空袭 泽连斯基 美联社">
+      <div class="time sans">15:30</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">俄乌</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">乌克兰再遭彻夜轰炸，泽连斯基再吁盟友提供防空系统</a></h3>
+      <p class="orig">Ukraine endures another night of bombardment</p>
+      <p class="sum">Summary：与法广同源（法新社电讯）的美联社版本，细节略有侧重：彻夜空袭的打击范围、受损的民用设施，以及基辅方面「防空缺口仍是最大短板」的明确表态。同一夜里，BBC 在赫尔松记录到短暂停火的另一面（见 15:14）——前线不同地段，一边是轰炸，一边是喘息，这正是这场战争当下的真实质地。</p></div>
+    </article>
+
+    <article data-src="bbc" data-k="乌克兰 赫尔松 停火 奥列什基 BBC">
+      <div class="time sans">15:14</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">俄乌</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">赫尔松短暂停火现生机，居民担心只是喘息；俄占区开疏散通道</a></h3>
+      <p class="orig">'The city is alive': A brief peace in Kherson, but residents fear what comes next</p>
+      <p class="sum">Summary：BBC 现场报道的标题直接引居民的话——「城市活过来了」。临时停火让赫尔松罕见地安静了几天，居民抓紧修缮、采购、过几天正常日子，但受访者普遍担心这只是下一轮打击前的间歇。同期俄占区奥列什基开出疏散通道。记者的笔触克制，信息量却大：停火的实际执行状况、居民的物资储备与去留意向，都在为判断局势走向提供地面证据。</p></div>
+    </article>
+
+    <article data-src="bbc" data-k="民主党 身份危机 特朗普 中期选举 BBC">
+      <div class="time sans">14:58</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">美国政治</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">深度：民主党团结反特朗普，却在「自己是谁」上分裂</a></h3>
+      <p class="orig">The Democrats are united against Trump — but divided on their future / Democrats have an identity crisis</p>
+      <p class="sum">Summary：BBC InDepth 与美国线的长篇：中期选举在即，民主党在「反对特朗普」上高度团结，却在经济纲领、移民立场与候选人风格等「自己是谁」的问题上明显分裂，且这种身份危机「不会轻易修好」。另有配套专题解析选举结果的几种组合将如何重塑特朗普余下任期。与《卫报》14:35 的摇摆州现场对照读，一篇看党内路线、一篇看选民脸色。</p></div>
+    </article>
+
+    <article data-src="guardian" data-k="卫报 中期选举 摇摆州 现场 特朗普 民主党">
+      <div class="time sans">14:35</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">美国政治 · 现场</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">摇摆州现场：物价牌比竞选口号更有说服力</a></h3>
+      <p class="orig">On the ground in the swing states: prices, not slogans, are deciding votes</p>
+      <p class="sum">Summary：《卫报》美国版派记者走访多个摇摆州选区，结论朴素：决定未定选民的不是集会声量，而是超市与加油站的价格牌。报道记录了农产品价格、油价冲高对家庭账本的直接冲击如何转化为对执政党的不满，也写了民主党基层组织试图用地方议题对冲全国叙事的努力。与同日特朗普改打电话拉票、农村支持率创新低两条消息拼在一起，中期选举的地面图景基本完整。</p></div>
+    </article>
+
+    <article data-src="nyt" data-k="邦迪 爱泼斯坦 传票 司法部 纽约时报">
+      <div class="time sans">14:20</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">司法部长邦迪被传唤，就爱泼斯坦案处理作证</a></h3>
+      <p class="orig">Bondi Is Subpoenaed to Testify About Handling of Epstein Case</p>
+      <p class="sum">Summary：国会传票再掀爱泼斯坦案余波：司法部长邦迪被要求就司法部对该案的处理方式出面作证，文件公开范围与调查节奏是听证焦点。选前一周爆出这一议程，对两党都是变量——共和党要解释执法尺度，民主党则要避免被指作秀。纽时的报道梳理了传票的法律路径与邦迪方面可能的应对，包括以执法敏感为由的有限作证安排。</p></div>
+    </article>
+
+    <article data-src="rfa" data-k="自由亚洲 朝鲜 黑客 币安 TraderTraitor 亚洲">
+      <div class="time sans">14:02</div><div class="rail"><span class="dot" style="background:var(--rfa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--rfa)">自由亚洲 RFA</span><span class="cat">亚洲安全 · 加密</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.rfa.org/mandarin" target="_blank" rel="noopener">矛头再指朝鲜黑客：币安案让亚洲加密市场与制裁规避问题同框</a></h3>
+      <p class="sum">Summary：自由亚洲的切入点是地缘：TRM Labs 将币安案手法与朝鲜黑客组织 TraderTraitor 关联后，这起盗窃在亚洲语境里就不只是金融新闻——若归因坐实，被盗资金可能经混币与跨境通道流入受制裁项目，联合国专家小组此前的多份报告正是追踪这条链。报道汇总了韩国、日本等地交易所当天的紧急自查与提币审查动向，亚洲投资者持仓集中的平台普遍提高了风控等级。</p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="亚洲 芯片 AI 抛售 台湾股 台股 彭博">
+      <div class="time sans">13:48</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">亚洲市场</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">亚洲芯片股遭殃：大型科技 AI 资金忧虑深化；台股迈向修正</a></h3>
+      <p class="orig">Big Tech's Deepening AI Funding Concerns Sink Asian Chip Stocks / Taiwan Stocks Heads for Correction as Global AI Selloff Deepens</p>
+      <p class="sum">Summary：彭博亚洲线记录了抛售的地理传导：美股科技巨头的 AI 开支忧虑越洋砸向亚洲芯片供应链，台股迈向技术性修正，铜价下跌，避险买盘推高各国国债，日元在日本央行按兵不动后走强。对亚洲投资者，这条的意义在于确认本轮调整是全球性的资金再定价，而非单一市场的财报事故；美国之音同日从供应链安全角度有同题报道（09:58），两条连读更完整。</p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国之声 加拿大 欧盟 贸易 德国 出口 关税">
+      <div class="time sans">13:30</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">贸易 · 欧洲</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">加拿大向欧盟靠拢，德国出口商在算另一笔账</a></h3>
+      <p class="orig">Canada-EU rapprochement puts German exporters on alert</p>
+      <p class="sum">Summary：与美联社同日头条（18:02）同题，德国之声追问加欧结盟对德国的实际含义：德国出口同时依赖美国市场与全球自由贸易秩序，华盛顿的关税施压若促使更多经济体「组团对冲」，德国企业既可能受益于新协定，也可能被夹在跨大西洋裂缝之间。报道引述行业协会表态，呼吁柏林在欧盟层面推动与加拿大的协定尽快落到关税与采购细则上。</p></div>
+    </article>
+
+    <article data-src="ap" data-k="密歇根 参议员 候选人 特朗普 经济 美联社">
+      <div class="time sans">13:12</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国政治</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">密歇根民主党参议员候选人猛批特朗普经济与信仰言论</a></h3>
+      <p class="orig">Democratic Senate candidate Abdul El-Sayed blasts Trump on economy, faith remarks in Michigan</p>
+      <p class="sum">Summary：中期选举选战升温，民主党参议员候选人 El-Sayed 在关键摇摆州密歇根集中攻击特朗普的经济记录与其涉及信仰的言论，试图同时动员工人选民与少数族裔选民。密歇根一席被两党都列为必争之地，这场隔空交火是全国选战的一个切片：经济牌与身份牌同时打出，效果如何，几天后的开票见分晓。</p></div>
+    </article>
+
+    <article data-src="economist" data-k="美国 拉丁裔 亚裔 摇摆选民 封面 经济学人">
+      <div class="time sans">12:55</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">周刊封面</span><span class="hot">10月31日刊</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">10月31日刊封面：拉丁裔与亚裔成美国最动态的摇摆选民</a></h3>
+      <p class="orig">The Americans changing politics for the better — Hispanics and Asians have become their country's most dynamic swing voters</p>
+      <p class="sum">Summary：本周刊封面故事的标题自带立场——「在把政治变好的美国人」。经济学人论证：拉丁裔与亚裔已成为美国最具流动性的摇摆选民群体，不再被任何一党视为理所当然的票仓，其经济关切与代际变化正在重塑两党的竞选策略。中期选举前夜读这篇，恰好为理解摇摆州现场报道（《卫报》14:35）提供人口结构层面的注脚。</p></div>
+    </article>
+
+    <article data-src="voa" data-k="美国之音 特朗普 农村 支持率 农团 中期选举">
+      <div class="time sans">12:38</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA 中文</span><span class="cat">美国政治</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.voachinese.com" target="_blank" rel="noopener">特朗普农村支持率创新低，农业团体投放广告阻击共和党</a></h3>
+      <p class="sum">Summary：美国之音与路透同题互证（路透版见 07:20）：特朗普在农村选民中的支持率跌至新低，以动物福利为导向的农业团体正大举投放广告，目标是在农村选区击败共和党候选人。VOA 的版本补充了农业州受访农户的原话——化肥、饲料与借贷成本是抱怨的集中点。对共和党而言，农村基本盘松动比城市选区丢分更危险，这也是特朗普改打电话拉票力图挽回的板块。</p></div>
+    </article>
+
+    <article data-src="reuters" data-k="塞尔维亚 学生 总理 选举 路透">
+      <div class="time sans">12:20</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">欧洲</span></div>
+      <h3><a href="https://www.reuters.com/podcasts/crypto-hack-serbias-next-prime-minister-remembering-patrick-stewart-2026-10-30/" target="_blank" rel="noopener">塞尔维亚学生运动胜选，总理人选四选一</a></h3>
+      <p class="orig">The banker, the basketball star, the cardiologist and the chemist: meet Serbia's potential new leaders</p>
+      <p class="sum">Summary：候选人名单本身就是故事：银行家、篮球明星、心脏科医生与化学家——学生领导的政党在提前选举中获胜后，正决定由谁出面组阁。路透的人物速写写出了这场运动的底色：它由校园抗议生长而来，专业人士而非职业政客站到前台。德国之声 11:02 把这一现象放到欧洲青年政治的大盘里解读，两篇连读更有味道。</p></div>
+    </article>
+
+    <article data-src="guardian" data-k="卫报 塞尔维亚 学生 抗议 欧洲 青年">
+      <div class="time sans">12:02</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">欧洲</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">从街头到组阁：塞尔维亚学生运动给欧洲上的一课</a></h3>
+      <p class="orig">Serbia's student movement goes from the streets to government</p>
+      <p class="sum">Summary：《卫报》的欧洲版面用长篇复盘了塞尔维亚学生运动从抗议走向胜选的全过程：起于对腐败与安全事故的愤怒，靠去中心化组织与专业人士加盟撑过镇压压力，最终完成选举转化。报道也泼了冷水——组阁人选的专业背景能否转化为治理能力、运动内部的路线分歧如何处理，都是胜选第二天就要面对的问题。欧洲多国青年选民的疏离感，让这篇报道的读者远不止巴尔干。</p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="BP 利润 炼油 中国 小麦 特习会 彭博">
+      <div class="time sans">11:45</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">大宗商品</span><span>涉华</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">BP 利润创 18 年新高（炼油价差）；中国自特习峰会后首次询价美国小麦</a></h3>
+      <p class="orig">BP Profit Hits 18-Year High as Oil Refining Margins Surge / China Makes First Inquiry for US Wheat Since Trump-Xi Summit</p>
+      <p class="sum">Summary：彭博把两条快讯并置，恰成对照：能源巨头 BP 靠炼油价差赚出 18 年最高利润，是油价危机的受益方；而中美农产品贸易出现试探性回暖——中国在特习峰会后首次询价美国小麦。后一条的量级不大，信号意义却强：峰会共识是否落地，先看农产品这类低敏感品类的实际询价与成交。自由亚洲 11:28 与美国之音均有同题跟进。</p></div>
+    </article>
+
+    <article data-src="rfa" data-k="自由亚洲 中国 小麦 美国 特习会 粮食">
+      <div class="time sans">11:28</div><div class="rail"><span class="dot" style="background:var(--rfa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--rfa)">自由亚洲 RFA</span><span class="cat">中美 · 农业</span><span class="hot">新增媒体 · 涉华</span></div>
+      <h3><a href="https://www.rfa.org/mandarin" target="_blank" rel="noopener">特习峰会后中国首次询价美国小麦，粮食采购成关系试纸</a></h3>
+      <p class="sum">Summary：自由亚洲从粮食安全角度解读这条彭博首发的快讯：中国买家在特习峰会后首次询价美国小麦，询价本身不等于成交，但在两国农产品贸易几近冻结的背景下，每一步试探都被市场放大解读。报道采访了贸易商与分析人士：若后续出现实际装运，将意味着峰会达成的降温安排开始兑现；若询价无下文，则说明双方仍停留在口头阶段。美国农业州对这笔潜在订单的期待，与同日农村支持率新闻构成微妙呼应。</p></div>
+    </article>
+
+    <article data-src="nyt" data-k="蒙大拿 参议员 退选 戴恩斯 纽约时报">
+      <div class="time sans">11:10</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">选举</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">戴恩斯放弃蒙大拿连任，搅动一席参议员选战</a></h3>
+      <p class="orig">Daines Drops Re-election Bid in Montana, Upending a Senate Race</p>
+      <p class="sum">Summary：共和党现任参议员戴恩斯意外放弃在蒙大拿州的连任竞选，一席原本被认为相对稳妥的席位瞬间开放，中期选举版图再添变数。退选决定与特朗普同日改打「电话集会」放在一起看，共和党的选前调度明显承压：参议院多数党地位本就只差几席，任何一席的开放竞争都会吞噬本可投向摇摆州的资源。</p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国之声 塞尔维亚 学生 欧洲 青年 民主">
+      <div class="time sans">11:02</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">欧洲</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">贝尔格莱德的课堂走向内阁：欧洲青年政治的塞尔维亚样本</a></h3>
+      <p class="orig">Serbia's students take power: a test case for Europe's youth politics</p>
+      <p class="sum">Summary：德国之声与路透、《卫报》同题三写，分工清楚：路透写人选（12:20）、《卫报》写历程（12:02）、DW 写欧洲含义——学生运动胜选在欧洲近年并不多见，它对欧盟扩大议程、对塞尔维亚入盟谈判的影响，以及布鲁塞尔乐见其成又谨慎表态的姿态，都是这篇的着力点。对关心欧洲政治走向的读者，这组三连读是今日性价比最高的一组。</p></div>
+    </article>
+
+    <article data-src="economist" data-k="卢拉 巴西 市场 大选 经济学人">
+      <div class="time sans">10:52</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">拉美</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">市场对卢拉意外胜选「有理由地」失望</a></h3>
+      <p class="orig">Markets are dismayed by Lula's surprise win — and for good reason</p>
+      <p class="sum">Summary：经济学人的标题把态度写在明处：巴西股市在大选后下跌，市场的失望「有理由」——压力在于连任的卢拉如何避免财政扩张把经济推向滑坡。同一周刊另有文章称卢拉为「伟大的幸存者」，再创巴西政治史纪录。两篇并读：一篇算账，一篇写人。德国之声 10:35 从欧盟—南方共同市场贸易协定的角度补了欧洲的关切。</p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国之声 巴西 卢拉 欧盟 贸易协定 南方共同市场">
+      <div class="time sans">10:35</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">拉美 · 贸易</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">卢拉胜选后，欧盟—南方共同市场协定又见曙光？</a></h3>
+      <p class="orig">Lula's win reopens questions over the EU-Mercosur trade deal</p>
+      <p class="sum">Summary：德国之声的巴西稿不谈巴西股市，谈欧洲账本：卢拉意外胜选后，拖延多年的欧盟—南方共同市场贸易协定是否会因巴西利亚的政治连续性而加速，成为布鲁塞尔与柏林的共同问题。报道梳理了法国农业界等反对力量与德国工业界支持力量之间的老对峙，并指出雨林保护条款仍是协定落地的最大门槛。与经济学人 10:52 的市场视角互为表里。</p></div>
+    </article>
+
+    <article data-src="ap" data-k="白宫 万圣节 特朗普 梅拉尼娅 美联社">
+      <div class="time sans">10:18</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">特朗普夫妇在白宫主持万圣节庆祝活动</a></h3>
+      <p class="orig">Trump, Melania host White House Halloween celebration</p>
+      <p class="sum">Summary：选前最后一个周末的轻松一幕：特朗普与梅拉尼娅在白宫主持万圣节庆祝，给到场的孩子们发糖。美联社把这条放在头条流里，是典型的节奏调节——同一天的华盛顿还有战争权力表决、传票与选战攻防，白宫南草坪的南瓜灯提醒读者，竞选机器之外还有一套精心安排的「正常感」展示。</p></div>
+    </article>
+
+    <article data-src="bbc" data-k="澳大利亚 蘑菇 杀人 上诉 BBC">
+      <div class="time sans">10:00</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">世界</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">澳大利亚「蘑菇杀人案」上诉被驳回，维持定罪</a></h3>
+      <p class="orig">Mushroom murderer fails to overturn convictions in Australian court challenge</p>
+      <p class="sum">Summary：BBC 世界线：那桩以毒蘑菇午餐毒杀亲属、轰动全球的案件，被告挑战定罪的上诉被法院驳回，原判维持，或将在狱中终老。案件从案发、审判到上诉持续占据多国头条，BBC 的跟进稿回顾了关键证据链与法官驳回上诉的理由——在一整天的宏观新闻里，这是唯一一条纯粹的社会案件，却有不输头条的点击量。</p></div>
+    </article>
+
+    <article data-src="voa" data-k="美国之音 芯片 供应链 亚洲 台湾 半导体">
+      <div class="time sans">09:58</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA 中文</span><span class="cat">科技 · 供应链</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.voachinese.com" target="_blank" rel="noopener">亚洲芯片股重挫之后：美国供应链安全讨论再起</a></h3>
+      <p class="sum">Summary：美国之音把亚洲芯片股重挫的市况（彭博亚洲线同日亦有报道，13:48）往政策面延伸：芯片股随美国科技股抛售重挫、台股迈向修正，再次暴露美国高端芯片供应对东亚的集中依赖。报道汇总了华盛顿智库与议员当天的表态——补贴本土制造、分散供应来源的呼声在每次市场动荡后都会回潮。市场跌的是股价，华盛顿算的是地缘账，两条线在这篇里交汇。</p></div>
+    </article>
+
+    <article data-src="rfi" data-k="法国 欧洲 拉加德 央行 法广">
+      <div class="time sans">09:42</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI 中文</span><span class="cat">欧洲</span></div>
+      <h3><a href="https://www.rfi.fr/cn/" target="_blank" rel="noopener">拉加德将提前卸任欧央行行长，欧洲货币政策交接成焦点</a></h3>
+      <p class="sum">Summary：拉加德宣布明年 2 月离任，比任期提前九个月，并称希望卸任后能就货币政策之外的议题自由发声。法广的法国视角关注两点：一是这位法国前财长离开后，巴黎在欧洲经济治理中的分量变化；二是继任人选之争将如何在巴黎与法兰克福之间展开——德国之声 17:45 的接班人分析，正是对这一问的回答。</p></div>
+    </article>
+
+    <article data-src="rfa" data-k="自由亚洲 中国 AI 抄袭 美国 科技竞争">
+      <div class="time sans">09:25</div><div class="rail"><span class="dot" style="background:var(--rfa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--rfa)">自由亚洲 RFA</span><span class="cat">科技 · 中国</span><span class="hot">新增媒体 · 涉华</span></div>
+      <h3><a href="https://www.rfa.org/mandarin" target="_blank" rel="noopener">「让中国抄袭美国 AI」在华语科技圈激起争论</a></h3>
+      <p class="sum">Summary：自由亚洲追踪经济学人社论（见 09:08）在华语圈的反响：主张开放、认为技术扩散利大于弊的一方，与强调安全审查、担心军民两用风险的一方隔空交锋，中国 AI 从业者的受访表态则更务实——算力与芯片管制才是当下真正的瓶颈，模型层面的「抄不抄」已不是主要矛盾。这组中外对照，恰好补上原社论没有展开的中国一侧声音。</p></div>
+    </article>
+
+    <article data-src="economist" data-k="中国 AI 抄袭 美国 社论 经济学人">
+      <div class="time sans">09:08</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">观点</span><span>涉华</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">社论：让中国「抄袭」美国 AI</a></h3>
+      <p class="orig">Let China copy American AI</p>
+      <p class="sum">Summary：本周刊观点栏的大胆主张：与其全面封堵，不如让中国使用乃至「抄袭」美国 AI——技术扩散带来的生态锁定与安全收益，大于封堵催生独立体系的风险。文章放在中美科技竞争的语境下读格外醒目，与 Anthropic 本周递交 IPO 的商业新闻形成对照：一边是资本市场的扩张，一边是地缘战略的再思考。自由亚洲 09:25 汇总了华语圈对这篇社论的争论。</p></div>
+    </article>
+
+    <article data-src="economist" data-k="莫迪 印度 25年 英国 预算 伯纳姆 经济学人">
+      <div class="time sans">08:50</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">周刊</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">如何评价莫迪的 25 年；英国预算「谈变革，却无所为」</a></h3>
+      <p class="orig">What to make of 25 years of Narendra Modi / Andy Burnham's government talks of change, then does nothing</p>
+      <p class="sum">Summary：本周刊的亚洲与英国两栏并读：前者盘点莫迪执政四分之一个世纪的功过——经济改革与基建推进对冲民主制度承压的批评；后者点名英国预算「缺乏雄心」，伯纳姆政府被评为「谈变革，却无所为」。两篇都是经济学人式的长周期评判：不追逐当日行情，追问的是权力长期运行后的资产负债。《卫报》08:32 从英国生活成本的角度写了同一份预算的民间感受。</p></div>
+    </article>
+
+    <article data-src="guardian" data-k="卫报 英国 预算 生活成本 伯纳姆">
+      <div class="time sans">08:32</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">英国</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">预算公布次日，英国超市与房租数据先给了答案</a></h3>
+      <p class="orig">After the budget, the cost-of-living numbers tell their own story</p>
+      <p class="sum">Summary：《卫报》的英国线不重复预算条文，而是拿公布次日的食品价格、房租与能源账单数据，检验「变革」承诺与家庭实际支出之间的落差——这正是其读者最关心的部分。报道采访了多个城市的低收入家庭与行业分析师，结论与经济学人「谈变革，却无所为」的评判方向一致，但证据全部来自地面：收银台与账单，比评论版的措辞更难反驳。</p></div>
+    </article>
+
+    <article data-src="nyt" data-k="中期选举 选区 重划 密苏里 司法部 纽约时报">
+      <div class="time sans">08:15</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">选举</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">中期选举乱局：重划选区图被推翻、司法部向 30 州索选举记录</a></h3>
+      <p class="orig">The U.S. midterm elections are looking like a mess</p>
+      <p class="sum">Summary：纽时用「一团乱」概括今年中期选举的程序面：密苏里一张意在利好共和党的重划选区图被推翻，改图大战连锁反应未止；司法部则就选举记录向至少 30 个州发函，源头是特朗普反复提出的选举舞弊指控。程序争议与选情本身同样重要——它们决定了选举夜之后，计票结果的合法性叙事战会打多久。</p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="特朗普 电话集会 中期选举 堪萨斯 爱荷华 彭博 晨播">
+      <div class="time sans">07:40</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">美国政治</span><span class="hot">Daybreak 晨播</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">特朗普取消实地集会，改打「电话拉票」</a></h3>
+      <p class="orig">Trump Shifts to Remote Rallies — Bloomberg Daybreak</p>
+      <p class="sum">Summary：这是全天这条新闻的最早版本，出自彭博晨播：中期选举前数日，特朗普取消堪萨斯、爱荷华行程，改为大量电话集会；晨播将其与币安被盗、科技财报并列为当日三头条——事后看排序精准。到晚间，美国之音（19:12）补上了两党操盘手的解读与农村支持率背景，同一条新闻的「晨播快讯版」与「晚间分析版」都收在本页时间线里。</p></div>
+    </article>
+
+    <article data-src="reuters" data-k="特朗普 农村 支持率 中期选举 农团 路透">
+      <div class="time sans">07:20</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国政治</span></div>
+      <h3><a href="https://www.reuters.com" target="_blank" rel="noopener">特朗普农村支持率创新低，农团砸钱阻击共和党中期选举</a></h3>
+      <p class="orig">Trump's approval rating among rural Americans is hitting record lows</p>
+      <p class="sum">Summary：路透的民调与资金流双线报道：特朗普在农村美国人中的支持率跌至新低，同时动物福利导向的农业团体正大举投放广告，目标是在农村选区击败共和党候选人。农村选区历来是共和党的票仓与文化象征，这里的松动对中期选举的象征意义大于席位数字本身——美国之音 12:38 的中文版补充了农户原声，建议连读。</p></div>
+    </article>
+
+    <article data-src="economist" data-k="以色列 阿拉伯 反对党 经济学人">
+      <div class="time sans">07:05</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">中东</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">以色列犹太与阿拉伯反对党应携手</a></h3>
+      <p class="orig">Israel's Jewish and Arab opposition parties should work together</p>
+      <p class="sum">Summary：以色列大选后组阁僵局未解（内塔尼亚胡联盟约 53/120 席，口径见当日简报），经济学人主张犹太与阿拉伯反对党跨越族裔界限合作，以凑齐制衡执政联盟的议会多数。文章承认这一合作在双方选民中都不讨好，但论证「共同的制度关切大于分歧」。在中东当天被袭击与油价占满头条的背景下，这篇谈的是战后政治结构的另一种可能。</p></div>
+    </article>
+
+    <article data-src="voa" data-k="美国之音 以色列 组阁 中东 外交">
+      <div class="time sans">06:48</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA 中文</span><span class="cat">中东</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.voachinese.com" target="_blank" rel="noopener">以色列组阁僵局牵动美国中东政策，华盛顿密切观望</a></h3>
+      <p class="sum">Summary：美国之音的华盛顿视角与经济学人 07:05 的社论构成同题对照：以色列组阁难产，内塔尼亚胡联盟席位不过半，反对阵营是否跨族裔合作成为变量；美方官员的表态则小心翼翼，只谈「尊重以色列民主程序」。在伊朗危机与油价冲击同时发酵的当口，耶路撒冷的权力结构直接关系美国中东棋盘的下一步落子，这也是 VOA 把这条放在清晨版面靠前位置的原因。</p></div>
+    </article>
+
+    <article data-src="rfa" data-k="自由亚洲 科威特 中企 海湾 中国劳工 安全">
+      <div class="time sans">06:30</div><div class="rail"><span class="dot" style="background:var(--rfa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--rfa)">自由亚洲 RFA</span><span class="cat">中东 · 涉华</span><span class="hot">新增媒体 · 涉华</span></div>
+      <h3><a href="https://www.rfa.org/mandarin" target="_blank" rel="noopener">中企建筑在科威特遇袭之后：在海湾的中国项目与人员安全再受关注</a></h3>
+      <p class="sum">Summary：这是法广 18:55 快讯的清晨预告性背景版（按亚洲时区首发节奏）：自由亚洲梳理了中国企业在海湾地区的基建与能源项目分布，以及历次地区冲突中中资工地受波及的记录，采访安全顾问谈撤离预案与保险安排。当天晚些时候科威特方面确认 1 人死亡后，这篇的背景价值被证实——读晚间版时不妨回看这条，理解为何一栋建筑遇袭会同时牵动外交、能源与侨民安全三条线。</p></div>
+    </article>
+
+    <article data-src="guardian" data-k="卫报 斯图尔特 讣闻 星际迷航 文化">
+      <div class="time sans">06:12</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">文化 · 讣闻</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">《卫报》讣闻：帕特里克·斯图尔特——把莎士比亚带上星舰的人</a></h3>
+      <p class="orig">Patrick Stewart obituary: the Shakespearean who captained a starship</p>
+      <p class="sum">Summary：《卫报》的讣闻栏目以完整人生轨迹收束这一消息：从约克郡的工人家庭、皇家莎士比亚剧团的黄金年代，到 47 岁才凭皮卡德舰长红遍全球，再到《X战警》里的 X 教授与晚年的舞台回归。讣闻作者特别写到他公开谈论家暴经历与心理创伤如何塑造了其表演的克制与力量。这条在时间线清晨的位置是英国编辑部的首发节奏——到晚间，它已与美联社的快讯、BBC 的悼念汇总共同构成今天的文化头条组。</p></div>
+    </article>
+
+    <article data-src="reuters" data-k="伊朗 制裁 军工 调查 走私 路透">
+      <div class="time sans">05:55</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">调查</span></div>
+      <h3><a href="https://www.reuters.com" target="_blank" rel="noopener">路透调查：伊朗隐秘军工网络正绕过美国封锁走私硬件</a></h3>
+      <p class="orig">Reuters investigation: Iran's hidden web of military agencies is slipping hardware past the US blockade</p>
+      <p class="sum">Summary：路透深度调查今日置顶推荐：记者梳理了伊朗军方机构编织的隐秘网络——经多层空壳公司与第三国中转，把受管制硬件运入国内，绕过美国封锁。这篇放在今天读尤其应景：同日伊朗的袭击打到科威特、胡塞的导弹打到沙特炼厂，伊朗军工体系的补给能力正是这些袭击背后的物质基础。自由亚洲 05:30 追问了其中涉及亚洲中转环节的公开记录。</p></div>
+    </article>
+
+    <article data-src="rfa" data-k="自由亚洲 伊朗 军工 走私 供应链 制裁">
+      <div class="time sans">05:30</div><div class="rail"><span class="dot" style="background:var(--rfa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--rfa)">自由亚洲 RFA</span><span class="cat">调查跟进</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.rfa.org/mandarin" target="_blank" rel="noopener">路透伊朗军工走私调查涉亚洲中转环节，公开记录如何拼图</a></h3>
+      <p class="sum">Summary：自由亚洲对路透调查（05:55）的跟进聚焦亚洲一段：调查提及的若干中转公司与物流路径在亚洲多地留有注册与报关公开记录，RFA 记者逐项核对了这些记录的可验证程度，并采访制裁合规专家，解释这类「拼图式」供应链为何难以被单一国家的出口管制堵住。报道保持了克制：对无法独立证实的环节明确标注来源为路透调查原文，不作延伸指控。</p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国之声 央行周 美联储 欧央行 日本央行 简报">
+      <div class="time sans">05:10</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">财经简报</span><span class="hot">新增媒体</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">央行周收官清晨简报：三家按兵不动，市场只听出一个「鹰」字</a></h3>
+      <p class="orig">Central banks hold, but the message is hawkish</p>
+      <p class="sum">Summary：德国之声的清晨财经简报为全天定调：美联储、欧洲央行、日本央行在本周相继维持利率不变，但措辞集体偏鹰——通胀黏性与油价新风险让降息预期一再后移。这条是今日央行线的源头：其后彭博（18:18）补上拉加德交棒与日本通胀达标的细节，法广（09:42）与 DW 自己的 17:45 则把接班人政治展开。从清晨简报到晚间分析，一条线在时间线里完整生长，这正是聚合阅读的价值。</p></div>
+    </article>
+
+  </div>
+  <div class="empty sans" id="empty">没有匹配的条目，换个关键词试试。</div>
+</main>
+
+<footer class="sans">
+  <p>读法建议：先看顶部 3 分钟总览，再顺时间线由新到旧扫标题；同一事件多家同题（如币安被盗有路透/BBC/彭博/卫报/自由亚洲五家）即为当日真头条，只需挑一家深读、其余看 summary 里的差异点即可。紧凑模式适合通勤快速扫完 61 条。</p>
+  <p>来源：美联社、法广中文、路透、BBC、纽约时报、彭博、经济学人、德国之声、《卫报》、美国之音中文、自由亚洲 2026-10-30 首页/当日简报交叉核对，晚间版截稿 22:04（北京时间）。本页为当日快照、非实时更新；时间为当日发布时间（北京时间，约数），标题为中文译题，英文为原题，点标题前往来源媒体——已核到原文的直达原文，其余至该媒体官网/中文版（部分需订阅）。新增 4 家与原 7 家同标准呈现：标题 + 英文原题 + 详细 summary。</p>
+</footer>
+
+<script>
+(function(){
+  var btns=document.querySelectorAll('[data-f]');
+  var arts=document.querySelectorAll('article[data-src]');
+  var q=document.getElementById('q');
+  var empty=document.getElementById('empty');
+  var cur='all';
+  function apply(){
+    var kw=q.value.trim().toLowerCase(); var any=false;
+    arts.forEach(function(a){
+      var showSrc=(cur==='all'||a.dataset.src===cur);
+      var hit=showSrc && (!kw || (a.textContent.toLowerCase().indexOf(kw)>-1 || (a.dataset.k||'').toLowerCase().indexOf(kw)>-1));
+      a.classList.toggle('hidden',!hit); if(hit)any=true;
+    });
+    empty.style.display=any?'none':'block';
+  }
+  btns.forEach(function(b){ b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true'); cur=b.dataset.f; apply();
+  });});
+  q.addEventListener('input',apply);
+  var d=document.getElementById('density');
+  d.addEventListener('click',function(){
+    var on=document.body.classList.toggle('compact');
+    d.setAttribute('aria-pressed',on?'true':'false');
+    d.textContent=on?'舒适模式（显示简介）':'紧凑模式（只看标题）';
+  });
+})();
+</script>
+</body>
+</html>
