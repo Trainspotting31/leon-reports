@@ -19,12 +19,27 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif SC","Songti SC",Georgia,serif;line-height:1.6}
   .sans{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
-  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px;transition:padding .3s ease,box-shadow .3s ease}
   .toprow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;max-width:920px;margin:0 auto}
-  h1{font-size:22px;margin:0;letter-spacing:.02em}
+  h1{font-size:22px;margin:0;letter-spacing:.02em;transition:font-size .3s ease}
   .edition{font-size:13px;color:var(--muted)}
   .edition b{color:var(--accent)}
-  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px}
+  .ed-mini{display:none}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px;max-height:340px;opacity:1;overflow:hidden;transition:max-height .32s ease,opacity .25s ease,margin .32s ease}
+  .hdr-toggle{display:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:3px 11px;font-size:12.5px;cursor:pointer;line-height:1.5;flex:none}
+  /* 滚动后顶栏收成一条窄条：只留小标题、版本信息与筛选入口 */
+  header.is-shrunk{padding:6px 16px;box-shadow:0 8px 20px rgba(20,16,8,.14)}
+  header.is-shrunk h1{font-size:15.5px}
+  header.is-shrunk .edition{font-size:12px}
+  header.is-shrunk .ed-full{display:none}
+  header.is-shrunk .ed-mini{display:inline}
+  header.is-shrunk .hdr-toggle{display:inline-block}
+  header.is-shrunk .toprow{flex-wrap:nowrap;align-items:center}
+  header.is-shrunk .controls{max-height:0;opacity:0;margin-top:0;pointer-events:none}
+  header.is-shrunk.show-controls .controls{max-height:340px;opacity:1;margin-top:8px;pointer-events:auto}
+  @media (prefers-reduced-motion: reduce){
+    header,h1,.controls{transition:none}
+  }
   .chipbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
   .chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
   .search{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
@@ -78,9 +93,10 @@
 <header>
   <div class="toprow">
     <h1>十一报时间线</h1>
-    <div class="edition sans">2026年10月30日 星期五 · <b>晚间版 22:04</b> 截稿 · 共 61 条 · 11 家聚合 · 按时间由新到旧 · 点标题前往来源</div>
+    <div class="edition sans"><span class="ed-full">2026年10月30日 星期五 · <b>晚间版 22:04</b> 截稿 · 共 61 条 · 11 家聚合 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>晚间版 22:04</b> · 共 61 条</span></div>
+    <button class="hdr-toggle sans" id="hdrToggle" aria-expanded="false" aria-controls="controlsBar">筛选 ▾</button>
   </div>
-  <div class="controls sans" role="group" aria-label="筛选">
+  <div class="controls sans" id="controlsBar" role="group" aria-label="筛选">
     <button class="chipbtn" data-f="all" aria-pressed="true">全部</button>
     <button class="chipbtn" data-f="ap" aria-pressed="false">美联社</button>
     <button class="chipbtn" data-f="rfi" aria-pressed="false">法广</button>
@@ -623,6 +639,28 @@
     var on=document.body.classList.toggle('compact');
     d.setAttribute('aria-pressed',on?'true':'false');
     d.textContent=on?'舒适模式（显示简介）':'紧凑模式（只看标题）';
+  });
+  /* 顶栏动态收缩：滚离顶部后收成窄条，回到顶部恢复完整 */
+  var hdr=document.querySelector('header');
+  var toggle=document.getElementById('hdrToggle');
+  var ticking=false;
+  function onScroll(){
+    var y=window.scrollY||window.pageYOffset;
+    if(y>90){ hdr.classList.add('is-shrunk'); }
+    else if(y<40){
+      hdr.classList.remove('is-shrunk'); hdr.classList.remove('show-controls');
+      toggle.setAttribute('aria-expanded','false'); toggle.textContent='筛选 ▾';
+    }
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){ ticking=true; window.requestAnimationFrame(onScroll); }
+  },{passive:true});
+  onScroll();
+  toggle.addEventListener('click',function(){
+    var open=hdr.classList.toggle('show-controls');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'筛选 ▴':'筛选 ▾';
   });
 })();
 </script>
