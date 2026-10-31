@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>新闻阅读 · 十一报午间时间线</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --panel:#fffdf8; --ink:#1a1814; --muted:#5c574d; --line:#ddd6c8;
+    --accent:#9a2a1e; --accent-ink:#fff; --chip:#ece7da; --live:#b42318;
+    --ap:#111111; --rfi:#0055a4; --reuters:#e8710a; --bbc:#b80000; --nyt:#121212; --bloom:#2800d7; --econ:#e3120b;
+    --dw:#0072bc; --guardian:#052962; --voa:#17648c; --rfa:#8a6d00;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141311; --panel:#1d1c19; --ink:#ece7dc; --muted:#a8a193; --line:#33302a; --chip:#2a2823; --accent:#e0654f; --ap:#d8d2c4; --nyt:#d8d2c4; --guardian:#7aa2e0; --bloom:#9d8cff; --rfa:#d9b84a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif SC","Songti SC",Georgia,serif;line-height:1.6}
+  .sans{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px;transition:padding .3s ease,box-shadow .3s ease}
+  .toprow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0;letter-spacing:.02em;transition:font-size .3s ease}
+  .edition{font-size:13px;color:var(--muted)}
+  .edition b{color:var(--accent)}
+  .ed-mini{display:none}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px;max-height:340px;opacity:1;overflow:hidden;transition:max-height .32s ease,opacity .25s ease,margin .32s ease}
+  .hdr-toggle{display:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:3px 11px;font-size:12.5px;cursor:pointer;line-height:1.5;flex:none}
+  header.is-shrunk{padding:6px 16px;box-shadow:0 8px 20px rgba(20,16,8,.14)}
+  header.is-shrunk h1{font-size:15.5px}
+  header.is-shrunk .edition{font-size:12px}
+  header.is-shrunk .ed-full{display:none}
+  header.is-shrunk .ed-mini{display:inline}
+  header.is-shrunk .hdr-toggle{display:inline-block}
+  header.is-shrunk .toprow{flex-wrap:nowrap;align-items:center}
+  header.is-shrunk .controls{max-height:0;opacity:0;margin-top:0;pointer-events:none}
+  header.is-shrunk.show-controls .controls{max-height:340px;opacity:1;margin-top:8px;pointer-events:auto}
+  @media (prefers-reduced-motion: reduce){
+    header,h1,.controls{transition:none}
+  }
+  .chipbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .search{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
+  main{max-width:920px;margin:0 auto;padding:14px 16px 40px}
+  .brief{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--accent);padding:14px 16px;margin-bottom:8px}
+  .brief h2{font-size:16px;margin:0 0 8px}
+  .brief ol{margin:0;padding-left:20px;font-size:14.5px}
+  .brief li{margin:5px 0}
+  .brief li b{color:var(--accent)}
+  .brief .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 0 4px}
+  .tl-head h2{font-size:17px;margin:0}
+  .tl-head span{font-size:12.5px;color:var(--muted)}
+  .timeline{position:relative;margin-top:6px}
+  .timeline::before{content:"";position:absolute;left:103px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  article{position:relative;display:grid;grid-template-columns:88px 22px 1fr;gap:0 6px;padding:12px 0 14px}
+  .time{font-size:12px;line-height:1.4;text-align:right;padding-top:2px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .time b{display:block;font-size:13px;color:var(--ink)}
+  .rail{display:flex;justify-content:center}
+  .dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none;box-shadow:0 0 0 3px var(--bg);z-index:1}
+  .card{background:var(--panel);border:1px solid var(--line);padding:12px 14px 10px;min-width:0}
+  .srcrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:5px}
+  .srcbadge{font-size:11.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 7px;letter-spacing:.02em}
+  @media (prefers-color-scheme: dark){ .srcbadge{color:#101010} .srcbadge.on-dark{color:#fff} }
+  .cat{font-size:11.5px;color:var(--muted)}
+  .hot{color:var(--live);font-weight:700;font-size:11.5px}
+  article h3{font-size:16.5px;line-height:1.45;margin:0 0 4px}
+  article h3 a{color:var(--ink);text-decoration:none}
+  article h3 a:hover{text-decoration:underline}
+  .orig{font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 5px;line-height:1.45}
+  .sum{font-size:14px;color:var(--ink);margin:0}
+  .meta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+  body.compact article{padding:7px 0 8px}
+  body.compact .sum,body.compact .orig{display:none}
+  body.compact article h3{font-size:15px}
+  body.compact .card{padding:8px 12px}
+  .hidden{display:none!important}
+  .empty{padding:30px;text-align:center;color:var(--muted);display:none}
+  footer{max-width:920px;margin:0 auto;padding:0 16px 28px;font-size:12px;color:var(--muted)}
+  footer p{margin:6px 0}
+  @media(max-width:560px){
+    .timeline::before{left:83px}
+    article{grid-template-columns:70px 18px 1fr;gap:0 4px}
+    .time{font-size:11px}
+    .time b{font-size:12px}
+    article h3{font-size:15.5px}
+    .sum{font-size:13.5px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="toprow">
+    <h1>新闻阅读 · 十一报午间时间线</h1>
+    <div class="edition sans"><span class="ed-full">2026年10月31日 星期六 · <b>午间版 13:08 截稿</b> · 共 37 条 · 11 家聚合 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>午间版 13:08</b> · 共 37 条</span></div>
+    <button class="hdr-toggle sans" id="hdrToggle" aria-expanded="false" aria-controls="controlsBar">筛选 ▾</button>
+  </div>
+  <div class="controls sans" id="controlsBar" role="group" aria-label="筛选">
+    <button class="chipbtn" data-f="all" aria-pressed="true">全部</button>
+    <button class="chipbtn" data-f="dw" aria-pressed="false">德国之声</button>
+    <button class="chipbtn" data-f="bbc" aria-pressed="false">BBC</button>
+    <button class="chipbtn" data-f="reuters" aria-pressed="false">路透</button>
+    <button class="chipbtn" data-f="voa" aria-pressed="false">美国之音</button>
+    <button class="chipbtn" data-f="guardian" aria-pressed="false">卫报</button>
+    <button class="chipbtn" data-f="ap" aria-pressed="false">美联社</button>
+    <button class="chipbtn" data-f="nyt" aria-pressed="false">纽约时报</button>
+    <button class="chipbtn" data-f="bloomberg" aria-pressed="false">彭博</button>
+    <button class="chipbtn" data-f="economist" aria-pressed="false">经济学人</button>
+    <button class="chipbtn" data-f="rfi" aria-pressed="false">法广</button>
+    <button class="chipbtn" data-f="rfa" aria-pressed="false">自由亚洲</button>
+    <input class="search" id="q" type="search" placeholder="搜关键词：G20 / 爱国者 / 提前投票 / PMI / 万圣节抗议…" aria-label="搜索标题" />
+    <button class="chipbtn" id="density" aria-pressed="false">紧凑模式（只看标题）</button>
+  </div>
+</header>
+
+<main>
+  <div class="brief">
+    <h2>⏱ 3 分钟总览 — 午间只有 5 条主线</h2>
+    <ol>
+      <li>G20亚特兰大外长会因俄罗斯同框争议取消“全家福”：美联社与《卫报》同题，鲁比奥称G20需合作应对粮食市场、供应链与贸易冲击；中德线：李强称中国愿进口更多高质量德国商品，习近平敦促德方奉行“理性、务实、友好”政策。</li>
+      <li>美国中期选举倒计时4天：提前投票已超4300万张，比2022年同期多近1000万，得州增幅达50%；VOA称已投逾4500万张；鲁比奥与巴西外长约定未来几周再会晤，为12月迈阿密G20峰会铺垫。</li>
+      <li>乌克兰防空与币安余波：美国批准21亿美元500枚爱国者拦截弹（加、德、挪出资），泽连斯基赞赏但警告交付或需数年；特朗普称正调查币安63亿美元被盗是否朝鲜所为，币安称约30亿美元已冻结，BBC追问朝鲜“精英”黑客嫌疑。</li>
+      <li>欧洲万圣节抗议潮与波兰宪政危机：法国部署7万警力、德国34城逾16万人参加Z世代集会，BBC有总览；波兰宪法法院院长去职引发危机，防暴警察进驻法院、总统中断塞内加尔之行回国。</li>
+      <li>中国经济与市场分化：中国10月官方制造业PMI 49.3（路透/彭博同题，三个月最快收缩）；美股：苹果重夺全球市值第一（5.03万亿美元）、纳指逼近回调区间、标普因AI支出将Meta展望下调至负面；安理会美俄西撒哈拉决议互否，MINURSO任期10月31日到期未获延长。</li>
+    </ol>
+    <p class="note sans">本版共 37 条：路透 5、彭博 7、美联社 3、BBC 6、卫报 7、美国之音 2、经济学人 6、德国之声 1；法广、纽约时报、自由亚洲当日缺货（原因见页脚），其余条目全部汇入下方同一条时间线，不再按媒体分区；每条保留发布时间、中文标题、英文原题（中文媒体除外）与详细 summary。</p>
+  </div>
+
+  <div class="tl-head"><h2>时间线 · 10月31日</h2><span class="sans">由新到旧 ↓ · 同一事件多家同题即当日真头条 · 时间未标注条目列于后段</span></div>
+
+  <div class="timeline" id="timeline">
+
+    <article data-src="bloomberg" data-k="中国 工厂 PMI 制造业 49.3 增长 非制造业">
+      <div class="time sans"><b>10月31日</b>11:17</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">经济·数据</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">中国工厂活动转入萎缩，增长动能摇摆</a></h3>
+      <p class="orig">China Factory Activity Eases Into Decline as Growth Wobbles</p>
+      <p class="sum">中国官方制造业采购经理指数从 9 月的 50.1 降至 10 月的 49.3，低于彭博调查中经济学家预测的 49.9；非制造业活动指数从 9 月的 50.2 降至 49.7；制造业生产指数下降 1.9 个百分点至 49.8，新订单指数下降 1.1 个百分点至 49.4；供需两端同时走弱，表明政策制定者在实现全年增长目标上面临压力；读数高于 50 表示扩张，低于 50 表示收缩。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 11:17</span><span>来源：彭博</span><span>链接为彭博官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="bloomberg" data-k="鲁比奥 巴西 外长 会晤 G20 迈阿密 选举">
+      <div class="time sans"><b>10月31日</b>10:41</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">外交</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">鲁比奥与巴西外长将在选举紧张后会晤</a></h3>
+      <p class="orig">Rubio and Brazil Foreign Minister to Meet After Election Tension</p>
+      <p class="sum">美国国务卿马尔科·鲁比奥与巴西外长毛罗·维埃拉同意在未来几周内会晤；两人在亚特兰大二十国集团外长会议间隙进行了简短面对面交谈；报道称双方同意在 12 月迈阿密二十国集团峰会之前再次会面；此次接触发生在巴西大选后的紧张氛围中，会晤被视为缓和双边关系的步骤。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 10:41</span><span>来源：彭博</span><span>链接为彭博官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="reuters" data-k="李强 德国 进口 商品 习近平 施泰因迈尔 贸易">
+      <div class="time sans"><b>10月31日</b>10:21</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">外交·贸易</span></div>
+      <h3><a href="https://www.reuters.com/world/china/china-willing-import-more-german-goods-premier-li-says-2026-10-31/" target="_blank" rel="noopener">中国愿进口更多德国商品，李强总理如是说</a></h3>
+      <p class="orig">China willing to import more German goods, Premier Li says</p>
+      <p class="sum">中国总理李强10月30日对到访的德国总统施泰因迈尔表示，中国愿意进口更多高质量德国产品。双方寻求在欧洲与北京之间保护主义抬头的背景下巩固贸易关系。李强还敦促两国坚定维护自由贸易和开放合作，相关表态见中国外交部10月30日晚发布的会谈纪要。中国愿利用政府间磋商机制，在汽车、化工、人工智能、数字和绿色产业扩大合作。习近平主席同日也敦促德国对华奉行“理性、务实、友好”政策。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 10:21</span><span>来源：路透</span><span>已核到原文</span></p></div>
+    </article>
+    <article data-src="ap" data-k="G20 合影 俄罗斯 欧洲 鲁比奥 亚特兰大 全家福">
+      <div class="time sans"><b>10月31日</b>09:49</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">外交</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">G20会谈共识渺茫：欧洲反对与俄同框致合影取消</a></h3>
+      <p class="orig">Consensus Looks Elusive At G20 Talks After European Objections To Russia Cancel Group Photo</p>
+      <p class="sum">二十国集团最大经济体外长10月30日在美国亚特兰大开始会谈，但欧洲对俄罗斯参与的反对迫使美方取消了传统合影。美国国务卿鲁比奥在多名欧洲官员威胁抵制或退出合影后决定取消，理由是争议会分散注意力。两名不愿具名的美国官员向美联社透露了这一决定。会谈本应为12月在特朗普迈阿密高尔夫俱乐部举行的G20领导人峰会做准备。南非虽为G20创始成员，却未获邀参加亚特兰大会议。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 09:49</span><span>来源：美联社</span><span>链接为美联社官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="bloomberg" data-k="苹果 英伟达 市值 全球第一 5.03万亿">
+      <div class="time sans"><b>10月31日</b>09:15</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">市场</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">苹果超越英伟达成为全球市值最高公司</a></h3>
+      <p class="orig">Apple Overtakes Nvidia to Become World’s Most Valuable Company</p>
+      <p class="sum">苹果周五重新夺回全球市值最高公司的头衔，从英伟达手中接过这一位置；苹果股价周五下跌 1.2%，市值为 5.03 万亿美元，而英伟达下跌 4.2%，收盘市值为 4.93 万亿美元；这是苹果自 7 月底短暂超越英伟达以来首次再度超越；投资者在担忧人工智能支出回报之际寻求苹果被认为更安全的避风港，而苹果今年股价已上涨 27%，涨幅超过英伟达的两倍多；苹果预计 2026 财年自由现金流将增长 38% 至 1420 亿美元。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 09:15</span><span>来源：彭博</span><span>链接为彭博官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="reuters" data-k="特朗普 阿富汗 移民 驱逐 巴基斯坦 路易斯安那">
+      <div class="time sans"><b>10月31日</b>09:13</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·移民</span></div>
+      <h3><a href="https://www.reuters.com/legal/government/trump-administration-plans-deport-some-afghan-immigrants-afghanistan-2026-10-31/" target="_blank" rel="noopener">特朗普政府计划把部分阿富汗移民驱逐至阿富汗</a></h3>
+      <p class="orig">Trump administration plans to deport some Afghan immigrants to Afghanistan</p>
+      <p class="sum">特朗普政府计划把部分阿富汗移民驱逐至阿富汗，一名美国官员以及退伍军人和倡导团体联盟10月30日透露了这一消息。许多面临驱逐者是在2021年塔利班接管和美军撤离后逃离阿富汗的。据《纽约时报》报道，预计逾150名阿富汗移民将被驱逐，这将是最大规模的单次驱逐阿富汗人行动之一。政府已在路易斯安那州拘留数十名阿富汗移民，首班航班最早预计10月31日之后的周一出发。由于美国与塔利班没有外交关系，无法直接安排驱逐，美国官员称驱逐将经由巴基斯坦进行。国土安全部以行动安全为由拒绝证实未来的驱逐行动。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 09:13</span><span>来源：路透</span><span>已核到原文</span></p></div>
+    </article>
+    <article data-src="bloomberg" data-k="爱国者 乌克兰 泽连斯基 21亿美元 加拿大 德国 挪威">
+      <div class="time sans"><b>10月31日</b>07:32</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">乌克兰·军售</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">美国批准向乌克兰出售 21 亿美元爱国者拦截弹</a></h3>
+      <p class="orig">US Approves 2.1 Billion in Patriot Interceptors for Ukraine</p>
+      <p class="sum">特朗普政府批准向乌克兰出售价值 21 亿美元的爱国者导弹，此前乌克兰总统泽连斯基指责美国拖延交付关键防空拦截弹；此次拟议出售涵盖 500 枚爱国者拦截弹，由加拿大、德国和挪威出资，美国资金不参与其中；泽连斯基对国务院的决定表示欢迎，但担心拦截弹交付不够快，无法抵御俄罗斯持续的攻击，并表示交付可能要几年后才开始；该批准发生在盟国已付款、但交付被指拖延的背景下。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 07:32</span><span>来源：彭博</span><span>链接为彭博官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="bloomberg" data-k="Meta 标普 评级 人工智能 AI支出 负面">
+      <div class="time sans"><b>10月31日</b>07:23</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">科技·评级</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">标普因人工智能支出将 Meta 评级展望下调至负面</a></h3>
+      <p class="orig">Meta’s Rating Outlook Cut to Negative by S&amp;P on AI Spending</p>
+      <p class="sum">标普全球评级周五将 Meta Platforms 的 AA- 信用评级展望下调至负面，迈出了未来两年内可能下调评级的第一步；评级机构称，人工智能相关支出升高给公司资产负债表带来压力，杠杆上升也是关键因素；标普表示 Meta 将人工智能投资变现的能力比同行更有限，且不清楚支出何时开始产生超过不断上升成本的实质收入；展望下调反映了对资本支出将维持高位多久、自由经营现金流将为负多久的不确定性；Meta 发言人表示不同意标普关于其人工智能变现能力的说法。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 07:23</span><span>来源：彭博</span><span>链接为彭博官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="ap" data-k="提前投票 中期选举 4300万 得州 2022 摇摆州">
+      <div class="time sans"><b>10月31日</b>05:04</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国政治</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">提前投票比2022年多1000万张：中期选举关键摇摆州投票率激增</a></h3>
+      <p class="orig">10 Million More Early Votes Than 2022: US Midterm Turnout Surges in Key Battleground States</p>
+      <p class="sum">美联社对投票数据的分析显示，距离11月3日投票日还有5天时，已有超过4300万美国人提前投票或寄回邮寄选票。这一数字比2022年同期多近1000万张，统计覆盖47个州和华盛顿特区。增幅在参议院竞争激烈的州尤为明显，得克萨斯州截至10月28日已有逾630万人投票，比2022年同期420万人增长50%。在公布党派登记信息的州，约680万民主党人和520万共和党人已提前投票，但该数字不代表候选人得票情况。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 05:04</span><span>来源：美联社</span><span>链接为美联社官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="bloomberg" data-k="币安 黑客 朝鲜 特朗普 63亿美元 冻结">
+      <div class="time sans"><b>10月31日</b>05:00</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">金融·加密</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">特朗普称美国正在调查币安黑客事件是否系朝鲜所为</a></h3>
+      <p class="orig">Trump Says US Looking at Whether Binance Hack Was By North Korea</p>
+      <p class="sum">特朗普总统周五在椭圆形办公室对记者表示，美国正在调查针对币安的 63 亿美元盗窃案是否由朝鲜黑客实施，并说“我们不知道，我们正在调查”；朝鲜黑客以针对数字资产行业著称，联邦调查局和网络安全专家曾指控其参与近年一些最大的加密货币盗窃案；币安是全球最大的加密货币交易平台，事件发生后暂停提款并承诺承担全部损失；币安在社交平台上表示约 30 亿美元资产已在区块链网络上被冻结。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年10月31日 05:00</span><span>来源：彭博</span><span>链接为彭博官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="reuters" data-k="PMI 工厂 收缩 49.3 国家统计局 出口">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">经济·数据</span></div>
+      <h3><a href="https://www.reuters.com/world/asia-pacific/chinas-october-factory-activity-contracts-fastest-pace-3-months-pmi-survey-shows-2026-10-31/" target="_blank" rel="noopener">中国10月工厂活动以三个月来最快速度收缩，PMI调查显示</a></h3>
+      <p class="orig">China's October factory activity contracts at fastest pace in 3 months, PMI survey shows</p>
+      <p class="sum">官方调查显示，中国10月工厂活动以三个月来最快速度收缩，原因是包括出口在内的需求疲软拖累了制造商。官方制造业采购经理人指数从9月的50.1降至49.3，低于路透调查预期的50.0，数据来自国家统计局。该指数根据采购经理人报告的新订单、产出和就业等领域状况改善、恶化或不变编制而成。指数高于50表示扩张，低于50表示收缩。原文页未显示具体发布时间，故时间记为未标注，仅确认其为10月31日星期六发布的当日稿件。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：路透</span><span>已核到原文</span></p></div>
+    </article>
+    <article data-src="reuters" data-k="法国 抗议 万圣节 警察 7万 马克龙 生活成本">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">社会·抗议</span></div>
+      <h3><a href="https://www.reuters.com/world/europe/france-braces-fresh-unrest-government-vows-tough-response-2026-10-31/" target="_blank" rel="noopener">法国严阵以待新一轮动荡，政府誓言强硬应对</a></h3>
+      <p class="orig">France braces for fresh unrest, government vows tough response</p>
+      <p class="sum">法国将在10月31日星期六部署7万名警察，以应对全国范围内预期中的新一轮抗议，抗议由生活成本、公共服务和马克龙政府的不满情绪驱动。此轮示威恰逢万圣节，距两周前骚乱和抢劫令安全部队措手不及仅两周，内政部长努内兹誓言不让重演。当局还警惕骚乱者可能利用万圣节面具遮掩身份，努内兹指出法律已允许警方在公共秩序面临风险时禁止蒙面。抗议自9月底马克龙少数派政府启动2027年预算谈判后升温，政府面临公共债务接近经济产出120%的压力。原文页未显示具体发布时间，故时间记为未标注。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：路透</span><span>已核到原文</span></p></div>
+    </article>
+    <article data-src="reuters" data-k="德国 Z世代 抗议 万圣节 16万人 34城 教育">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">社会·抗议</span></div>
+      <h3><a href="https://www.reuters.com/world/europe/gen-z-protests-reach-germany-over-160000-expected-halloween-rallies-2026-10-31/" target="_blank" rel="noopener">Z世代抗议蔓延至德国，万圣节集会预计逾16万人参加</a></h3>
+      <p class="orig">Gen Z protests reach Germany as over 160,000 expected at Halloween rallies</p>
+      <p class="sum">组织者称，德国各地预计逾16万人将在10月31日星期六参加示威，这场受欧洲其他地区启发的青年运动走上街头，要求改善教育和降低生活成本。德国的抗议由“Gen Z regelt”（Z世代掌权）组织，计划在包括柏林、法兰克福和慕尼黑在内的34个城市举行。该组织反对义务兵役制，并要求加大教育投入，称许多德国年轻人正为生活成本上涨挣扎。德国当局预计示威大体和平，但警告极端团体可能加以利用。抗议背景是德国经济复苏乏力，同时婴儿潮一代退休给养老金和公共服务带来压力。原文页未显示具体发布时间，故时间记为未标注。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：路透</span><span>已核到原文</span></p></div>
+    </article>
+    <article data-src="bbc" data-k="德法 万圣节 抗议 欧洲 青年 警察">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">欧洲·抗议</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">德法严阵以待万圣节周末抗议</a></h3>
+      <p class="orig">Germany and France brace for protests on Halloween weekend</p>
+      <p class="sum">欧洲一波青年主导的抗议已蔓延开来，示威者抗议物价上涨和前景匮乏。法国10月31日部署约7万名警察和宪兵，德国34个城市预计逾16万人参加由“Z世代掌权”组织的集会。两国抗议均与教育投入、生活成本和公共服务压力有关，法国方面还叠加了万圣节蒙面带来的治安风险。德国当局预计示威大体和平，但警告极端团体可能利用这一运动。本条为BBC当日欧洲抗议总览性头条，未打开原文，事件细节以路透同日核实稿为准，不另行编造现场数字。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：BBC</span><span>链接为BBC官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="bbc" data-k="爱国者 乌克兰 500枚 泽连斯基 PAC-3">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">乌克兰·军售</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">美国批准向乌克兰出售500枚爱国者导弹</a></h3>
+      <p class="orig">US approves sale of 500 Patriot missiles to Ukraine</p>
+      <p class="sum">美国已批准向乌克兰出售500枚爱国者导弹，这是应对俄罗斯日益猛烈空袭急需的弹药。美国国务院表示，先进的PAC-3拦截弹价值21亿美元，将“完全由”乌克兰在欧洲和加拿大的盟友出资。乌克兰总统泽连斯基警告，交付可能需要“数年”时间，他在10月30日晚再次呼吁美国加快释放爱国者导弹。BBC把爱国者拦截弹描述为击落俄罗斯弹道导弹唯一有效的武器。订单据了解为新造导弹而非现有库存，加之年产量有限，因此不太可能迅速交付。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：BBC</span><span>链接为BBC官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="泽连斯基 爱国者 21亿美元 交付 乌克兰">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">乌克兰·军售</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">泽连斯基赞赏美国21亿美元爱国者导弹交易，但警告交付或需数年</a></h3>
+      <p class="orig">Ukraine's Zelenskyy praises US over $2.1bn Patriot missile deal but warns it could take years</p>
+      <p class="sum">乌克兰总统泽连斯基对美国批准21亿美元爱国者导弹交易表示赞赏。报道同时指出，他警告这批导弹的交付可能需要数年时间。美国国务院此前表示，拟议军售将提升乌克兰的综合防空与反导能力。相关报道还提到，费用将由加拿大、德国、挪威的捐款及欧盟贷款支付，而非美国出资。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：《卫报》</span><span>链接为《卫报》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="bbc" data-k="伯纳姆 奴隶制 道歉 赔款 加勒比 英国">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">英国·历史</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">伯纳姆对奴隶制道歉呼声持开放态度，但排除赔款</a></h3>
+      <p class="orig">Burnham 'open' to calls for slavery apology but not reparations</p>
+      <p class="sum">英国首相伯纳姆表示，英国必须“正视过去”在跨大西洋奴隶贸易中的角色，但赔款“不是正确答案”。他在下周加勒比地区英联邦政府首脑会议前表示，对代表英国正式道歉的呼声持开放态度。伯纳姆在《卫报》撰文表达了个人“悲伤和遗憾”，并提出与受影响国家进行“结构化对话”。他同时明确，当代英国人不应为几个世纪前在不同法律下发生的历史错误承担责任。加勒比国家和赔款运动人士则认为这一表态不足，继续要求立即正式道歉和赔款。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：BBC</span><span>链接为BBC官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="bbc" data-k="伯纳姆 提前大选 议员 英国 预算">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">英国政治</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">尽管伯纳姆否认，议员为何仍不断谈论提前大选</a></h3>
+      <p class="orig">Why MPs keep talking about an early election despite Burnham's denials</p>
+      <p class="sum">英国首相伯纳姆已明确排除提前大选，但威斯敏斯特的猜测仍未停止。聚合页10月31日仍把该题列为BBC当日头条之一，显示提前大选话题在预算案后审查和党内议论中持续发酵。伯纳姆方面的否认并未平息议员和评论员对选举时机的讨论。报道的切入点在于否认与持续猜测之间的反差，而非宣布任何新的选举日期。本条未打开BBC原文，细节以聚合页标题和当日头条地位为准，不补充未核实的议会内情。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：BBC</span><span>链接为BBC官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="economist" data-k="伯纳姆 英国 预算 社论 变革 周刊">
+      <div class="time sans"><b>时间未标注</b>（10月31日当期周刊）</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">英国·社论</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">安迪·伯纳姆的政府空谈变革，然后无所作为</a></h3>
+      <p class="orig">Andy Burnham’s government talks of change, then does nothing</p>
+      <p class="sum">社论批评英国政府的预算缺乏雄心；尽管政府谈论变革，但实际行动跟不上言辞；预算被认为未能展现推动实质改革的决心；这种落差使政府的改革承诺受到质疑；社论将此视为英国执政表现不佳的一个例证。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注（10月31日当期周刊）</span><span>来源：《经济学人》</span><span>链接为《经济学人》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="bbc" data-k="波兰 宪法法院 总统 塞内加尔 防暴警察 危机">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">波兰·宪政</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">波兰总统中断塞内加尔之行回国，宪法法院院长去职引发危机</a></h3>
+      <p class="orig">Poland's president turns back from Senegal trip as court chief's ousting sparks crisis</p>
+      <p class="sum">波兰总统纳夫罗茨基10月30日中断塞内加尔访问回国，背景是宪法法院院长被停职引发宪政危机升级。宪法法院最资深法官宣布暂停院长希维茨科夫斯基和副院长的职务，防暴警察被部署到法院，抗议者聚集在法院大楼外。图斯克政府与纳夫罗茨基长期围绕宪法法院组成存在争议，法院方面则否认停职令效力并称相关行为是“政变”。纳夫罗茨基回国后召集紧急会议，波兰驻华大使也宣布辞职抗议。这一危机是2015年以来围绕司法控制权的长期权力斗争的最新升级。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：BBC</span><span>链接为BBC官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="波兰 宪法法院 防暴警察 停职 法官">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">波兰·宪政</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">波兰宪法法院法官被停职后防暴警察进驻</a></h3>
+      <p class="orig">Riot police deployed to Poland's constitutional court after judge suspended</p>
+      <p class="sum">报道称防暴警察被部署到波兰宪法法院，此前一名法官被停职。波兰总统缩短了塞内加尔之行回国，加入了在法院外与警方对峙的抗议者。事件发生在波兰最高法院人事危机背景下，宪法法院首席法官被免职引发争议。聚合页仅显示标题，未提供停职法官姓名与具体法律程序等进一步细节，故此处不展开。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：《卫报》</span><span>链接为《卫报》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="ap" data-k="西撒哈拉 安理会 美国 俄罗斯 否决 MINURSO">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">联合国</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">美俄关于西撒哈拉的对立决议草案均在安理会被否决</a></h3>
+      <p class="orig">Rival US and Russia resolutions on disputed Western Sahara are defeated in UN Security Council</p>
+      <p class="sum">俄罗斯否决了美国起草的一份决议草案，该草案支持摩洛哥对有争议的西撒哈拉的主权要求，并将结束联合国长达35年的维和任务。该维和任务负责协助筹备有关这片矿产资源丰富领土未来的公投。俄罗斯提出的对立决议草案则仅主张把现有维和任务授权延长至2027年10月31日。转载页显示该AP稿件于10月31日上午更新，但原文页未显示美联社自身的发布时间，故时间记为未标注。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：美联社</span><span>链接为美联社官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="dw" data-k="西撒哈拉 MINURSO 美国 俄罗斯 安理会 摩洛哥">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">联合国</span></div>
+      <h3><a href="https://www.dw.com/en" target="_blank" rel="noopener">美国和俄罗斯阻止延长西撒哈拉联合国特派团任期</a></h3>
+      <p class="orig">US and Russia block extension of UN mission in Western Sahara</p>
+      <p class="sum">联合国安理会未能延长西撒哈拉维和特派团 MINURSO 的任期，该任期于 10 月 31 日到期；美国和俄罗斯各自否决了对方关于延长特派团工作的决议草案；美国草案提出将任期延长一年，并把摩洛哥自治计划作为谈判的唯一基础，同时削减特派团的军事部分；该草案获得 15 个安理会成员中的 11 票支持、3 票弃权，但遭到俄罗斯否决；美国随后否决了俄罗斯提出的在不改变现有条件下再延长一年的草案；MINURSO 成立于 1991 年，负责监督摩洛哥与波利萨里奥阵线之间的解决计划和停火。本条转载记录时间戳无法核实，故时间记为未标注。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：德国之声</span><span>链接为德国之声官网（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="G20 全家福 俄罗斯 澳大利亚 英国 拉夫罗夫">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">外交</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">美国取消G20“全家福”，因澳英等国拒绝与俄罗斯同框</a></h3>
+      <p class="orig">US cancels G20 'family photo' after Australia, UK and others refuse to appear with Russia</p>
+      <p class="sum">美国取消了二十国集团外长会议的“全家福”合影环节。此前澳大利亚、英国等国代表拒绝与俄罗斯外长拉夫罗夫同框合影。会议于10月30日在美国亚特兰大举行，欧洲代表的抵制是取消合影的直接原因。主办方最终取消了这一传统集体合影环节。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：《卫报》</span><span>链接为《卫报》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="voa" data-k="卢比奥 G20 粮食 供应链 伊朗 特朗普 美国之音">
+      <div class="time sans"><b>时间未标注</b>（2026年10月31日节目）</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">外交·视频</span></div>
+      <h3><a href="https://www.youtube.com/watch?v=DKvBFJiQ0u8" target="_blank" rel="noopener">美国之音中文广播（2026年10月31日）：卢比奥称G20需合作应对粮食、供应链与贸易冲击，特朗普称与伊朗冲突很快结束</a></h3>
+      <p class="orig">美国之音中文广播 (2026年10月31日) 卢比奥：二十国集团需要合作应对粮食市场、供应链和贸易所受到的冲击；特朗普总统表示与伊朗的冲突很快就将结束</p>
+      <p class="sum">美国国务卿卢比奥说，世界目前正处于一个抉择的时刻，面临一系列相互关联的经济和地缘政治威胁，二十国集团需要合作应对粮食市场、供应链和贸易受到的冲击。美国总统特朗普10月30日说，与伊朗的冲突很快就能结束，华盛顿需要保证德黑兰不会寻求核武器。在梅拉尼娅·特朗普协助促成的停火协议下，一支援助车队进入了被俄军占领的乌克兰城市奥列什基，平民撤离工作随之启动。西班牙首相桑切斯说，当局将对今年发生的第二起致命高速列车事故展开调查，以防止此类悲剧再次发生。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注（2026年10月31日节目）</span><span>来源：美国之音</span><span>已核到视频页</span></p></div>
+    </article>
+    <article data-src="voa" data-k="卢比奥 G20 中期选举 提前投票 4500万 美国之音">
+      <div class="time sans"><b>时间未标注</b>（2026年10月31日节目）</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">外交·视频</span></div>
+      <h3><a href="https://www.youtube.com/watch?v=vKGXYH9gyxo" target="_blank" rel="noopener">VOA今日焦点（2026年10月31日）：卢比奥主持G20外长会议</a></h3>
+      <p class="orig">VOA今日焦点 (2026年10月31日) 卢比奥国务卿主持G20外长会议</p>
+      <p class="sum">本期重点包括卢比奥国务卿主持20国集团外长会议，以及美国中期选举日临近、逾4500万张选票已经提前投出。美国前官员表示，美国中期选举结果不会影响对中国政策。美国海军中型无人水面载具计划迎来新进展，特朗普总统表示与伊朗的冲突很快将结束。在国际政治犯日，中国特设委员会主席穆勒纳尔呼吁中共释放所有政治犯。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注（2026年10月31日节目）</span><span>来源：美国之音</span><span>已核到视频页</span></p></div>
+    </article>
+    <article data-src="bloomberg" data-k="纳斯达克 回调 亚马逊 Alphabet 英特尔 AI 华尔街">
+      <div class="time sans"><b>时间未标注</b>（聚合记录05:59但未注明时区，若为美东时间则为北京时间09:59，日期仍为10月31日）</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">市场</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">纳斯达克逼近回调区间，亚马逊、Alphabet、英特尔令华尔街失望</a></h3>
+      <p class="orig">Nasdaq Nears Correction as Amazon, Alphabet, Intel Disappoint Wall Street</p>
+      <p class="sum">纳斯达克综合指数在又一轮科技股抛售后逼近回调区间，较近期高点下跌约 8%；亚马逊、Alphabet 和英特尔令人失望的业绩加剧了投资者对人工智能高额资本支出的疑虑；市场参与者越来越谨慎地看待云计算巨头每年超过 7000 亿美元的资本支出计划与自由现金流受到审视之间的落差；核心平台过去一年的合计经营利润约为 4900 亿美元，而领先平台运营商的合计市值达 11.5 万亿美元；投资者正在重新评估人工智能基础设施投资的资本回报率。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注（聚合记录05:59但未注明时区，若为美东时间则为北京时间09:59，日期仍为10月31日）</span><span>来源：彭博</span><span>链接为彭博官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="曼吉奥尼 双重危险 州级指控 律师">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">美国·司法</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">曼吉奥尼律师援引双重危险法要求驳回州级指控</a></h3>
+      <p class="orig">Luigi Mangione's lawyers file to dismiss state charges, citing double jeopardy law</p>
+      <p class="sum">报道称路易吉·曼吉奥尼的律师已提交动议，要求驳回针对他的州级指控。动议援引的理由是双重危险法，即同一行为不应被重复追诉。聚合页仅显示标题，未披露动议所涉的具体指控清单与检方回应。基于现有可核信息，不对案件事实与审理进展作进一步推断。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：《卫报》</span><span>链接为《卫报》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="邮轮 MV Odyssey 柬埔寨 奢华 特朗普">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">特稿</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">受诅咒的邮轮：永不停靠的海上奢华梦如何变成噩梦</a></h3>
+      <p class="orig">The cursed cruise: how the dream of never-ending luxury at sea became a nightmare</p>
+      <p class="sum">MV Odyssey号被宣传为永不停靠的海上退休生活，可连续环球航行，被一些乘客视为远离特朗普的终极出逃。报道称，因特朗普发动的战争引发的石油冲击打乱了这一计划。乘客最终在柬埔寨被卸下船，所谓永不结束的航程戛然而止。标题中的“受诅咒的邮轮”与“梦想变噩梦”正是指这种宣传承诺与现实结局之间的落差。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：《卫报》</span><span>链接为《卫报》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="阿尔巴尼斯 澳大利亚 加息 世界舞台">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">澳大利亚政治</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">阿尔巴尼斯寻求世界舞台重启，国内小麻烦不断且加息前景逼近</a></h3>
+      <p class="orig">Albanese looks for reset on world stage as 'spot fires burn' domestically and likely interest rate hike looms</p>
+      <p class="sum">报道称澳大利亚总理阿尔巴尼斯正寻求在世界舞台上重启局面。国内方面，他同时面临多处“小火苗”式的政治麻烦。报道还提到，可能的加息前景正在逼近，构成其国内压力的一部分。聚合页仅显示标题与上述要点，未提供具体的出访行程与政策细节，故不展开。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：《卫报》</span><span>链接为《卫报》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="澳大利亚 间谍 帕特里克 透明度 丑闻">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">澳大利亚·透明度</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">绝密间谍任务与数十年旧丑闻：要求揭盖的奥斯汀·鲍尔斯式曲折经过</a></h3>
+      <p class="orig">A top-secret spy mission, a decades-old scandal – and the Austin Powers-esque saga to lift the lid</p>
+      <p class="sum">报道聚焦澳大利亚参议员雷克斯·帕特里克的最新透明度之争。争议围绕一项他所称的澳大利亚历史上“最公开的秘密”展开，涉及一项绝密间谍任务与数十年前的丑闻。标题以“奥斯汀·鲍尔斯式”形容这场要求公开真相的曲折经过。聚合页仅显示标题与上述导语，未提供任务本身的具体内容，故不展开。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：《卫报》</span><span>链接为《卫报》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="economist" data-k="拉美裔 亚裔 摇摆选民 美国政治 周刊 封面社论">
+      <div class="time sans"><b>时间未标注</b>（10月31日当期周刊）</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">美国·社论</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">正在向好改变美国政治的美国人</a></h3>
+      <p class="orig">The Americans changing politics for the better</p>
+      <p class="sum">该期封面社论认为拉美裔和亚裔已成为美国最具活力的摇摆选民；这一变化正在重塑美国政治的竞争格局；两党都不能再把这些选民视为理所当然的票仓；社论的论点是这种流动性对美国政治是积极的变化；选民结构的变化使政党必须争取更广泛的联盟。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注（10月31日当期周刊）</span><span>来源：《经济学人》</span><span>链接为《经济学人》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="economist" data-k="以色列 内塔尼亚胡 反对党 犹太 阿拉伯 周刊">
+      <div class="time sans"><b>时间未标注</b>（10月31日当期周刊）</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">中东·社论</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">以色列的犹太和阿拉伯反对党应当合作</a></h3>
+      <p class="orig">Israel’s Jewish and Arab opposition parties should work together</p>
+      <p class="sum">社论认为如果以色列的犹太和阿拉伯反对党希望把本雅明·内塔尼亚胡赶下台，就需要尽快行动；两方单独行动难以形成足以组建政府的多数；合作是反对派改变政治格局的前提；社论敦促双方克服分歧、协调策略；时间紧迫是该论点强调的关键因素。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注（10月31日当期周刊）</span><span>来源：《经济学人》</span><span>链接为《经济学人》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="economist" data-k="莫迪 印度 25年 就业 经济增长 周刊">
+      <div class="time sans"><b>时间未标注</b>（10月31日当期周刊）</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">印度·社论</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">如何看待莫迪的 25 年</a></h3>
+      <p class="orig">What to make of 25 years of Narendra Modi</p>
+      <p class="sum">社论评估了纳伦德拉·莫迪 25 年政治生涯的影响；它指出即使经济快速增长，也未必能安抚选民；如果增长不能创造足够的就业，选民的不满仍会积累；社论提醒人们不要只用增长率来衡量执政成败；就业问题被视为理解莫迪政治遗产的关键。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注（10月31日当期周刊）</span><span>来源：《经济学人》</span><span>链接为《经济学人》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="economist" data-k="卢拉 巴西 市场 连任 财政 衰退 周刊">
+      <div class="time sans"><b>时间未标注</b>（10月31日当期周刊）</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">巴西·社论</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">市场对卢拉意外获胜感到沮丧——而且有充分理由</a></h3>
+      <p class="orig">Markets are dismayed by Lula’s surprise win—and for good reason</p>
+      <p class="sum">社论认为市场对巴西总统卢拉连任的反应是负面的；这种沮丧有其理由，因为新政府面临避免经济下滑的压力；卢拉需要在财政和增长之间取得平衡；如果政策失误，巴西可能陷入经济低迷；社论把避免衰退视为连任总统的首要考验。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注（10月31日当期周刊）</span><span>来源：《经济学人》</span><span>链接为《经济学人》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="economist" data-k="中国 AI 蒸馏 Anthropic OpenAI 复制 周刊">
+      <div class="time sans"><b>时间未标注</b>（10月31日当期周刊）</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人</span><span class="cat">科技·社论</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">让中国复制美国的人工智能</a></h3>
+      <p class="orig">Let China copy American AI</p>
+      <p class="sum">社论认为蒸馏技术令 Anthropic 和 OpenAI 感到不满，但这不足以成为禁止它的理由；对模型蒸馏的限制并不能从根本上阻止技术扩散；试图封锁复制行为可能损害创新和竞争；社论主张以更开放的态度看待人工智能技术的传播；限制措施的代价可能超过其收益。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注（10月31日当期周刊）</span><span>来源：《经济学人》</span><span>链接为《经济学人》官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+    <article data-src="bbc" data-k="朝鲜 黑客 币安 TraderTraitor 63亿美元 精英">
+      <div class="time sans"><b>时间未标注</b></div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">金融·加密</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">朝鲜“精英”黑客为何成为币安重大黑客案头号嫌疑</a></h3>
+      <p class="orig">Why North Korea's 'elite' hackers are the prime suspect in major Binance hack</p>
+      <p class="sum">币安称黑客窃取约63亿美元，是有记录以来最大的加密货币盗窃案，公司已暂停存取款并承诺承担全部损失。两家分析机构把事件归因于朝鲜黑客组织TraderTraitor，称攻击者在约20分钟内从币安在10条区块链上的钱包转移约63.6亿美元。币安是全球最大的加密货币交易所，此案规模超过此前与朝鲜有关的15亿美元Bybit黑客案。美国总统特朗普被问及朝鲜 involvement 时表示执法部门仍在调查，称“我们不知道”。本条未打开BBC原文，归因表述以分析机构说法为准，不作定罪性断言。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：时间未标注</span><span>来源：BBC</span><span>链接为BBC官网首页（未核到逐篇原文）</span></p></div>
+    </article>
+
+  </div>
+  <div class="empty sans" id="empty">没有匹配的条目，换个关键词试试。</div>
+</main>
+
+<footer class="sans">
+  <p>先看顶部 3 分钟总览，再顺时间线由新到旧扫标题；同一事件多家同题（如G20合影取消有美联社/卫报/美国之音三家、爱国者军售有BBC/彭博/卫报三家、中国PMI有路透/彭博两家、西撒哈拉有美联社/德国之声两家）即为当日真头条，只需挑一家深读、其余看 summary 里的差异点即可。紧凑模式适合通勤快速扫完 37 条。</p>
+  <p>来源：美联社、法广中文、路透、BBC、纽约时报、彭博、经济学人、德国之声、《卫报》、美国之音中文、自由亚洲 2026-10-31 首页/当期周刊交叉核对，午间版截稿 13:08（北京时间）。本页为当日快照、非实时更新；时间为当日发布时间（北京时间），标题为中文译题，英文为原题（中文媒体除外），点标题前往来源媒体——已核到原文的直达原文（本版仅路透 5 条与美国之音 2 条视频页），其余至该媒体官网/中文版（部分需订阅）。</p>
+  <p>本版缺货说明：法广中文版与自由亚洲官网抓取被拦截、且检索中无 10 月 31 日当日条目，故 0 条；纽约时报首页热榜核实到的条目实际为 10 月 29–30 日，按“不用旧闻冒充新版”全部排除，故 0 条；德国之声仅核实 1 条且其时间戳无法核实，列入时间未标注段；经济学人 6 条为 10 月 31 日当期周刊社论（封面社论转载记录为 10 月 29 日上线），按当期周刊收录；彭博纳斯达克一条聚合记录时间未注明时区，列入时间未标注段并附注。</p>
+</footer>
+
+<script>
+(function(){
+  var btns=document.querySelectorAll('[data-f]');
+  var arts=document.querySelectorAll('article[data-src]');
+  var q=document.getElementById('q');
+  var empty=document.getElementById('empty');
+  var cur='all';
+  function apply(){
+    var kw=q.value.trim().toLowerCase(); var any=false;
+    arts.forEach(function(a){
+      var showSrc=(cur==='all'||a.dataset.src===cur);
+      var hit=showSrc && (!kw || (a.textContent.toLowerCase().indexOf(kw)>-1 || (a.dataset.k||'').toLowerCase().indexOf(kw)>-1));
+      a.classList.toggle('hidden',!hit); if(hit)any=true;
+    });
+    empty.style.display=any?'none':'block';
+  }
+  btns.forEach(function(b){ b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true'); cur=b.dataset.f; apply();
+  });});
+  q.addEventListener('input',apply);
+  var d=document.getElementById('density');
+  d.addEventListener('click',function(){
+    var on=document.body.classList.toggle('compact');
+    d.setAttribute('aria-pressed',on?'true':'false');
+    d.textContent=on?'舒适模式（显示简介）':'紧凑模式（只看标题）';
+  });
+  var hdr=document.querySelector('header');
+  var toggle=document.getElementById('hdrToggle');
+  var ticking=false;
+  function onScroll(){
+    var y=window.scrollY||window.pageYOffset;
+    if(y>90){ hdr.classList.add('is-shrunk'); }
+    else if(y<40){
+      hdr.classList.remove('is-shrunk'); hdr.classList.remove('show-controls');
+      toggle.setAttribute('aria-expanded','false'); toggle.textContent='筛选 ▾';
+    }
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){ ticking=true; window.requestAnimationFrame(onScroll); }
+  },{passive:true});
+  onScroll();
+  toggle.addEventListener('click',function(){
+    var open=hdr.classList.toggle('show-controls');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'筛选 ▴':'筛选 ▾';
+  });
+})();
+</script>
+</body>
+</html>
