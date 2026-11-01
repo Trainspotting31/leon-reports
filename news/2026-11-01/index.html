@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>新闻阅读 · 十一报午间时间线</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --panel:#fffdf8; --ink:#1a1814; --muted:#5c574d; --line:#ddd6c8;
+    --accent:#9a2a1e; --accent-ink:#fff; --chip:#ece7da; --live:#b42318;
+    --ap:#111111; --rfi:#0055a4; --reuters:#e8710a; --bbc:#b80000; --nyt:#121212; --bloom:#2800d7; --econ:#e3120b;
+    --dw:#0072bc; --guardian:#052962; --voa:#17648c; --rfa:#8a6d00;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141311; --panel:#1d1c19; --ink:#ece7dc; --muted:#a8a193; --line:#33302a; --chip:#2a2823; --accent:#e0654f; --ap:#d8d2c4; --nyt:#d8d2c4; --guardian:#7aa2e0; --bloom:#9d8cff; --rfa:#d9b84a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif SC","Songti SC",Georgia,serif;line-height:1.6}
+  .sans{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px;transition:padding .3s ease,box-shadow .3s ease}
+  .toprow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0;letter-spacing:.02em;transition:font-size .3s ease}
+  .edition{font-size:13px;color:var(--muted)}
+  .edition b{color:var(--accent)}
+  .ed-mini{display:none}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px;max-height:340px;opacity:1;overflow:hidden;transition:max-height .32s ease,opacity .25s ease,margin .32s ease}
+  .hdr-toggle{display:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:3px 11px;font-size:12.5px;cursor:pointer;line-height:1.5;flex:none}
+  header.is-shrunk{padding:6px 16px;box-shadow:0 8px 20px rgba(20,16,8,.14)}
+  header.is-shrunk h1{font-size:15.5px}
+  header.is-shrunk .edition{font-size:12px}
+  header.is-shrunk .ed-full{display:none}
+  header.is-shrunk .ed-mini{display:inline}
+  header.is-shrunk .hdr-toggle{display:inline-block}
+  header.is-shrunk .toprow{flex-wrap:nowrap;align-items:center}
+  header.is-shrunk .controls{max-height:0;opacity:0;margin-top:0;pointer-events:none}
+  header.is-shrunk.show-controls .controls{max-height:340px;opacity:1;margin-top:8px;pointer-events:auto}
+  @media (prefers-reduced-motion: reduce){
+    header,h1,.controls{transition:none}
+  }
+  .chipbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .search{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
+  main{max-width:920px;margin:0 auto;padding:14px 16px 40px}
+  .brief{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--accent);padding:14px 16px;margin-bottom:8px}
+  .brief h2{font-size:16px;margin:0 0 8px}
+  .brief ol{margin:0;padding-left:20px;font-size:14.5px}
+  .brief li{margin:5px 0}
+  .brief li b{color:var(--accent)}
+  .brief .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 0 4px}
+  .tl-head h2{font-size:17px;margin:0}
+  .tl-head span{font-size:12.5px;color:var(--muted)}
+  .timeline{position:relative;margin-top:6px}
+  .timeline::before{content:"";position:absolute;left:103px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  article{position:relative;display:grid;grid-template-columns:88px 22px 1fr;gap:0 6px;padding:12px 0 14px}
+  .time{font-size:12px;line-height:1.4;text-align:right;padding-top:2px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .time b{display:block;font-size:13px;color:var(--ink)}
+  .rail{display:flex;justify-content:center}
+  .dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none;box-shadow:0 0 0 3px var(--bg);z-index:1}
+  .card{background:var(--panel);border:1px solid var(--line);padding:12px 14px 10px;min-width:0}
+  .srcrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:5px}
+  .srcbadge{font-size:11.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 7px;letter-spacing:.02em}
+  @media (prefers-color-scheme: dark){ .srcbadge{color:#101010} .srcbadge.on-dark{color:#fff} }
+  .cat{font-size:11.5px;color:var(--muted)}
+  .hot{color:var(--live);font-weight:700;font-size:11.5px}
+  article h3{font-size:16.5px;line-height:1.45;margin:0 0 4px}
+  article h3 a{color:var(--ink);text-decoration:none}
+  article h3 a:hover{text-decoration:underline}
+  .orig{font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 5px;line-height:1.45}
+  .sum{font-size:14px;color:var(--ink);margin:0}
+  .meta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+  .subhead{position:relative;padding:16px 0 2px 116px;font-size:13px;font-weight:700;color:var(--muted)}
+  .subhead span{font-weight:400}
+  body.compact article{padding:7px 0 8px}
+  body.compact .sum,body.compact .orig{display:none}
+  body.compact article h3{font-size:15px}
+  body.compact .card{padding:8px 12px}
+  .hidden{display:none!important}
+  .empty{padding:30px;text-align:center;color:var(--muted);display:none}
+  footer{max-width:920px;margin:0 auto;padding:0 16px 28px;font-size:12px;color:var(--muted)}
+  footer p{margin:6px 0}
+  @media(max-width:560px){
+    .timeline::before{left:83px}
+    article{grid-template-columns:70px 18px 1fr;gap:0 4px}
+    .time{font-size:11px}
+    .time b{font-size:12px}
+    article h3{font-size:15.5px}
+    .sum{font-size:13.5px}
+    .subhead{padding-left:92px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="toprow">
+    <h1>新闻阅读 · 十一报午间时间线</h1>
+    <div class="edition sans"><span class="ed-full">2026年11月1日 星期日 · <b>午版 12:30 截稿</b> · 共 17 条 · 11 家聚合 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>午版 12:30</b> · 共 17 条</span></div>
+    <button class="hdr-toggle sans" id="hdrToggle" aria-expanded="false" aria-controls="controlsBar">筛选 ▾</button>
+  </div>
+  <div class="controls sans" id="controlsBar" role="group" aria-label="筛选">
+    <button class="chipbtn" data-f="all" aria-pressed="true">全部</button>
+    <button class="chipbtn" data-f="dw" aria-pressed="false">德国之声</button>
+    <button class="chipbtn" data-f="bbc" aria-pressed="false">BBC</button>
+    <button class="chipbtn" data-f="reuters" aria-pressed="false">路透</button>
+    <button class="chipbtn" data-f="voa" aria-pressed="false">美国之音</button>
+    <button class="chipbtn" data-f="guardian" aria-pressed="false">卫报</button>
+    <button class="chipbtn" data-f="ap" aria-pressed="false">美联社</button>
+    <button class="chipbtn" data-f="nyt" aria-pressed="false">纽约时报</button>
+    <button class="chipbtn" data-f="bloomberg" aria-pressed="false">彭博</button>
+    <button class="chipbtn" data-f="economist" aria-pressed="false">经济学人</button>
+    <button class="chipbtn" data-f="rfi" aria-pressed="false">法广</button>
+    <button class="chipbtn" data-f="rfa" aria-pressed="false">自由亚洲</button>
+    <input class="search" id="q" type="search" placeholder="搜关键词：印度 / 币安 / 德国抗议 / 韩国出口 / WNBA / 波兰…" aria-label="搜索标题" />
+    <button class="chipbtn" id="density" aria-pressed="false">紧凑模式（只看标题）</button>
+  </div>
+</header>
+
+<main>
+  <div class="brief">
+    <h2>⏱ 3 分钟总览 — 午间只有 5 条主线</h2>
+    <ol>
+      <li><b>美国中期选举倒计时3天：</b>加州选票争夺升温，阿拉斯加原住民动员成关键。</li>
+      <li><b>德国青年抗议演变为暴力，法兰克福商店遭洗劫。</b></li>
+      <li><b>印度反对派大集会，选民名册争议升级。</b></li>
+      <li><b>FBI指认朝鲜制造币安劫案，币安称已补足90%。</b></li>
+      <li><b>波兰宪法法院改组对峙，图斯克力挺改组。</b></li>
+    </ol>
+    <p class="note sans">本版共 17 条：彭博 3、纽约时报 3、卫报 3、BBC 2、美联社 2、路透 2、德国之声 1、法广 1；经济学人、美国之音、自由亚洲本版均为 0 条。同一事件在不同来源下分别保留：德国青年抗议（路透、BBC、德国之声三家）、印度反对派集会（BBC、彭博两家）；其余条目全部汇入下方同一条时间线，不再按媒体分区；每条保留发布时间、中文标题、英文原题与详细 summary。</p>
+  </div><div class="tl-head"><h2>时间线 · 11月1日</h2><span class="sans">由新到旧 ↓ · 同一事件多家同题即当日真头条 · 时间未标注条目列于后段</span></div>
+
+  <div class="timeline" id="timeline">
+    <article data-src="bloomberg" data-k="印度 抗议 莫迪 甘地 选民名册 拉姆利拉 蟑螂人民党">
+      <div class="time sans"><b>11月1日</b>12:01</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">印度·政治</span></div>
+      <h3><a href="https://www.thehindubusinessline.com/news/indias-protest-movements-unite-in-fresh-headache-for-modi/article71652027.ece" target="_blank" rel="noopener">印度抗议运动合流，给莫迪带来新麻烦</a></h3>
+      <p class="orig">India's Protest Movements Unite in Fresh Headache for Modi</p>
+      <p class="sum">印度反对派联盟INDIA bloc把持续数周的选民名册争议带上街头，11月1日在新德里拉姆利拉广场举行“拯救选票、拯救国家”大集会，被描述为十多年来对莫迪总理最严峻的挑战之一。反对党领袖拉胡尔·甘地带头抗议，指称大规模选民名册修订导致数百万选民被排除在草案名单之外，并要求首席选举专员贾内什·库马尔辞职，国大党设定的到场目标为100万人。此次集会把此前各自行动的两股抗议力量合流，包括上月组织大规模示威的青年讽刺运动“蟑螂人民党”，该组织已正式支持本次集会。莫迪所在的印人党则为选民名册修订辩护，指责反对派破坏宪法机构，并批评反对派选在1984年反锡克教骚乱42周年当天集会。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 12:01</span><span>来源：彭博</span><span>转载页，未核到bloomberg.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="nyt" data-k="海蒂 克鲁姆 万圣节 左手 断手 纽约 派对">
+      <div class="time sans"><b>11月1日</b>11:51</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·文化</span></div>
+      <h3><a href="https://www.lanacion.com.ar/usa/heidi-klum-reveals-halloween-costume-as-her-iconic-party-marks-25-years-nid01112026/" target="_blank" rel="noopener">海蒂·克鲁姆化身自己的左手过万圣节</a></h3>
+      <p class="orig">Heidi Klum Becomes Her Left Hand for Halloween</p>
+      <p class="sum">超模海蒂·克鲁姆在纽约举办第25届年度万圣节派对，亮相造型是一只巨大的、血淋淋的断手——确切说是她自己左手的复制品，头部从手掌中央露出，指甲涂红，戴着订婚戒指、婚戒和写有丈夫名字的手指纹身。这一构思源于去年，当时她正在变装为美杜莎，灵感来自低头看自己的手；特效团队对她的真手做了扫描，复刻了静脉、肌肉和甲床，穿戴耗时约五六个小时，制作耗时更久。派对在曼哈顿东村Moxy酒店内的Cathédrale餐厅举行，丈夫汤姆·考利茨因巡演缺席。克鲁姆此前还扮过E.T.、孔雀、美杜莎、怪物史莱克中的菲奥娜等，素有“万圣节女王”之称。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 11:51</span><span>来源：纽约时报</span><span>转载页，未核到nytimes.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="WNBA 女武神 梦想队 抢七 总冠军 威廉姆斯">
+      <div class="time sans"><b>11月1日</b>约 11:30</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">体育·篮球</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">女武神队抢七击败梦想队，建队第二年即夺WNBA总冠军</a></h3>
+      <p class="orig">Gabby Williams leads Valkyries to WNBA championship in second season, beating Dream 68-63 in Game 7</p>
+      <p class="sum">金州女武神队在旧金山大通中心举行的WNBA总决赛抢七大战中以68-63击败亚特兰大梦想队，建队仅第二年就夺得队史首冠。加比·威廉姆斯全场砍下30分，其中下半场独得28分，创下WNBA总决赛半场得分纪录，并当选总决赛MVP。梦想队在第三节一度领先9分，但威廉姆斯在第三节末段连得13分带队反扑，并在终场前2分18秒命中一记超远三分，帮助球队以60-57反超锁定胜局。这是WNBA自2025年改用七场四胜制以来首次打满七场的总决赛，女武神队也成为北美主要职业体育联盟中夺冠最快的扩军球队。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：约2026年11月1日 11:30</span><span>来源：《卫报》</span><span>至官网首页，未核到卫报逐篇原文直达链接</span></p></div>
+    </article>
+    <article data-src="nyt" data-k="曼联 卡里克 计划 危机 功能失调">
+      <div class="time sans"><b>11月1日</b>11:24</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">体育·足球</span></div>
+      <h3><a href="https://www.archynetys.com/trend/2026-11-01/what-do-manchester-united-do-now-is-there-a-plan" target="_blank" rel="noopener">曼联现在怎么办？有计划吗？</a></h3>
+      <p class="orig">What do Manchester United do now? Is there a plan?</p>
+      <p class="sum">纽约时报以“曼联现在怎么办”为题，追问这家俱乐部在新一轮组织混乱之后有何计划，认为其未来正处在不稳定的节点上。综合《卫报》、BBC、《泰晤士报》和Defector等媒体的同期评论，舆论把曼联形容为进入了组织功能失调的新阶段，《卫报》专栏称之为“最新危机与家丑”，BBC则讨论了“厄运循环”之说如何成为业内焦点。争议焦点之一是，是否本应更早给迈克尔·卡里克一个高级职位、以及更好的分析能否预见当前的局面。Defector的表述更为尖锐，称卡里克与曼联正在“组织功能失调上开创先例”，凸显内部紊乱的深度。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 11:24</span><span>来源：纽约时报</span><span>综合转述页，未核到nytimes.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="台湾 同志大游行 Pride 彩虹 台北 平权">
+      <div class="time sans"><b>11月1日</b>约 10:46</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">台湾·社会</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">“我们的声音，我们的旅程”：2026台湾同志大游行图集</a></h3>
+      <p class="orig">‘Our voices, our journey’: 2026 Taiwan Pride parade – in pictures</p>
+      <p class="sum">约15万人周六走上台北街头，参加第24届台湾同志大游行，这是东亚规模最大的年度同志活动。游行以“我们的声音，我们的旅程”为主题，旨在推动性别平等、促进跨社群对话，并争取更广泛的法律保障与社会包容。组织方称，参与者来自台湾及海外，游行队伍从台北市政府广场出发，沿两条路线行进，沿途有变装皇后领队，终点安排了舞台表演与彩虹市集。部分游行者将万圣节装扮融入造型。另据其他报道，组织方最终估计人数超过17万，且游行前数周台北一家同志酒吧曾遭警方搜查，使平权议题受到额外关注。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：约2026年11月1日 10:46</span><span>来源：《卫报》</span><span>至官网首页，未核到卫报逐篇原文直达链接</span></p></div>
+    </article>
+    <article data-src="bbc" data-k="德国 法兰克福 抗议 生活成本 洗劫 暴力 Z世代 水炮">
+      <div class="time sans"><b>11月1日</b>10:25</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">欧洲·抗议</span></div>
+      <h3><a href="https://gapim.uz/en/world-en/67858-mass-protests-over-cost-of-living-descend-into-riots-across-german-cities-1793502022" target="_blank" rel="noopener">德国生活成本抗议演变为暴力，商店遭洗劫</a></h3>
+      <p class="orig">Shops looted as German cost of living protests turn violent</p>
+      <p class="sum">欧洲青年主导的生活成本抗议浪潮蔓延至德国，周六在法兰克福市中心的大规模示威演变为暴力骚乱和抢劫。法兰克福警方表示，抗议者向应急人员投掷石块、烟花、玻璃瓶和汽油弹，警方动用水炮还击，并封锁了法兰克福主要购物区的大片区域，随后确认多人被捕。除了法兰克福，柏林、科隆和汉堡也爆发了暴力冲突，抗议由“Gen Z regelt”（Z世代说了算）发起，抗议内容包括学校资金不足、公共开支削减和义务兵役制。黑森州内政部长罗曼·波塞克称，约100名已被明确识别的左翼极端分子渗透进法兰克福的抗议队伍，并称由此产生的暴力“可耻”。这场抗议是法国、意大利等地青年抗议浪潮的一部分，反映出欧洲年轻人对生活成本上涨和公共服务恶化的普遍不满。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 10:25</span><span>来源：BBC</span><span>转载页，未核到bbc.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="bbc" data-k="印度 反对派 集会 选举委员会 库马尔 甘地 选民名单">
+      <div class="time sans"><b>11月1日</b>10:23</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">印度·政治</span></div>
+      <h3><a href="https://ua.news/en/dovkolo-svitu/opozitsiia-indiyi-sklikaie-miting-za-vidstavku-glavi-viborchkomu-bbc-news" target="_blank" rel="noopener">印度反对派号召举行大型集会，要求选举委员会主席辞职</a></h3>
+      <p class="orig">India opposition calls rally over election chief</p>
+      <p class="sum">印度国大党领导的反对派联盟定于周日在德里拉姆利拉广场举行大型集会，要求首席选举委员贾内什·库马尔辞职并推动选举改革，预计将有数万人参加，反对派称最多可能达100万人。集会正值选民名单特别修订程序引发争议之际，该程序导致全国草案名册中约1.3亿个名字被删除，反对派指控选举委员会配合执政党操纵选民名单。德里警方已批准集会，但附加了条件：活动须在17:00前结束、场地须安装闭路电视、不得在指定区域外游行。反对派领袖拉胡尔·甘地称这场抗议针对的是“印度民主的破坏”，他上月曾率领数万人从德里康诺特广场游行至最高法院，同样要求库马尔辞职。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 10:23</span><span>来源：BBC</span><span>转载页，未核到bbc.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="nyt" data-k="飞机 横幅 Fire Novell 诺维尔 佛罗里达州立 克莱姆森 拼错">
+      <div class="time sans"><b>11月1日</b>09:24</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">体育·橄榄球</span></div>
+      <h3><a href="https://www.archynetys.com/trend/2026-11-01/plane-flies-misspelled-fire-novell-banner-at-clemson-florida-state" target="_blank" rel="noopener">飞机在克莱姆森—佛罗里达州立大学比赛上空打出拼错的“解雇诺维尔”横幅</a></h3>
+      <p class="orig">Plane flies misspelled 'Fire Novell' banner at Clemson-Florida State</p>
+      <p class="sum">在克莱姆森对阵佛罗里达州立大学的比赛期间，一架抗议飞机拖着一条横幅飞过球场，上面写着“Fire Novell”，把佛罗里达州立大学主教练迈克·诺维尔（Mike Norvell）的姓氏拼错，严肃的解雇诉求因此演变成一场拼写乌龙并在社交媒体上病毒式传播。据综合报道，纽约时报、ESPN和《塔拉哈西民主党人报》等媒体均报道了这一事件，并注意到拼写错误本身的传播效应。横幅属于球迷要求解雇诺维尔的抗议的一部分，反映了外界对佛罗里达州立大学橄榄球项目领导层的审视。截至检索时，未见有关方面对拼写错误本身作出正式回应。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 09:24</span><span>来源：纽约时报</span><span>综合转述页，未核到nytimes.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="bloomberg" data-k="FBI 朝鲜 币安 加密货币 劫案 60亿 以太坊 洗钱">
+      <div class="time sans"><b>11月1日</b>09:19</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">加密·安全</span></div>
+      <h3><a href="https://www.byteseu.com/2489124/" target="_blank" rel="noopener">FBI指认朝鲜制造60亿美元币安加密货币劫案</a></h3>
+      <p class="orig">FBI Blames North Korea for 6 Billion Binance Crypto Hack</p>
+      <p class="sum">美国联邦调查局发表声明，指认朝鲜应对币安交易所逾60亿美元虚拟资产被盗负责，这是迄今已知最大的加密货币交易所劫案，规模约为2025年Bybit 15亿美元劫案的四倍。FBI称，与特朗普政府此前点名的TraderTraitor组织有关的黑客正在把赃款主要兑换成以太坊，并预计将通过去中心化金融和即时兑换服务进一步洗钱，已呼吁虚拟资产服务商拦截相关地址。币安方面同日表示，已动用公司资金补回约90%的被盗金额（逾63.4亿美元），并计划于周日恢复提款，承诺全额赔付客户。与此同时，特朗普在佛罗里达州万圣节派对上对记者表示，调查人员尚未最终确定是否确为朝鲜所为，留下了与FBI声明之间的口径差异。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 09:19</span><span>来源：彭博</span><span>转载页，未核到bloomberg.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="ap" data-k="佐治亚 佛罗里达 橄榄球 失误 达阵 科尔">
+      <div class="time sans"><b>11月1日</b>09:01</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">体育·橄榄球</span></div>
+      <h3><a href="https://getty.pp.ua/p/a%3A8206504149137%3Ano-3-georgia-takes-advantage-001049000" target="_blank" rel="noopener">排名第三的佐治亚利用佛罗里达四次失误取胜</a></h3>
+      <p class="orig">No. 3 Georgia takes advantage of 4 turnovers by No. 17 Florida</p>
+      <p class="sum">在亚特兰大举行的比赛中，排名第三的佐治亚大学以27-8击败排名第17的佛罗里达大学，赢下这场宿敌对决。佐治亚线卫克里斯·科尔在上半场末段接弗罗里达第二四分卫特拉梅尔·琼斯被擒杀后掉球，回攻66码达阵，这是他本赛季第二次长距离掉球回攻得分。佛罗里达全场出现四次失误，上半场另有5次犯规共罚60码，进攻端始终未能打开局面。佐治亚地面进攻以217码对48码碾压对手，取得对佛罗里达的六连胜，战绩来到7胜1负（分区5胜1负），也从10月17日被奥本绝杀的失利中强势反弹。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 09:01</span><span>来源：美联社</span><span>转载页，未核到apnews.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="dw" data-k="德国 Z世代 抗议 街头 法兰克福 柏林 科隆 汉堡 水炮">
+      <div class="time sans"><b>11月1日</b>08:58</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">欧洲·抗议</span></div>
+      <h3><a href="https://www.youtube.com/shorts/VBP5v1pauig" target="_blank" rel="noopener">德国Z世代走上街头</a></h3>
+      <p class="orig">Gen Z in Germany takes to the streets</p>
+      <p class="sum">德国之声11月1日的视频报道记录了德国青年抗议的后续：由“Gen Z regelt”（Z世代来管）发起的游行于10月31日在34个城市举行，诉求包括更好的学校、可负担的生活、反对恢复义务兵役以及更坚定的气候保护，组织者称有十万以上人参加。白天游行大体和平，但晚间在柏林、科隆、汉堡和法兰克福等地演变为暴力冲突，部分人不愿散去，警方动用水炮对付投掷燃烧瓶的青年。在法兰克福，蒙面暴徒砸抢商店，包括一家运动鞋店、一家香水店和一家枪店，多名警察受伤，警方一度警告市民避开市中心。这一波青年抗议受到法国、意大利同类运动的启发，而德国全国学生会议已与本次行动保持距离，并计划11月20日在柏林另行组织游行。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 08:58</span><span>来源：德国之声</span><span>DW News官方短片，未核到dw.com文字原文直达链接</span></p></div>
+    </article>
+    <article data-src="bloomberg" data-k="韩国 出口 芯片 半导体 AI 贸易">
+      <div class="time sans"><b>11月1日</b>08:38</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博 Bloomberg</span><span class="cat">经济·贸易</span></div>
+      <h3><a href="https://asia.nikkei.com/economy/trade/south-korea-exports-nearly-double-in-october-on-ai-investment-boom" target="_blank" rel="noopener">韩国出口延续强劲增长，芯片热潮持续</a></h3>
+      <p class="orig">S. Korea Exports Extend Robust Growth as Chip Boom Continues</p>
+      <p class="sum">韩国产业通商资源部11月1日公布的数据显示，韩国10月出口同比增长93.7%，至1152.8亿美元，是1974年1月以来最强劲的同比增幅，也高于路透调查预期的93.2%。半导体仍是最大驱动力，芯片出口同比激增259.4%，至564.4亿美元，计算机出口更暴涨496.6%，反映全球大科技公司为AI基础设施持续投资。按工作日调整后出口增长为76.1%，统计口径差异与中秋假期在2025年10月、2026年9月的不同落点有关，1—10月累计出口已达9300亿美元。韩国贸易部长表示，11月内实现全年出口首次突破1万亿美元“几乎确定”，这将使韩国成为继美国、中国、德国之后第四个达到该里程碑的国家。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 08:38</span><span>来源：彭博</span><span>转载页，未核到bloomberg.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="guardian" data-k="波兰 图斯克 宪法法院 改组 抗议 纳夫罗茨基">
+      <div class="time sans"><b>11月1日</b>08:30</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">卫报 The Guardian</span><span class="cat">欧洲·政治</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">图斯克力挺宪法法院改组，尽管抗议持续</a></h3>
+      <p class="orig">Tusk defends overhaul of Poland's constitutional court despite protests</p>
+      <p class="sum">波兰总理唐纳德·图斯克在周六晚间的电视讲话中表示，在某些问题上“不能妥协”，力挺对宪法法院的有争议改组。此前一天，政府支持的法官试图夺取该法院的程序控制权，暂停了由法律与公正党（PiS）任命的院长及其副手职务，引发街头抗议，防暴警察被派往保护法院大楼。图斯克称，这座法院已被PiS塑造成“不是真正的法院”，改组是为了恢复一座十多年来一直瘫痪的法庭的运转。波兰赫尔辛基人权基金会则表示，临时停职的法律依据“存疑”，无助于恢复法院。图斯克还批评总统纳夫罗茨基加入周五晚的抗议并强行进入法院大楼干预，并指责亲俄势力以“机器人大军”在网上声援反对派。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 08:30</span><span>来源：《卫报》</span><span>至官网首页，未核到卫报逐篇原文直达链接</span></p></div>
+    </article>
+    <article data-src="ap" data-k="瓦舍罗 弗里茨 巴塞尔 网球 决赛 莱赫奇卡">
+      <div class="time sans"><b>11月1日</b>08:17</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">体育·网球</span></div>
+      <h3><a href="https://www.byteseu.com/2489033/" target="_blank" rel="noopener">瓦舍罗击败弗里茨，晋级巴塞尔室内赛决赛</a></h3>
+      <p class="orig">Vacherot to meet Lehecka in the Swiss Indoors tennis final</p>
+      <p class="sum">在瑞士巴塞尔举行的室内赛半决赛中，瓦伦丁·瓦舍罗以7-6（5）、6-3击败六号种子、美国选手泰勒·弗里茨，晋级2026年的首个决赛，这也是他职业生涯的第二个决赛。决赛将于周日举行，对手是八号种子、捷克选手伊日·莱赫奇卡，后者以3-6、7-5、6-4逆转战胜德国选手扬-伦纳德·施特鲁夫。施特鲁夫此前在周四的比赛中淘汰了诺瓦克·德约科维奇。本场半决赛的胜利使瓦舍罗延续了近期的良好状态，也让周日的冠军争夺成为两位非种子热门选手之间的对决。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 08:17</span><span>来源：美联社</span><span>转载页，未核到apnews.com原文直达链接</span></p></div>
+    </article>
+    <article data-src="rfi" data-k="阿拉斯加 原住民 选票 动员 中期选举 沙利文 佩尔托拉 渔业">
+      <div class="time sans"><b>11月1日</b>08:09</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.shango.media/rfi-en-alaska-la-mobilisation-du-vote-des-autochtones-enjeu-majeur-de-la-campagne-12005318" target="_blank" rel="noopener">阿拉斯加原住民选票动员成中期选举关键</a></h3>
+      <p class="orig">En Alaska, la mobilisation du vote des Autochtones, enjeu majeur de la campagne</p>
+      <p class="sum">阿拉斯加历来被视为共和党堡垒，但在11月3日的中期选举中，寻求连任的共和党参议员丹·沙利文正面临民主党人玛丽·佩尔托拉的有力挑战，后者本人来自阿拉斯加最大的原住民社群尤皮克人。原住民约占阿拉斯加选民的25%，他们的选票可能决定这场参议员选举的胜负，但2024年总统大选中仅有11%的原住民参与投票。渔业是今年竞选的核心议题之一，原住民选民动员组织负责人米歇尔·斯帕克指出，渔业生计与原住民社区的利益直接相关。在安克雷奇，提前投票首日已登记443张选票，约为往常水平的两倍，显示原住民选民的动员程度明显高于以往。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月1日 08:09</span><span>来源：法广</span><span>转载页，未核到rfi.fr原文直达链接</span><span>法文原题</span></p></div>
+    </article>
+
+    <div class="subhead sans">时间未标注条目 <span>· 按给定顺序列于后段</span></div>
+
+    <article data-src="reuters" data-k="加州 纽森 特朗普 选票 法官 司法部 非公民 选举">
+      <div class="time sans"><b>时间未标注</b>11月1日</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.reuters.com/legal/government/california-governor-asks-us-judges-resist-trump-attempts-seize-ballots-2026-11-01/" target="_blank" rel="noopener">加州州长吁请联邦法官抵制特朗普夺取选票的企图</a></h3>
+      <p class="orig">California governor asks US judges to resist Trump attempts to seize ballots</p>
+      <p class="sum">加州州长加文·纽森于周六致信联邦法官，警告他们为特朗普政府在中期选举期间可能试图夺取选票做好准备。纽森写道，鉴于司法部坚持推进所谓非公民投票的刑事责任理论，他严重担忧联邦执法人员会在选举结果认证前申请搜查令、扣押选票及选票材料。这一警告的背景是加州与联邦政府正在进行的法律战：司法部以刑事调查为由要求加州提供选民记录，而上诉法院已于周五驳回政府的相关请求，此案可能最终闹上最高法院。另有一名联邦法官已下令司法部停止威胁起诉拒绝配合其选举要求的州和地方选举官员。特朗普政府声称加州有超过2万名非公民登记选民，但加州政府和多名专家质疑这份名单的可靠性，司法部也未说明名单上究竟有多少人实际投了票。</p>
+      <p class="meta sans"><span>发布时间：时间未标注（原文URL日期为2026-11-01）</span><span>来源：路透</span><span>已核到逐篇原文直达链接</span></p></div>
+    </article>
+    <article data-src="reuters" data-k="德国 法兰克福 抗议 Z世代 洗劫 商店 暴力 水炮">
+      <div class="time sans"><b>时间未标注</b>11月1日</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">欧洲·抗议</span></div>
+      <h3><a href="https://www.gmanetwork.com/news/topstories/world/1007879/rioters-loot-stores-in-frankfurt-as-gen-z-led-protests-in-germany-turn-violent/story/" target="_blank" rel="noopener">德国“Z世代”抗议变味，蒙面暴徒洗劫法兰克福商店</a></h3>
+      <p class="orig">Rioters loot stores in Frankfurt as Gen Z-led protests in Germany turn violent</p>
+      <p class="sum">周六晚间，数万名示威者走上德国各大城市街头后，蒙面暴徒在法兰克福洗劫商店，抗议活动演变为暴力冲突。抗议由“GenZ regelt!”（Z世代说了算）组织，在包括柏林、法兰克福和慕尼黑在内的34个城市举行，诉求包括改善教育投入、缓解生活成本压力，并反对恢复义务兵役制和军费大幅上涨。组织方称约12万人参加，低于最初预计的18.2万人，而官方下午的统计显示法兰克福、慕尼黑和柏林三地合计约1.8万人。法兰克福市中心至少两家商店被洗劫、多家商店受损，其中一家枪店窗户被砸，一名嫌疑人被捕、两件武器被缴获，另有运动鞋店和香水店也遭针对。警方动用水炮和胡椒喷雾回应投掷石块、烟花和汽油弹的抗议者，多名警察受伤，汉堡还有路障被点燃。</p>
+      <p class="meta sans"><span>发布时间：时间未标注（转载时间不一，路透电稿精确时间未核到）</span><span>来源：路透</span><span>转载页，未核到路透原文直达链接</span></p></div>
+    </article>
+
+  </div>
+  <div class="empty sans" id="empty">没有匹配的条目，换个关键词试试。</div>
+</main>
+
+<footer class="sans">
+  <p>先看顶部3分钟总览，再顺时间线由新到旧扫标题；同一事件多家同题（如德国青年抗议有路透/BBC/德国之声三家、印度反对派集会有BBC/彭博两家）即为当日真头条，只需挑一家深读、其余看summary里的差异点即可。紧凑模式适合通勤快速扫完17条。</p>
+  <p>本版共17条：彭博3、纽约时报3、卫报3、BBC2、美联社2、路透2、德国之声1、法广1；经济学人、美国之音、自由亚洲本版均为0条。收稿窗口为2026年11月1日08:00之后新发，早版已收录一律排除；午版截稿约12:30（北京时间）。本页为当日快照、非实时更新；时间为当日发布时间（北京时间），标题为中文译题，英文为原题（法广一条为法文原题），点标题前往来源。</p>
+  <p>链接口径明示：仅路透加州州长一条核到逐篇原文直达链接，其余均链媒体官网首页或标注来源的转载页、未编造原文URL。经济学人、美国之音、自由亚洲本版均为0条（无当日可核实新稿，不用旧闻冒充）。约数时间（卫报两条）已在条目中标注“约”，时间未标注的两条列于后段并在条目meta中明示。</p>
+</footer>
+
+<script>
+(function(){
+  var btns=document.querySelectorAll('[data-f]');
+  var arts=document.querySelectorAll('article[data-src]');
+  var q=document.getElementById('q');
+  var empty=document.getElementById('empty');
+  var cur='all';
+  function apply(){
+    var kw=q.value.trim().toLowerCase(); var any=false;
+    arts.forEach(function(a){
+      var showSrc=(cur==='all'||a.dataset.src===cur);
+      var hit=showSrc && (!kw || (a.textContent.toLowerCase().indexOf(kw)>-1 || (a.dataset.k||'').toLowerCase().indexOf(kw)>-1));
+      a.classList.toggle('hidden',!hit); if(hit)any=true;
+    });
+    empty.style.display=any?'none':'block';
+  }
+  btns.forEach(function(b){ b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true'); cur=b.dataset.f; apply();
+  });});
+  q.addEventListener('input',apply);
+  var d=document.getElementById('density');
+  d.addEventListener('click',function(){
+    var on=document.body.classList.toggle('compact');
+    d.setAttribute('aria-pressed',on?'true':'false');
+    d.textContent=on?'舒适模式（显示简介）':'紧凑模式（只看标题）';
+  });
+  var hdr=document.querySelector('header');
+  var toggle=document.getElementById('hdrToggle');
+  var ticking=false;
+  function onScroll(){
+    var y=window.scrollY||window.pageYOffset;
+    if(y>90){ hdr.classList.add('is-shrunk'); }
+    else if(y<40){
+      hdr.classList.remove('is-shrunk'); hdr.classList.remove('show-controls');
+      toggle.setAttribute('aria-expanded','false'); toggle.textContent='筛选 ▾';
+    }
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){ ticking=true; window.requestAnimationFrame(onScroll); }
+  },{passive:true});
+  onScroll();
+  toggle.addEventListener('click',function(){
+    var open=hdr.classList.toggle('show-controls');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'筛选 ▴':'筛选 ▾';
+  });
+})();
+</script>
+</body>
+</html>
