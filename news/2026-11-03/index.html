@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>新闻阅读 · 11月3日早版时间线</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --panel:#fffdf8; --ink:#1a1814; --muted:#5c574d; --line:#ddd6c8;
+    --accent:#9a2a1e; --accent-ink:#fff; --chip:#ece7da; --live:#b42318;
+    --ap:#111111; --rfi:#0055a4; --reuters:#e8710a; --bbc:#b80000; --nyt:#121212; --bloom:#2800d7; --econ:#e3120b;
+    --dw:#0072bc; --guardian:#052962; --voa:#17648c; --rfa:#8a6d00;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141311; --panel:#1d1c19; --ink:#ece7dc; --muted:#a8a193; --line:#33302a; --chip:#2a2823; --accent:#e0654f; --ap:#d8d2c4; --nyt:#d8d2c4; --guardian:#7aa2e0; --bloom:#9d8cff; --rfa:#d9b84a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif SC","Songti SC",Georgia,serif;line-height:1.6}
+  .sans{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px;transition:padding .3s ease,box-shadow .3s ease}
+  .toprow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0;letter-spacing:.02em;transition:font-size .3s ease}
+  .edition{font-size:13px;color:var(--muted)}
+  .edition b{color:var(--accent)}
+  .ed-mini{display:none}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px;max-height:340px;opacity:1;overflow:hidden;transition:max-height .32s ease,opacity .25s ease,margin .32s ease}
+  .hdr-toggle{display:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:3px 11px;font-size:12.5px;cursor:pointer;line-height:1.5;flex:none}
+  header.is-shrunk{padding:6px 16px;box-shadow:0 8px 20px rgba(20,16,8,.14)}
+  header.is-shrunk h1{font-size:15.5px}
+  header.is-shrunk .edition{font-size:12px}
+  header.is-shrunk .ed-full{display:none}
+  header.is-shrunk .ed-mini{display:inline}
+  header.is-shrunk .hdr-toggle{display:inline-block}
+  header.is-shrunk .toprow{flex-wrap:nowrap;align-items:center}
+  header.is-shrunk .controls{max-height:0;opacity:0;margin-top:0;pointer-events:none}
+  header.is-shrunk.show-controls .controls{max-height:340px;opacity:1;margin-top:8px;pointer-events:auto}
+  @media (prefers-reduced-motion: reduce){
+    header,h1,.controls{transition:none}
+  }
+  .chipbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .search{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
+  main{max-width:920px;margin:0 auto;padding:14px 16px 40px}
+  .brief{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--accent);padding:14px 16px;margin-bottom:8px}
+  .brief h2{font-size:16px;margin:0 0 8px}
+  .brief ol{margin:0;padding-left:20px;font-size:14.5px}
+  .brief li{margin:5px 0}
+  .brief li b{color:var(--accent)}
+  .brief .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 0 4px}
+  .tl-head h2{font-size:17px;margin:0}
+  .tl-head span{font-size:12.5px;color:var(--muted)}
+  .timeline{position:relative;margin-top:6px}
+  .timeline::before{content:"";position:absolute;left:103px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  article{position:relative;display:grid;grid-template-columns:88px 22px 1fr;gap:0 6px;padding:12px 0 14px}
+  .time{font-size:12px;line-height:1.4;text-align:right;padding-top:2px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .time b{display:block;font-size:13px;color:var(--ink)}
+  .rail{display:flex;justify-content:center}
+  .dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none;box-shadow:0 0 0 3px var(--bg);z-index:1}
+  .card{background:var(--panel);border:1px solid var(--line);padding:12px 14px 10px;min-width:0}
+  .srcrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:5px}
+  .srcbadge{font-size:11.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 7px;letter-spacing:.02em}
+  @media (prefers-color-scheme: dark){ .srcbadge{color:#101010} .srcbadge.on-dark{color:#fff} }
+  .cat{font-size:11.5px;color:var(--muted)}
+  article h3{font-size:16.5px;line-height:1.45;margin:0 0 4px}
+  article h3 a{color:var(--ink);text-decoration:none}
+  article h3 a:hover{text-decoration:underline}
+  .orig{font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 5px;line-height:1.45}
+  .orig .lbl{font-style:normal;font-weight:700}
+  .sum{font-size:14px;color:var(--ink);margin:0}
+  .meta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+  body.compact article{padding:7px 0 8px}
+  body.compact .sum,body.compact .orig{display:none}
+  body.compact article h3{font-size:15px}
+  body.compact .card{padding:8px 12px}
+  .hidden{display:none!important}
+  .empty{padding:30px;text-align:center;color:var(--muted);display:none}
+  footer{max-width:920px;margin:0 auto;padding:0 16px 28px;font-size:12px;color:var(--muted)}
+  footer p{margin:6px 0}
+  @media(max-width:560px){
+    .timeline::before{left:83px}
+    article{grid-template-columns:70px 18px 1fr;gap:0 4px}
+    .time{font-size:11px}
+    .time b{font-size:12px}
+    article h3{font-size:15.5px}
+    .sum{font-size:13.5px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="toprow">
+    <h1>新闻阅读 · 11月3日早版时间线</h1>
+    <div class="edition sans"><span class="ed-full">早版 · 2026年11月2日 20:00 至 11月3日 约 08:30（北京时间） · 本版为窗口内新稿 · 共 27 条 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>早版 20:00–约08:30</b> · 共 27 条</span></div>
+    <button class="hdr-toggle sans" id="hdrToggle" aria-expanded="false" aria-controls="controlsBar">筛选 ▾</button>
+  </div>
+  <div class="controls sans" id="controlsBar" role="group" aria-label="筛选">
+    <button class="chipbtn" data-f="all" aria-pressed="true">全部</button>
+    <button class="chipbtn" data-f="ap" aria-pressed="false">美联社</button>
+    <button class="chipbtn" data-f="rfi" aria-pressed="false">法广</button>
+    <button class="chipbtn" data-f="reuters" aria-pressed="false">路透</button>
+    <button class="chipbtn" data-f="bbc" aria-pressed="false">BBC</button>
+    <button class="chipbtn" data-f="nyt" aria-pressed="false">纽约时报</button>
+    <button class="chipbtn" data-f="bloomberg" aria-pressed="false">彭博社</button>
+    <button class="chipbtn" data-f="economist" aria-pressed="false">经济学人</button>
+    <button class="chipbtn" data-f="dw" aria-pressed="false">德国之声</button>
+    <button class="chipbtn" data-f="guardian" aria-pressed="false">《卫报》</button>
+    <button class="chipbtn" data-f="voa" aria-pressed="false">美国之音</button>
+    <button class="chipbtn" data-f="rfa" aria-pressed="false">自由亚洲</button>
+    <input class="search" id="q" type="search" placeholder="搜关键词：中期选举 / 最高法院 / 坠机 / 霍尔木兹 / 芯片 / Meta…" aria-label="搜索标题" />
+    <button class="chipbtn" id="density" aria-pressed="false">紧凑模式（只看标题）</button>
+  </div>
+</header>
+
+<main>
+  <div class="brief">
+    <h2>3 分钟总览 — 早版 5 条主线</h2>
+    <ol>
+      <li><b>投票日当天：</b>最高法院投票前夜驳回特朗普政府搁置加州约 2 万张选票的请求，司法部在加州“选民欺诈”打击中再指控六人；今日决出众议院全部 435 席与参议院 35 席，密歇根史蒂文斯背书余波与得州塔拉里科竞选成看点。</li>
+      <li><b>佛州坠机调查：</b>9 人遇难，调查称飞机可能在空中就已开始解体，天气是重点；BBC 还原最后时刻，NYT 梳理须知。</li>
+      <li><b>俄乌与中东：</b>俄军轰炸扎波罗热援助中心致 26 死，赫尔松有限停火到期后战火回归；内塔尼亚胡推动对伊新打击，伊朗称协议后两天重开霍尔木兹海峡，油价大跌 8%。</li>
+      <li><b>市场与科技：</b>芯片抛售拖累标普收跌、纳斯达克 100 进入技术性调整；Meta 拟发债至少 200 亿美元加码 AI 基建，苹果盘后财报受关注；阿联酋脱离欧佩克后称出口上升。</li>
+      <li><b>其他：</b>阿富汗脊髓灰质炎接种运动启动、法治指数倒数第二；华盛顿州禽流感死亡一例；乌干达开始从索马里撤军；塞尔维亚银行家被捕；布什比 28 年徒步环球归乡。</li>
+    </ol>
+    <p class="note sans">本版共 27 条：美联社 5、《卫报》5、美国之音 5、纽约时报 3、BBC 2、彭博社 2、路透 2、法广 2、德国之声 1；经济学人、自由亚洲本窗口内无可核实新稿，记 0 条。全部 27 条汇入下方同一条时间线，按时间倒序；每条保留发布时间（北京时间）、中文标题、英文原题（法广条目为法文原题并注明无英文原题）与详细 summary。</p>
+  </div>
+  <div class="tl-head"><h2>时间线 · 11月2日 20:00 至 11月3日 约 08:30</h2><span class="sans">由新到旧 ↓ · 时间均为北京时间</span></div>
+
+  <div class="timeline" id="timeline">
+
+    <article data-src="ap" data-k="俄军 轰炸 扎波罗热 援助中心 避难所 26死 泽连斯基 赫尔松 停火">
+      <div class="time sans"><b>11月3日</b>08:07</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">俄乌·空袭</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">俄军轰炸乌克兰南部援助中心和避难所，致 26 人死亡</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Russia bombs aid center and shelter in southern Ukraine, killing 26, officials say</p>
+      <p class="sum">扎波罗热州 Komyshuvakha 村一处学校建筑（人道援助分发点）及邻近避难所遭到轰炸，造成 26 人死亡、约 20 人失踪。泽连斯基称，首轮空袭之后，俄军又以 9 枚炸弹实施了“二次打击”。此次袭击发生在赫尔松有限停火于周一到期之后，战火随之回归。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 08:07</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="最高法院 特朗普 加州 选票 非公民 邮寄选票 司法部 中期选举">
+      <div class="time sans"><b>11月3日</b>07:45</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://apnews.com/article/midterm-elections-immigration-voter-fraud-trump-48998968a23a4af2f59eaea3dba4d2f3" target="_blank" rel="noopener">最高法院驳回特朗普政府要求搁置加州数千张选票的请求</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Supreme Court rejects Trump administration push to set aside thousands of California ballots</p>
+      <p class="sum">投票前夜，最高法院拒绝介入，驳回了要求加州搁置约 2 万张涉非公民争议邮寄选票的紧急请求，无大法官公开表示异议。下级法院此前亦已驳回该请求，司法部承认其名单并非完全可靠。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:45</span><span>来源：美联社</span><span>已核到逐篇原文直达链接</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="塔拉里科 得州 民主党 参议员 奥斯汀 教师 竞选">
+      <div class="time sans"><b>11月3日</b>07:32</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">五维棋局：詹姆斯·塔拉里科打破得州民主党困局的非凡竞选</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Five dimensional chess: inside James Talarico's extraordinary bid to break Texas Democrats'…（原题在聚合页显示为截断形式）</p>
+      <p class="sum">得州自 1988 年以来未选出民主党参议员，年轻的前教师塔拉里科在奥斯汀向捐助者发表讲话，开启竞选，力图打破得州民主党的这一困局。报道以其竞选开局为切口，呈现这场非凡竞选的内情。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:32</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="佛州 坠机 Learjet 解体 NTSB 天气 结冰 Greenacres 西棕榈滩">
+      <div class="time sans"><b>11月3日</b>07:27</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国·事故</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">调查人员称佛州坠机 Learjet 可能在空中就已开始解体</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Parts of a Learjet may have broken off midair before Florida crash that killed 9, investigators say</p>
+      <p class="sum">NTSB 委员 Tom Chapman 周一称，残骸散落范围较广，显示飞机可能在空中就已开始解体。该机周日自奥斯汀起飞前往巴哈马，在西棕榈滩附近 Greenacres 坠毁，9 人遇难。调查的重点为天气：事发时有暴雨，也有飞行员报告高空结冰。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:27</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="内塔尼亚胡 伊朗 打击 特朗普 霍尔木兹海峡 核谈判 胡塞 沙特 希伯伦">
+      <div class="time sans"><b>11月3日</b>07:27</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">中东·伊朗</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">消息人士称内塔尼亚胡推动美国对伊朗发动新一轮打击</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Netanyahu pushes for new strikes on Iran, officials tell AP, and other Mideast news</p>
+      <p class="sum">多名官员称，内塔尼亚胡希望特朗普政府对伊朗实施新一轮打击，特朗普尚未作出承诺。伊朗方面称，若华盛顿满足要求，可在两天内重开霍尔木兹海峡并恢复核谈判。同一汇总还提到胡塞指控沙特袭击红海港口，以及以军收尾希伯伦枪击事件后的行动。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:27</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="AI 科技股 华尔街 标普 道指 纳指 苹果 Palantir 财报">
+      <div class="time sans"><b>11月3日</b>07:27</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">市场·综述</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">AI 与科技股继续下跌，拖累华尔街多数个股的涨幅</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>More drops for AI and tech stocks overshadow gains for most of Wall Street</p>
+      <p class="sum">标普 500 指数周一早盘上涨 1.1% 后回吐涨幅，收跌 0.5%；道指上涨 0.4%，纳指下跌 1.1%。科技与 AI 板块在上周抛售后仍不稳定，多数个股的涨幅被其下跌所掩盖。盘后，苹果与 Palantir 的财报受到关注。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:27</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="司法部 选民欺诈 加州 指控 六人 选票">
+      <div class="time sans"><b>11月3日</b>07:22</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">特朗普的司法部在加州“选民欺诈”打击中再指控六人</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Trump’s DoJ charges six more people in ‘voter fraud’ crackdown in California</p>
+      <p class="sum">司法部在加州又指控六人涉嫌选民欺诈。此前，司法部未能迫使州方隔离约 2 万张选票，最新逮捕是这一打击行动的后续动作。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:22</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="史蒂文斯 罗杰斯 密歇根 民主党 背书 特朗普 参议员">
+      <div class="time sans"><b>11月3日</b>07:22</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">“可鄙的背叛”：民主党人对海莉·史蒂文斯支持迈克·罗杰斯感到愤怒</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>‘A despicable betrayal’: Democrats incensed by Haley Stevens’s endorsement of Mike Rogers</p>
+      <p class="sum">史蒂文斯在最后时刻支持密歇根共和党参议员候选人罗杰斯，引发党内激烈反弹，特朗普对此表示赞赏。这一背书发生在投票前夕，令民主党人愤怒。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:22</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="最高法院 特朗普 加州 选票 隔离 非公民">
+      <div class="time sans"><b>11月3日</b>07:09</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">最高法院驳回特朗普强制加州搁置选票的请求</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Supreme court rules against Trump over bid to force California to set aside ballots</p>
+      <p class="sum">最高法院周一驳回特朗普政府要求强制加州隔离约 2 万张选票的请求，这些选票来自政府声称可能是非公民的选民。这是特朗普政府干预多州选举程序的又一次司法挫败。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:09</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="BBC Verify 佛罗里达 坠机 最后时刻 空管 飞行追踪 9人遇难">
+      <div class="time sans"><b>11月3日</b>07:05</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">美国·事故</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">BBC 还原佛罗里达致命坠机事件的最后时刻</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>BBC reconstructs final moments before deadly Florida plane crash（标题经转载页核对，未直接打开 BBC 原文页）</p>
+      <p class="sum">一架私人喷气机周日在佛州坠毁，9 人遇难。BBC Verify 利用空管音频和飞行追踪数据，还原了坠机前的最后时刻。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:05</span><span>来源：BBC（BBC Verify）</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="voa" data-k="中期选举 众议院 参议院 州长 国会 特朗普 解说">
+      <div class="time sans"><b>11月3日</b>06:31</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">解说：美国中期选举</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Explainer: US midterm elections</p>
+      <p class="sum">选举定于 11 月 3 日举行，众议院全部 435 席、参议院 35 席及多州州长和地方官员改选。选举结果将决定国会控制权，影响特朗普剩余任期的立法、开支、任命和监督议程。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 06:31</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="voa" data-k="朝鲜 地雷 布雷 禁雷组织 ICBL 边境 非军事区">
+      <div class="time sans"><b>11月3日</b>06:10</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">朝鲜·地雷</span></div>
+      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">禁雷组织：朝鲜被报道的布雷可能是 2001 年以来最大规模</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>ICBL: North Korea’s reported mine-laying could be world’s largest since 2001</p>
+      <p class="sum">地雷监测报告指出，在 2024 年中至 2025 年 10 月的报告期内，朝鲜沿与韩国、中国的边境使用杀伤人员地雷。朝鲜在 2023–2024 年亦被报道在朝韩非军事区布雷。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 06:10</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="华盛顿州 禽流感 死亡 基础疾病 卫生官员">
+      <div class="time sans"><b>11月3日</b>05:59</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·公共卫生</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">华盛顿州居民感染禽流感后因“重病”死亡</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Washington state resident dies from ‘severe illness’ after contracting bird flu</p>
+      <p class="sum">该患者同时患有基础疾病，在接触禽流感后住院治疗，最终死亡。当地卫生官员于周日通报了这一死亡病例。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 05:59</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="voa" data-k="阿富汗 脊髓灰质炎 疫苗接种 儿童 世卫">
+      <div class="time sans"><b>11月3日</b>05:50</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">阿富汗·公共卫生</span></div>
+      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">阿富汗脊髓灰质炎疫苗接种运动开始，病例激增</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Polio vaccination campaign begins in Afghanistan, as cases surge</p>
+      <p class="sum">阿富汗卫生部于 11 月 2 日启动全国接种运动，目标为超过 1270 万名 5 岁以下儿童。世卫组织报告称，截至 9 月 13 日，阿富汗在 2026 年已确认 25 例野生脊髓灰质炎病毒 1 型病例。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 05:50</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="芯片 标普 纳斯达克 技术性调整 油价 黄金 苹果 甲骨文 Meta Alphabet 发债">
+      <div class="time sans"><b>11月3日</b>约 05:49</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">市场·综述</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">芯片股抛售抵消美伊希望带来的油价下跌，标普 500 收跌</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>S&amp;P 500 Falls as Chip Rout Offsets US-Iran Hopes: Markets Wrap</p>
+      <p class="sum">标普 500 指数下跌 0.5%，纳斯达克 100 指数下跌 1.4%，较峰值下跌 10%，进入技术性调整；道指上涨 0.4%。WTI 原油下跌 8%，至 95.79 美元/桶；现货黄金上涨 1.9%，至 3946.57 美元/盎司。盘后，苹果销售增长放缓，中国收入不及预期。甲骨文发售 100 亿美元债券，Meta 的 200 亿美元发债计划与 Alphabet 的 60 亿欧元发债亦在文中提及。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 05:49</span><span>来源：彭博社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="佛州 坠机 Learjet Cresthaven 棕榈滩 FAA NTSB 结冰 颠簸">
+      <div class="time sans"><b>11月3日</b>约 05:38</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·事故</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">关于造成 9 人死亡的佛州飞机坠毁事件，你需要知道的事</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>What to Know About the Florida Plane Crash That Killed 9</p>
+      <p class="sum">一架 Learjet 60 周日自奥斯汀起飞前往巴哈马，在棕榈滩县 Cresthaven 附近坠毁，9 人遇难，地面暂无伤亡报告。FAA 与 NTSB 已展开调查，空管录音与飞行追踪显示，飞机在报告结冰、颠簸和降水后急速下降。AP 周一的进展称，飞机可能在空中就已解体。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 05:38</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="voa" data-k="阿富汗 法治指数 世界正义工程 委内瑞拉 刑事司法">
+      <div class="time sans"><b>11月3日</b>05:15</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">阿富汗·法治</span></div>
+      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">报告：阿富汗在全球法治指数中排名倒数第二</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Report: Afghanistan ranks second worst globally in rule of law</p>
+      <p class="sum">世界正义工程 2026 年法治指数显示，阿富汗在 143 个国家和地区中排名第 142 位，仅高于委内瑞拉，得分 0.31（满分 1 分）。其中，基本权利和秩序安全均排第 140 位，刑事司法排第 135 位。该报告本身发布于 10 月 28 日，VOA 聚合页标注时间为 11 月 2 日。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 05:15</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="怀孕 就业保护 怀孕工人公平法案 EEOC 试管婴儿 职场便利">
+      <div class="time sans"><b>11月3日</b>约 05:03</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·劳工</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">特朗普政府据称计划削减与怀孕相关的就业保护</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Trump Administration Said to Plan Rolling Back Pregnancy-Related Job Protections</p>
+      <p class="sum">据七名知情人士透露，政府准备缩小《怀孕工人公平法案》下雇主须提供的职场便利范围，EEOC 最快本月公布拟议修改。现行规则明确将生育治疗（含试管婴儿）列为须合理便利的情形，拟议修改可能取消对未怀孕人群相关情形的明确保护。孕期女性的核心保护预计不会取消，具体文本尚未公布，须公开征求意见。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 05:03</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="伊朗 霍尔木兹海峡 美国协议 核谈判 多哈 七步计划 封锁">
+      <div class="time sans"><b>11月3日</b>约 04:25</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">中东·伊朗</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">伊朗称作为与美国协议的一部分，将在两天内重开霍尔木兹海峡</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Iran Says It Would Reopen Strait of Hormuz in 2 Days as Part of U.S. Deal</p>
+      <p class="sum">伊朗称，若美国满足要求，可在两天内重开海峡并恢复核谈判。据多哈会谈的报道，伊朗谈判人员已离开多哈，正在传阅协议草案，其基础为伊朗 9 月提出的七步计划，包括重开海峡和结束美国对伊朗的海上封锁。伊朗外长称，实施期可由七天缩短至两天。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 04:25</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="佛州 坠机 直播 官员 NTSB Cresthaven 海湖庄园 副驾驶">
+      <div class="time sans"><b>11月3日</b>02:30</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">美国·事故</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">直播：美国官员将就佛罗里达致命喷气机坠机事件作更新</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>LIVE: US officials to update on deadly Florida jet crash | BBC News</p>
+      <p class="sum">官员将就周日佛州坠机事件作更新，机上 9 人全部遇难，其中一名遇难者为该机的 20 岁副驾驶，地面无人受伤。NTSB 正在调查，坠机地点在 Cresthaven 附近，距海湖庄园约 9 英里。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 02:30</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="voa" data-k="俄罗斯 政治犯 死亡 人权 羁押 酷刑 纪念">
+      <div class="time sans"><b>11月3日</b>02:13</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">俄罗斯·人权</span></div>
+      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">人权组织：自 2022 年 2 月以来至少 69 名政治犯在俄罗斯羁押中死亡</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Human rights group: at least 69 political prisoners in Russian custody have died since February 2022</p>
+      <p class="sum">据“声援政治犯·纪念”项目 2026 年 10 月的报告，至少 69 人在羁押场所、搜查期间、居家监禁期间或获释后不久死亡，其中包括 63 名男性和 6 名女性。按年份划分：2022 年 4 人、2023 年 10 人、2024 年 26 人、2025 年 13 人、2026 年 10 月底前 16 人。至少 29 人死于疾病和缺乏医疗，至少 20 人死于殴打、酷刑或其后果，10 人被推定为自杀或类似情形，8 人死因不明。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 02:13</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="rfi" data-k="塞尔维亚 银行家 马库拉 资本转移 武契奇 反腐 贝尔格莱德">
+      <div class="time sans"><b>11月3日</b>02:06</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI（法文版）</span><span class="cat">塞尔维亚·反腐</span></div>
+      <h3><a href="https://www.rfi.fr" target="_blank" rel="noopener">塞尔维亚银行家达沃尔·马库拉在试图向境外转移资本后被捕</a></h3>
+      <p class="orig"><span class="lbl">法文原题：</span>En Serbie, le banquier Davor Macura arrêté après une tentative de transfert de capitaux à l’étranger（无英文原题）</p>
+      <p class="sum">塞尔维亚警方于 11 月 2 日逮捕了银行家马库拉，他拥有 1 家银行、15 家企业和贝尔格莱德 135 公顷建筑用地。法广称，其财富在武契奇执政 14 年期间积累，其银行在被捕前一个星期五被关闭，原因是试图向境外转移资本。逮捕发生在反腐学生名单赢得选举约 8 天后、新政府预计 12 月中旬交接的过渡期。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 02:06</span><span>来源：法广（法文版）</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="Meta 发债 200亿美元 AI 基础设施 花旗 摩根士丹利 标普">
+      <div class="time sans"><b>11月3日</b>01:56</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">科技·融资</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">彭博报道：Meta 拟发债筹资至少 200 亿美元</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Meta eyes at least $20 billion from potential bond offerings, Bloomberg News reports</p>
+      <p class="sum">Meta 考虑通过跨境债券发行筹资至少 200 亿美元，用于 AI 基础设施，最终规模可能随投资者需求扩大，尚未最终决定。Meta 已请花旗与摩根士丹利在周一周二举行投资者电话会，美元债期限为 5 至 30 年，欧元债约 4 年至 38 年以上。此前一周，Meta 刚宣布约 975 亿美元的史上最大股权融资计划，标普全球上周五已将其展望由“稳定”下调至“负面”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 01:56</span><span>来源：彭博社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="能源 中期选举 油价 伊朗 霍尔木兹海峡 卡塔尔 核计划 制裁">
+      <div class="time sans"><b>11月3日</b>01:06</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters（专栏）</span><span class="cat">能源·评论</span></div>
+      <h3><a href="https://www.reuters.com/commentary/reuters-open-interest/energy-watch-midterm-mist-2026-11-02/" target="_blank" rel="noopener">能源观察：中期选举的迷雾</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Energy Watch: Midterm mist</p>
+      <p class="sum">能源市场数周以来对政治信号作出反应，关键不仅是中期选举后特朗普是否被削弱，更是选举结果对中东冲突和能源市场意味着什么。周一油价大幅下跌，因市场重燃对美以与伊朗战争达成协议的希望。伊朗谈判人员已完成与卡塔尔调解人的三天会谈，据称正在推进一项提案：可在美伊达成协议后两天内重开霍尔木兹海峡。但在伊朗核计划、制裁解除与更广泛的安全问题上，仍存在重大分歧。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 01:06</span><span>来源：路透（专栏）</span><span>已核到逐篇原文直达链接</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="阿联酋 欧佩克 石油出口 ADIPEC 产量 ADNOC">
+      <div class="time sans"><b>11月2日</b>23:57</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">能源·阿联酋</span></div>
+      <h3><a href="https://www.reuters.com/business/energy/freed-opec-quotas-uae-says-oil-exports-have-risen-it-hosts-industry-event-2026-11-02/" target="_blank" rel="noopener">摆脱欧佩克配额后，阿联酋称其石油出口已上升</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Freed from OPEC quotas, UAE says oil exports have risen as it hosts industry event</p>
+      <p class="sum">脱离欧佩克六个月后，阿联酋周一开始主办大型能源会议 ADIPEC，能源部长称其出口在伊朗战争期间有时好于战前，但未给出精确细节。欧佩克二手资料显示，阿联酋 9 月原油产量为 391.7 万桶/日，较 2 月上升 15%；国际能源署的评估更高，称 9 月预期产量为 440 万桶/日。ADNOC 否认了路透引用的数据，称报道不准确，但未说明何处不准确，也未提供替代数据。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 23:57</span><span>来源：路透</span><span>已核到逐篇原文直达链接</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="乌干达 索马里 撤军 青年党 非盟 摩加迪沙">
+      <div class="time sans"><b>11月2日</b>22:30</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">非洲·撤军</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">乌干达开始从索马里撤军，结束近 20 年任务</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Uganda begins withdrawing troops from Somalia after nearly 20 years of mission</p>
+      <p class="sum">乌干达已开始逐步从索马里撤军，军队近 20 年来支持政府军打击青年党。首批撤军分队已返回乌干达，军方称将到 2027 年底前撤出全部部队，包括经非盟索马里稳定团及双边协议部署的人员。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 22:30</span><span>来源：德国之声</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="rfi" data-k="布什比 徒步 环球 赫尔 英吉利海峡 蓬塔阿雷纳斯">
+      <div class="time sans"><b>11月2日</b>21:02</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI（法文版）</span><span class="cat">英国·人物</span></div>
+      <h3><a href="https://www.rfi.fr" target="_blank" rel="noopener">英国人卡尔·布什比徒步环球 28 年后回到故乡赫尔</a></h3>
+      <p class="orig"><span class="lbl">法文原题：</span>Le Britannique Karl Bushby de retour à Hull, sa ville natale, après un tour du monde à pied de 28 ans（无英文原题）</p>
+      <p class="sum">布什比于 11 月 2 日回到英格兰东北部故乡赫尔，受到数百人欢迎。他于 1998 年从智利蓬塔阿雷纳斯出发，当时 29 岁，徒步穿越美洲、亚洲和欧洲，全程不使用交通工具，途中游泳横渡英吉利海峡。仪式后，他将走完最后一段路回到母亲家中，与 36 岁的儿子和从未见过面的 12 岁孙女团聚。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 21:02</span><span>来源：法广（法文版）</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+  </div>
+  <div class="empty sans" id="empty">没有匹配的条目，换个关键词试试。</div>
+</main>
+
+<footer class="sans">
+  <p>本版为 2026-11-02 20:00 至 2026-11-03 约 08:30（北京时间）窗口内新稿，不含 11 月 2 日晚版；同一事件在不同来源下分别保留；未编造标题、时间和链接。同一事件在不同来源下分别保留，例如最高法院驳回加州选票请求在美联社与《卫报》各保留一条，佛州坠机在美联社、BBC 与纽约时报各保留一条，未合并、未删减。</p>
+  <p>部分条目未核到逐篇原文链接，链接指向该媒体官网。已核到逐篇原文直达链接的 3 条（美联社最高法院条、路透专栏与路透阿联酋条）已在条目下方注明。</p>
+  <p>经济学人、自由亚洲在本窗口内无可核实新稿，记 0 条，未用旧闻冒充。</p>
+  <p>时间标注说明：《卫报》条目时间为聚合页标注的美东时间换算（按格林尼治换算亦落入本窗口）；纽约时报 3 条与彭博 Markets Wrap 条时间系聚合页或转载页标注换算，标“约”；BBC Verify 条目标题经转载页核对；法广 2 条为法文原题；《卫报》塔拉里科条原题在聚合页显示为截断形式。</p>
+</footer>
+
+<script>
+(function(){
+  var btns=document.querySelectorAll('[data-f]');
+  var arts=document.querySelectorAll('article[data-src]');
+  var q=document.getElementById('q');
+  var empty=document.getElementById('empty');
+  var cur='all';
+  function apply(){
+    var kw=q.value.trim().toLowerCase(); var any=false;
+    arts.forEach(function(a){
+      var showSrc=(cur==='all'||a.dataset.src===cur);
+      var hit=showSrc && (!kw || (a.textContent.toLowerCase().indexOf(kw)>-1 || (a.dataset.k||'').toLowerCase().indexOf(kw)>-1));
+      a.classList.toggle('hidden',!hit); if(hit)any=true;
+    });
+    empty.style.display=any?'none':'block';
+  }
+  btns.forEach(function(b){ b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true'); cur=b.dataset.f; apply();
+  });});
+  q.addEventListener('input',apply);
+  var d=document.getElementById('density');
+  d.addEventListener('click',function(){
+    var on=document.body.classList.toggle('compact');
+    d.setAttribute('aria-pressed',on?'true':'false');
+    d.textContent=on?'舒适模式（显示简介）':'紧凑模式（只看标题）';
+  });
+  var hdr=document.querySelector('header');
+  var toggle=document.getElementById('hdrToggle');
+  var ticking=false;
+  function onScroll(){
+    var y=window.scrollY||window.pageYOffset;
+    if(y>90){ hdr.classList.add('is-shrunk'); }
+    else if(y<40){
+      hdr.classList.remove('is-shrunk'); hdr.classList.remove('show-controls');
+      toggle.setAttribute('aria-expanded','false'); toggle.textContent='筛选 ▾';
+    }
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){ ticking=true; window.requestAnimationFrame(onScroll); }
+  },{passive:true});
+  onScroll();
+  toggle.addEventListener('click',function(){
+    var open=hdr.classList.toggle('show-controls');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'筛选 ▴':'筛选 ▾';
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>新闻阅读 · 11月2日晚版时间线</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --panel:#fffdf8; --ink:#1a1814; --muted:#5c574d; --line:#ddd6c8;
+    --accent:#9a2a1e; --accent-ink:#fff; --chip:#ece7da; --live:#b42318;
+    --ap:#111111; --rfi:#0055a4; --reuters:#e8710a; --bbc:#b80000; --nyt:#121212; --bloom:#2800d7; --econ:#e3120b;
+    --dw:#0072bc; --guardian:#052962; --voa:#17648c; --rfa:#8a6d00;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141311; --panel:#1d1c19; --ink:#ece7dc; --muted:#a8a193; --line:#33302a; --chip:#2a2823; --accent:#e0654f; --ap:#d8d2c4; --nyt:#d8d2c4; --guardian:#7aa2e0; --bloom:#9d8cff; --rfa:#d9b84a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif SC","Songti SC",Georgia,serif;line-height:1.6}
+  .sans{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px;transition:padding .3s ease,box-shadow .3s ease}
+  .toprow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0;letter-spacing:.02em;transition:font-size .3s ease}
+  .edition{font-size:13px;color:var(--muted)}
+  .edition b{color:var(--accent)}
+  .ed-mini{display:none}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px;max-height:340px;opacity:1;overflow:hidden;transition:max-height .32s ease,opacity .25s ease,margin .32s ease}
+  .hdr-toggle{display:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:3px 11px;font-size:12.5px;cursor:pointer;line-height:1.5;flex:none}
+  header.is-shrunk{padding:6px 16px;box-shadow:0 8px 20px rgba(20,16,8,.14)}
+  header.is-shrunk h1{font-size:15.5px}
+  header.is-shrunk .edition{font-size:12px}
+  header.is-shrunk .ed-full{display:none}
+  header.is-shrunk .ed-mini{display:inline}
+  header.is-shrunk .hdr-toggle{display:inline-block}
+  header.is-shrunk .toprow{flex-wrap:nowrap;align-items:center}
+  header.is-shrunk .controls{max-height:0;opacity:0;margin-top:0;pointer-events:none}
+  header.is-shrunk.show-controls .controls{max-height:340px;opacity:1;margin-top:8px;pointer-events:auto}
+  @media (prefers-reduced-motion: reduce){
+    header,h1,.controls{transition:none}
+  }
+  .chipbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .search{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
+  main{max-width:920px;margin:0 auto;padding:14px 16px 40px}
+  .brief{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--accent);padding:14px 16px;margin-bottom:8px}
+  .brief h2{font-size:16px;margin:0 0 8px}
+  .brief ol{margin:0;padding-left:20px;font-size:14.5px}
+  .brief li{margin:5px 0}
+  .brief li b{color:var(--accent)}
+  .brief .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 0 4px}
+  .tl-head h2{font-size:17px;margin:0}
+  .tl-head span{font-size:12.5px;color:var(--muted)}
+  .timeline{position:relative;margin-top:6px}
+  .timeline::before{content:"";position:absolute;left:103px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  article{position:relative;display:grid;grid-template-columns:88px 22px 1fr;gap:0 6px;padding:12px 0 14px}
+  .time{font-size:12px;line-height:1.4;text-align:right;padding-top:2px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .time b{display:block;font-size:13px;color:var(--ink)}
+  .rail{display:flex;justify-content:center}
+  .dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none;box-shadow:0 0 0 3px var(--bg);z-index:1}
+  .card{background:var(--panel);border:1px solid var(--line);padding:12px 14px 10px;min-width:0}
+  .srcrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:5px}
+  .srcbadge{font-size:11.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 7px;letter-spacing:.02em}
+  @media (prefers-color-scheme: dark){ .srcbadge{color:#101010} .srcbadge.on-dark{color:#fff} }
+  .cat{font-size:11.5px;color:var(--muted)}
+  article h3{font-size:16.5px;line-height:1.45;margin:0 0 4px}
+  article h3 a{color:var(--ink);text-decoration:none}
+  article h3 a:hover{text-decoration:underline}
+  .orig{font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 5px;line-height:1.45}
+  .orig .lbl{font-style:normal;font-weight:700}
+  .sum{font-size:14px;color:var(--ink);margin:0}
+  .meta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+  body.compact article{padding:7px 0 8px}
+  body.compact .sum,body.compact .orig{display:none}
+  body.compact article h3{font-size:15px}
+  body.compact .card{padding:8px 12px}
+  .hidden{display:none!important}
+  .empty{padding:30px;text-align:center;color:var(--muted);display:none}
+  footer{max-width:920px;margin:0 auto;padding:0 16px 28px;font-size:12px;color:var(--muted)}
+  footer p{margin:6px 0}
+  @media(max-width:560px){
+    .timeline::before{left:83px}
+    article{grid-template-columns:70px 18px 1fr;gap:0 4px}
+    .time{font-size:11px}
+    .time b{font-size:12px}
+    article h3{font-size:15.5px}
+    .sum{font-size:13.5px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="toprow">
+    <h1>新闻阅读 · 11月2日晚版时间线</h1>
+    <div class="edition sans"><span class="ed-full">晚版 · 2026年11月2日 12:30–20:00（北京时间） · 共 32 条 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>晚版 12:30–20:00</b> · 共 32 条</span></div>
+    <button class="hdr-toggle sans" id="hdrToggle" aria-expanded="false" aria-controls="controlsBar">筛选 ▾</button>
+  </div>
+  <div class="controls sans" id="controlsBar" role="group" aria-label="筛选">
+    <button class="chipbtn" data-f="all" aria-pressed="true">全部</button>
+    <button class="chipbtn" data-f="ap" aria-pressed="false">美联社</button>
+    <button class="chipbtn" data-f="rfi" aria-pressed="false">法广</button>
+    <button class="chipbtn" data-f="reuters" aria-pressed="false">路透</button>
+    <button class="chipbtn" data-f="bbc" aria-pressed="false">BBC</button>
+    <button class="chipbtn" data-f="nyt" aria-pressed="false">纽约时报</button>
+    <button class="chipbtn" data-f="bloomberg" aria-pressed="false">彭博社</button>
+    <button class="chipbtn" data-f="economist" aria-pressed="false">经济学人</button>
+    <button class="chipbtn" data-f="dw" aria-pressed="false">德国之声</button>
+    <button class="chipbtn" data-f="guardian" aria-pressed="false">《卫报》</button>
+    <button class="chipbtn" data-f="voa" aria-pressed="false">美国之音</button>
+    <button class="chipbtn" data-f="rfa" aria-pressed="false">自由亚洲</button>
+    <input class="search" id="q" type="search" placeholder="搜关键词：中期选举 / 永居 / 霍尔木兹 / 网络攻击 / 中国 / 乌干达…" aria-label="搜索标题" />
+    <button class="chipbtn" id="density" aria-pressed="false">紧凑模式（只看标题）</button>
+  </div>
+</header>
+
+<main>
+  <div class="brief">
+    <h2>3 分钟总览 — 晚版 5 条主线</h2>
+    <ol>
+      <li><b>中期选举倒计时最后一天：</b>密歇根民主党内决裂，史蒂文斯倒戈背书共和党人罗杰斯；阿拉斯加“两个丹·沙利文”事件 FBI 介入，事态转向刑事层面。</li>
+      <li><b>英国一日多线：</b>永居改革拟从 5 年延至 10 年；央行加息预期压向 230 万户房贷；议会批评对华政策“走一步看一步”。</li>
+      <li><b>网络攻击蔓延：</b>俄乌应急警报应用同遭入侵并出现虚假警报；比利时与瑞典超市冷柜疑遭攻击，温度被调至 50 摄氏度。</li>
+      <li><b>中国议题三线：</b>纽约时报称中国向对手传递“你们需要我们制造的东西”；除大豆外对美农产品购买低迷，考验 170 亿美元承诺；习近平会见阿曼苏丹。</li>
+      <li><b>中东与全球其他：</b>伊朗提出两天重开霍尔木兹海峡方案；阿富汗要求美国遣返问题上“负责任地行事”；乌干达开始从索马里撤军；黑石 31 亿美元收购 LNG Canada 股份；佛罗里达私人飞机坠毁，9 人遇难。</li>
+    </ol>
+    <p class="note sans">本版共 32 条：美联社 6、BBC 7、路透 4、《卫报》4、德国之声 3、纽约时报 3、彭博社 2、法广 2、经济学人 1；美国之音、自由亚洲本窗口内查无可核对新稿，计 0 条。全部 32 条汇入下方同一条时间线，按时间倒序；每条保留发布时间（北京时间）、中文标题、英文原题（法文原题如实标注）与详细 summary。</p>
+  </div>
+  <div class="tl-head"><h2>时间线 · 11月2日 12:30–20:00</h2><span class="sans">由新到旧 ↓ · 时间均为北京时间</span></div>
+
+  <div class="timeline" id="timeline">
+
+    <article data-src="ap" data-k="密歇根 史蒂文斯 埃尔-赛义德 罗杰斯 民主党 参议院">
+      <div class="time sans"><b>11月2日</b>19:48</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">密歇根民主党人史蒂文斯倒戈背书共和党人罗杰斯，震动民主党</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>El-Sayed's primary opponent stuns Democrats by endorsing Republican opponent in Michigan Senate race</p>
+      <p class="sum">密歇根民主党众议员哈莉·史蒂文斯在初选中败给本党参议员候选人阿卜杜勒·埃尔-赛义德后，于周日出席底特律一场教堂活动时转而背书共和党候选人迈克·罗杰斯。她称埃尔-赛义德已明确表示她不再受其竞选活动欢迎，而原定的两人同台“团结亮相”也已告吹。这一倒戈发生在距选举仅两天之际，密歇根席位对民主党争夺参议院多数至关重要，埃尔-赛义德则回应称自己专注于选民关心的问题。事件本身为周日发生，AP 以当日综述形式在窗口内再次发布。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 19:48</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="伊朗 霍尔木兹海峡 核谈判 美国 也门 加沙">
+      <div class="time sans"><b>11月2日</b>19:48</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">中东·伊朗</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">伊朗称有两天方案可重开霍尔木兹海峡并恢复与美国核谈判</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Iran has a 2-day plan to reopen Strait, resume nuclear talks with US, and other Mideast news</p>
+      <p class="sum">伊朗外交部发言人周一表示，如果华盛顿满足其要求，伊朗有一项两天内实施的方案，可重开霍尔木兹海峡并恢复与美国的核谈判，该方案仍是经调解人与美方谈判的基础。同一综述还提到，联合国移民机构称也门战事重燃已导致 30 多万人逃离，中国正派特使前往伊朗、沙特和阿曼。加沙周一上午的打击造成两人死亡，显示地区紧张并未因谈判消息而缓解。该条为 AP 中东综述条目，核心是伊朗方面周一的最新表态。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 19:48</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="乌克兰 俄罗斯 应急预警 网络攻击 虚假警报 赫尔松">
+      <div class="time sans"><b>11月2日</b>19:48</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">俄乌·网络攻击</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">乌克兰与俄罗斯称应急预警应用遭网络攻击，收到虚假警报</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Ukraine and Russia report fake emergency alerts after cyberattack targets apps</p>
+      <p class="sum">乌克兰与俄罗斯均报告其应急预警应用遭到网络攻击，乌克兰用户收到关于辐射水平危险、化学威胁和基辅公共秩序混乱的虚假警告，乌克兰空袭警报频道称周日晚有未经授权者干扰该应用，服务暂停后于夜间恢复。俄罗斯官员称黑客通过紧急情况部应用发送了虚假警报，但更广泛的公共警报系统仍在运行。与此同时，乌克兰当局报告称，在周一零点开始的人道主义临时停火到期后，赫尔松地区再度遭到俄方攻击。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 19:48</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="阿拉斯加 丹·沙利文 FBI 彼得斯堡 佩尔托拉 选票">
+      <div class="time sans"><b>11月2日</b>19:48</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">阿拉斯加渔村“两个丹·沙利文”事件升级，FBI 登门，事态转向严峻</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>In Alaska fishing community, the Dan Sullivan episode takes an ominous turn as FBI comes knocking</p>
+      <p class="sum">在阿拉斯加彼得斯堡这个渔村，挑战现任共和党参议员丹·S·沙利文的同名候选人丹·J·沙利文已数周不见踪影，其住所一片漆黑，而此前一天 FBI 人员曾走访向其竞选捐款的朋友。丹·J·沙利文院前的标语写着“为民主挺身而出：投票 2026”，这一事件起初被视为以混淆选民为目的、为民主党人玛丽·佩尔托拉助选的“选票堆叠”策略。如今随着特朗普政府权衡是否就此提起刑事指控，事态已转向严肃的法律层面，远超一场地方选举花招的范畴。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 19:48</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="阿根廷 米莱 巴塔哥尼亚 AI 数据中心 特雷利乌">
+      <div class="time sans"><b>11月2日</b>19:48</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">阿根廷·科技</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">阿根廷米莱向科技巨头推销巴塔哥尼亚“零监管 AI 乐土”</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Argentina's Milei pitches a regulation-free AI haven at the end of the world</p>
+      <p class="sum">尽管数据中心在美国和欧洲正面临越来越大的反弹，阿根廷总统哈维尔·米莱仍希望把巴塔哥尼亚推销给科技巨头，卖点包括开阔土地、丰富的风能和天然气、拟议的税收优惠以及不监管 AI 的承诺。报道指出，相关计划目前大多仍停留在纸面，投资者对明年的选举心存疑虑，最大的考验是特雷利乌附近一个波兰开发商规划的 30 亿美元园区。该园区满负荷用电量可达布宜诺斯艾利斯的近三倍，出租土地的牧场主表示欢迎，但也有人担心环境代价并质疑阿根廷究竟能得到什么。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 19:48</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="全球股市 美股期货 油价 标普 纳斯达克 苹果">
+      <div class="time sans"><b>11月2日</b>19:48</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">市场·综述</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">全球股市涨跌互现、美股期货走高，油价因美伊外交希望大跌近 4%</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Global shares are mixed and US futures advance, while oil prices fall nearly 4%</p>
+      <p class="sum">香港发来的市场综述称，全球股市涨跌互现，油价在美伊外交进展希望重燃的背景下大幅回落，跌幅接近 4%，美股期货则小幅走高。此前华尔街刚经历了自 6 月以来最糟糕的一天，标普 500 指数上周五下跌 1.8%，纳斯达克下跌 2.9%，道琼斯下跌 1.1%，科技股和 AI 相关股遭遇抛售。市场人士将抛售归因于对 AI 建设可能构成泡沫的担忧，本周还将迎来更多财报，其中苹果定于周一晚些时候公布业绩，而上周 Alphabet 和亚马逊的财报已震动市场。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 19:48</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="英国央行 利率 通胀 11月5日">
+      <div class="time sans"><b>11月2日</b>19:31</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">英国·央行</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">英国央行思考利率新常态，以使通胀回归目标</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>The Bank of England ponders a new normal for interest rates to keep inflation at target</p>
+      <p class="sum">彭博当日推送议题是英国央行正在重新思考利率的“新常态”，即在通胀压力下何种利率水平才能使通胀回到目标。推送本身仅给出标题方向，未展开正文细节，本条不补写彭博正文未载的数据。时间点上，该议题正值市场预期英国央行 11 月 5 日议息会议前夕，这一背景来自同日卫报/路透的相关报道，需与彭博正文区分。总体看，该条的价值在于点出央行政策框架讨论，而非一次具体的决议消息。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 19:31</span><span>来源：彭博社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="马哈茂德 永居 移民 护工 伯纳姆 10年">
+      <div class="time sans"><b>11月2日</b>19:29</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">英国·移民</span></div>
+      <h3><a href="https://www.bbc.co.uk/news" target="_blank" rel="noopener">马哈茂德将公布合法移民永居规则改革方案</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Mahmood to set out changes to settlement rules for legal migrants</p>
+      <p class="sum">BBC 头条称，内政大臣莎芭娜·马哈茂德将于当天晚些时候公布修改合法移民获得永久居留时间的修订方案。原方案于 2025 年 11 月公布，拟将多数工人的永居等待期从 5 年延长至 10 年，护工最长可达 15 年，且适用于已在英国的外籍工人，因而引发巨大争议。最新预览报道称，马哈茂德可能对已在英国的护工作出软化处理，免除其最长等待期，而此次公布前已收到超过 20 万份咨询反馈。首相安迪·伯纳姆此前曾表示支持“永居权要靠争取”的原则，但未对改革的每个细节背书。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 19:29</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="比利时 瑞典 超市 冷柜 网络攻击 Delhaize 家乐福 ICA Coop">
+      <div class="time sans"><b>11月2日</b>19:25</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">欧洲·网络攻击</span></div>
+      <h3><a href="https://www.bbc.co.uk/news" target="_blank" rel="noopener">比利时与瑞典超市冷柜疑遭网络攻击，温度被调至 50 摄氏度</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Supermarket freezers in Belgium and Sweden hit by suspected cyber-attack</p>
+      <p class="sum">BBC 头条称，比利时和瑞典的超市冷柜遭到疑似网络攻击，其中瑞典一家门店称其冷柜温度被设定为 50 摄氏度（122 华氏度）。交叉报道显示，比利时 Delhaize 约 40 家门店、家乐福比利时 15 家门店以及瑞典 ICA 和 Coop 的部分门店受到影响，制冷系统被远程切换为除霜模式。事件令人联想到上个月法国约 700 家超市遭到的类似攻击，当时黑客控制了制冷设备并造成食品损失和火灾。Delhaize 方面仅称之为“IT 事件”，尚未正式确认是否为网络攻击，也未确认 70 摄氏度等极端传闻，归因仍未确定。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 19:25</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="英国 马哈茂德 永居 移民 10年 护工 法拉奇 伯纳姆">
+      <div class="time sans"><b>11月2日</b>18:30</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">英国·移民</span></div>
+      <h3><a href="https://www.reuters.com" target="_blank" rel="noopener">英国将公布移民永居改革，多数人等待期拟从 5 年延至 10 年</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>UK to unveil migrant settlement overhaul after months of debate</p>
+      <p class="sum">路透社伦敦消息称，内政大臣莎芭娜·马哈茂德将于周一公布英国移民永居改革方案，试图在选民要求降低移民与企业警告严苛规则会吓跑仍需的工人之间取得平衡。现行规则下，多数移民在英居住 5 年后可申请无限期居留，马哈茂德拟以“earned settlement”制度取而代之，标准等待期为 10 年，部分低薪工人（包括护工）最长可达 15 年。报道指出，尽管工党选出安迪·伯纳姆任首相后民调下滑，但奈杰尔·法拉奇领导的改革党仍是推动收紧移民管控的重要因素，而伯纳姆上周已表态支持“永居权要靠争取”的原则。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 18:30</span><span>来源：路透</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="佛罗里达 私人飞机 坠毁 Learjet 棕榈滩 9人遇难">
+      <div class="time sans"><b>11月2日</b>17:20</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">美国·事故</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">美国佛罗里达私人飞机坠毁，机上 9 人全部遇难</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>US: Private jet crashes near busy road in Florida, 9 killed</p>
+      <p class="sum">一架从得克萨斯州奥斯汀起飞、前往巴哈马北埃卢瑟拉的 Learjet 60 商务机，周日在佛罗里达州棕榈滩县克雷斯特黑文居民区坠毁，机上 9 人全部遇难。飞机在约 35000 英尺高度报告颠簸、结冰和降水并请求爬升后急剧俯冲，航管录音显示下降率一度高达每分钟 30000 英尺，驾驶舱最后传出“我们没时间了”的呼喊。飞机撞向路边并爆炸起火，在路面留下大坑，所幸地面暂无人员伤亡报告。美国交通部长达菲称之为“可怕的悲剧”，美国国家运输安全委员会已展开调查，事故原因和机上人员身份当时尚未公布。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 17:20</span><span>来源：德国之声</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="匈牙利 线民 共产主义 国家安全 马扎尔 档案">
+      <div class="time sans"><b>11月2日</b>17:17</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">匈牙利·历史</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">匈牙利将公布共产主义时期线民姓名</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Hungary to reveal communist-era informants' names</p>
+      <p class="sum">匈牙利预计于 11 月 4 日公布数万名共产主义政权国家安全机构线民的姓名，新政府希望通过开放档案帮助社会正视过去、恢复信任。1945 年至 1989 年间，匈牙利国家安全机构用庞大的线民网络监视社会、压制异议，有人被勒索或胁迫告发邻居、朋友、同事甚至家人，也有人为换取好处而被招募。9 月，佩特·马扎尔政府通过法律为公布材料铺路，民调显示逾三分之二民众支持此举。历史学家估计文件涉及 5 万至 6 万人，其中约 10% 仍在世，但仅约 9000 人有详细档案，相关内容经去除健康、成瘾、性取向等个人信息及受害者信息后计划于 2 月公布；部分档案在 1956 年起义和 1989 年转型期被毁，材料并不完整。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 17:17</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="乌干达 索马里 撤军 AMISOM 摩加迪沙 卡伊内鲁加巴">
+      <div class="time sans"><b>11月2日</b>16:55</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">非洲·撤军</span></div>
+      <h3><a href="https://www.bbc.co.uk/news" target="_blank" rel="noopener">乌干达开始从索马里撤军，结束近 20 年军事存在</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Uganda begins withdrawing troops from Somalia after 20 years</p>
+      <p class="sum">BBC 报道称，乌干达已开始从索马里撤军，结束近二十年的军事介入，首批 109 名乌干达人民国防军士兵已于上周五离开首都摩加迪沙。乌干达是 2007 年非盟驻索马里特派团（AMISOM）成立时首个派兵的非洲国家，该特派团旨在保护索马里过渡政府免受伊斯兰武装分子攻击。陆军司令穆胡齐·卡伊内鲁加巴上周宣布撤军启动，并称在“20 年的流血与牺牲”之后，将把安全责任移交给索马里兄弟。撤军将分阶段进行，预计 2027 年 8 月完成，但 BBC 版本称根据单独双边安全安排部署的部队将继续留在索马里。乌军方周一另有表述称全部部队将于 2027 年底前撤完，与 BBC 关于双边部队去留的表述不完全一致，本条以 BBC 版本为准。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 16:55</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="英国 房贷 230万户 央行 加息 3.75% 通胀">
+      <div class="time sans"><b>11月2日</b>16:35</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">英国·房贷</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">英国逾 230 万户家庭 2027 年可能面临更高的房贷还款</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Millions in UK brace to remortgage on worse deals as rate rise looms</p>
+      <p class="sum">超过 230 万英国家庭在 2027 年固定利率房贷到期后可能面临还款大幅上升，背景是英国央行预计本周开始加息。央行九人货币政策委员会普遍预计在 11 月 5 日将基准利率从 3.75% 上调至 4%，此前英国 9 月通胀升至 3.5%；市场预期这可能是未来 12 个月四次各 25 个基点加息中的第一次。今年下半年约 70 万借款人预计转入新贷款条件，另有 230 万户的固定利率协议将于明年到期，数据来自银行业协会 UK Finance。报道还指出，英国央行基准利率自去年 12 月以来未变，但受能源价格和中东战争引发的通胀担忧影响，债券市场波动已推高影响固定房贷定价的掉期利率；预算责任办公室预计明年经通胀调整后的家庭可支配收入将下降 0.6%，能源价格上限预计明年 1 月上调逾 400 英镑，令再融资压力雪上加霜。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 16:35</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="中国 美国 农产品 大豆 170亿美元 贸易承诺">
+      <div class="time sans"><b>11月2日</b>约 16:19</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">中国·贸易</span></div>
+      <h3><a href="https://www.reuters.com/world/china/chinas-slow-buying-us-farm-goods-tests-17-billion-trade-pledge-2026-11-02/" target="_blank" rel="noopener">中国购买美国农产品（除大豆外）低迷，170 亿美元贸易承诺受考验</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>China's slow buying of US farm goods tests $17 billion trade pledge</p>
+      <p class="sum">路透社对海关数据的分析显示，尽管今年 5 月白宫称北京同意自 2026 年起每年购买 170 亿美元美国农产品（当年目标按比例折算），但除大豆外的中国购买量今年却走向七年低点。1 月至 9 月，中国仅购买了 72 亿美元的其他农产品，从肉类到玉米，均为 2019 年首轮贸易战高峰以来同期最低，而大豆目标则有望达成。白宫尚未说明计时起点是从 5 月宣布时算起，还是从中国拟议的关税削减最终确定后算起，因此是否构成违约尚不明确。分析指出，需求疲软与全球竞争使目标难以实现，除非北京指令国有买家出手，这也让面临高油价困扰的美国农民感到失望，并牵动民主党在中期选举前争取农业州选民的努力。本条时间以抓取核验时间为准，原文未显示精确首发时间。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 约 16:19</span><span>来源：路透</span><span>已核到逐篇原文直达链接</span><span>时间以抓取核验时间为准</span></p></div>
+    </article>
+
+    <article data-src="rfi" data-k="杜邦 韦尔隆 马里 基达尔 解密 RFI 记者">
+      <div class="time sans"><b>11月2日</b>16:11</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI</span><span class="cat">法国·记者</span></div>
+      <h3><a href="https://www.rfi.fr" target="_blank" rel="noopener">杜邦与韦尔隆遇害 13 年：家属仍在等新解密</a></h3>
+      <p class="orig"><span class="lbl">法文原题：</span>Assassinats de Ghislaine Dupont et Claude Verlon en 2013 au Mali: «On attend une nouvelle déclassification depuis 3 ans»</p>
+      <p class="sum">13 年前的今天，RFI 记者吉斯兰·杜邦和报道技术员克洛德·韦尔隆在马里北部基达尔采访时被一支基地组织北非分支突击队绑架，不到一小时后在城外被处决，法国的司法调查至今仍在进行、仍有疑点未解。杜邦与韦尔隆之友协会主席达妮埃尔·戈诺表示，新任反恐法官已于 2026 年 1 月要求对主使者与绑架者之间的通话、以及法国特种部队干预报告做新的解密，但 5 月只收到一份法国对外安全总局的文件，对推进案件毫无帮助，此后没有任何回复。协会律师强调，预审法官已明确要求提供关于幸存者行踪的电话侦查材料和特种部队干预报告，并质疑“特种部队没有写干预报告”的说法根本站不住脚。戈诺最后援引马克龙作为三军统帅曾承诺的完全透明指出，不说明就难免让人怀疑有所隐瞒，而真相才能让家属感到司法有望、获得 13 年来一直没有的宽慰。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 16:11</span><span>来源：法广</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="瑞安航空 票价 薪酬 燃油 奥利里">
+      <div class="time sans"><b>11月2日</b>16:06</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">航空·英国</span></div>
+      <h3><a href="https://www.bbc.co.uk/news" target="_blank" rel="noopener">瑞安航空考虑冻结员工薪酬、提高票价，以抵消燃油成本飙升</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Ryanair says it may freeze workers' pay and raise airfares</p>
+      <p class="sum">瑞安航空表示，正在考虑临时冻结员工薪酬，并预计短途票价将大幅上涨，以应对燃油成本的急剧上升。公司预计，在截至 2028 年 3 月的财年中，按当前远期价格计算，其燃油账单将增加约 20 亿欧元，而票价上涨可能仍不足以完全抵消这一增幅。首席执行官迈克尔·奥利里称，除非中东冲突迅速得到解决，否则喷气燃油价格将“在 2027 年大部分时间里保持高位”。公司还在考虑的其他措施包括与机场重新谈判、降低机组配备比例以及在后台更多使用人工智能，BBC 已就薪酬冻结一事联系代表瑞安员工的工会 Unite 征求回应。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 16:06</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="兹维列夫 世界第一 网球">
+      <div class="time sans"><b>11月2日</b>14:44</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">体育·网球</span></div>
+      <h3><a href="https://www.bbc.co.uk/news" target="_blank" rel="noopener">兹维列夫成为当之无愧的世界第一，但仍有挥之不去的不适感</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Zverev becomes deserved world number one - but sense of discomfort remains</p>
+      <p class="sum">BBC 的评述指出，亚历山大·兹维列夫是今年男子网坛表现最好的选手，成为世界第一实至名归，但围绕这一登顶仍有一种挥之不去的不适感。标题的转折表明，这并非一篇单纯的祝贺战报，而是对兹维列夫赛季表现与外界观感之间张力的点评。聚合页导语未展开“不适感”的具体所指，本条不猜测其原因，仅保留 BBC 的原判断。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 14:44</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="阿富汗 美国 遣返 塔利班 巴基斯坦 移民">
+      <div class="time sans"><b>11月2日</b>14:38</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">阿富汗·移民</span></div>
+      <h3><a href="https://www.reuters.com/world/asia-pacific/afghanistan-asks-us-act-responsibly-deporting-afghan-immigrants-back-home-2026-11-02/" target="_blank" rel="noopener">阿富汗要求美国在遣返阿富汗移民问题上“负责任地行事”</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Afghanistan asks US to act responsibly on deporting Afghan immigrants back home</p>
+      <p class="sum">阿富汗塔利班政府外交部周一表示，要求美国在把阿富汗移民遣返回国时负责任地行事，同时表示喀布尔准备在这一问题上与华盛顿建设性接触。特朗普政府上周五被曝计划把部分阿富汗移民遣返阿富汗，据《纽约时报》上周五报道，预计遣返人数超过 150 人，首班飞机最早可能在周一出发。由于美国与塔利班政府没有外交关系，遣返将经由巴基斯坦进行。阿富汗声明还称，第三国不应把另一国公民当作换取有限临时让步的讨价还价筹码，而巴基斯坦与阿富汗正因跨境袭击问题关系紧张。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 14:38</span><span>来源：路透</span><span>已核到逐篇原文直达链接</span></p></div>
+    </article>
+
+    <article data-src="rfi" data-k="记者 联合国 古特雷斯 迪雅里克 战地记者 杜邦 韦尔隆">
+      <div class="time sans"><b>11月2日</b>14:35</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI</span><span class="cat">记者安全</span></div>
+      <h3><a href="https://www.rfi.fr" target="_blank" rel="noopener">联合国发言人：记者处境恶化，战地记者尤甚</a></h3>
+      <p class="orig"><span class="lbl">法文原题：</span>Violences contre les journalistes: «La situation s'aggrave surtout pour les journalistes en zone de combat»</p>
+      <p class="sum">今天是 RFI 记者吉斯兰·杜邦和克洛德·韦尔隆在马里北部基达尔被圣战分子杀害整整 13 周年，联合国大会正是因此把 11 月 2 日定为“终止针对记者犯罪不受惩罚现象国际日”。联合国秘书长古特雷斯的发言人斯特凡纳·迪雅里克在纽约连线接受 RFI 记者克里斯托夫·布瓦布维耶提问，讨论记者今天的处境究竟是在好转还是在恶化。报道的核心判断是，暴力面前记者处境总体恶化，而在战区的记者处境恶化得尤为严重。这篇访谈把 13 年前的两名 RFI 记者遇害案作为当下记者安全议题的起点，而非孤立的历史回顾。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 14:35</span><span>来源：法广</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="埃尔-赛义德 史蒂文斯 密歇根 罗杰斯 民主党 以色列">
+      <div class="time sans"><b>11月2日</b>14:31</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">埃尔-赛义德与史蒂文斯在密歇根的决裂内幕</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Inside the Abdul El-Sayed-Haley Stevens Meltdown in Michigan</p>
+      <p class="sum">《纽约时报》的内幕报道称，压垮史蒂文斯的最后一根稻草出现在周六下午：她本有望与击败自己的埃尔-赛义德一同出席一场团结活动，但此前她在周五上午发表强硬声明，要求埃尔-赛义德谴责一家支持性政治行动委员会制作的广告并作出其他让步，埃尔-赛义德随即公开表示不再希望她参加周日的底特律教堂活动。周日，史蒂文斯在底特律一座黑人教堂外与罗杰斯并肩站立，宣布背书共和党对手，并称自己从未受邀参加埃尔-赛义德的竞选活动。时报认为，这场决裂不仅源于对以色列政策的分歧，也折射出民主党内部关于其与以色列及犹太捐赠者关系的重大裂痕，而如果埃尔-赛义德当选，他将成为自以色列建国 78 年来最反以色列的美国参议员。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 14:31</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="子宫内膜异位症 机器人手术 等待 医疗">
+      <div class="time sans"><b>11月2日</b>14:24</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">英国·医疗</span></div>
+      <h3><a href="https://www.bbc.co.uk/news" target="_blank" rel="noopener">女子多年忍痛等待子宫内膜异位症手术，寄望机器人手术让后来者不再久等</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>'It took years to get pain-relieving surgery - I hope a robot means others won't have to wait'</p>
+      <p class="sum">BBC 报道了一名多年来忍受疼痛等待子宫内膜异位症手术的女性的经历，她对一项旨在终结漫长等待的高科技方案表示赞赏。该方案涉及机器人辅助手术，报道的落点在于技术能否缩短患者从确诊到获得缓解性手术的等待时间。这一条目属于健康与医疗可及性议题，反映了英国患者对手术排队问题的切身感受。聚合页导语未给出手术方式、试点医院或等待时长的具体数字，本条不作补充。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 14:24</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="英格兰 急诊 儿童预警 PEWS NHS">
+      <div class="time sans"><b>11月2日</b>14:22</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">英国·医疗</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">英格兰急诊科计划引入儿童预警评分</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>England plan for child warning scores in A&amp;E</p>
+      <p class="sum">英格兰急诊科预计今年冬季引入儿童预警评分，这是该工具首次从病房扩展到急诊护理。全国儿童早期预警系统（PEWS）通过观察儿童生命体征，帮助医护团队追踪病情变化并判断响应紧迫程度，NHS 英格兰已发布材料说明该框架在住院护理中的使用。卫报称此次计划将 PEWS 带入急诊科，但未给出具体开始日期。报道还提醒，低分并不排除升级处置，NHS 英格兰的图表把临床医生、父母或照护者提出的担忧列为采取行动的理由，为工作人员在儿童病情令人担忧时响应提供了另一依据；该报道基于 100 多份信息公开申请。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 14:22</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="母亲 婴儿 纽卡斯尔 医院 道歉 NHS">
+      <div class="time sans"><b>11月2日</b>14:18</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">英国·社会</span></div>
+      <h3><a href="https://www.bbc.co.uk/news" target="_blank" rel="noopener">英国母亲被要求“预约”才能生下已死亡的婴儿，医院道歉</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Mother told to book appointment to give birth to her dead baby</p>
+      <p class="sum">BBC 报道称，一名母亲被告知需要预约才能生下她已经死亡的婴儿，纽卡斯尔医院 NHS 信托基金已就此道歉，承认其护理“未达到应有标准”。该条目为 BBC 当日较早的英国社会新闻，标题本身即揭示了事件的核心冲突：失去孩子的母亲在最脆弱的时刻遭遇了程序化的冷漠对待。医院的道歉表明院方承认服务存在不足，但聚合页导语未展开更多个案细节。本条摘要依据仅限 BBC 标题与导语，未补充未经核验的个案情节。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 14:18</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="economist" data-k="经济学人 简报 网络攻击 中国市场 中期选举 模型">
+      <div class="time sans"><b>11月2日</b>14:06</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--econ)">经济学人 The Economist</span><span class="cat">简报·综述</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">经济学人简报：俄乌网络攻击、中国市场逆势与美国中期选举模型</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Cyber-attacks in Russia and Ukraine, Chinese markets buck global trends and our model of the midterm results（The world in brief）</p>
+      <p class="sum">这是《经济学人》当日“世界简报”的一期，标题涵盖三个主题：俄罗斯与乌克兰的网络攻击、中国市场逆全球趋势而行，以及该刊对美国中期选举结果的模型。网络攻击部分与 DW 同日报道交叉印证，即俄乌双方的应急警报应用均遭入侵并出现虚假信息。简报的其余两项——中国市场表现与中期选举模型——在推送记录中仅见标题，未载具体数值或模型结论，本条不补写数字和预测结果。整体看，这是一条晨间简报性质的条目，适合作为窗口内俄乌网络战、中国市场和美国选举三条线的索引，而非单事件的深度报道。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 14:06</span><span>来源：经济学人</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="黑石 LNG Canada 三菱 31亿美元 液化天然气">
+      <div class="time sans"><b>11月2日</b>13:57</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">能源·并购</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">黑石牵头财团 31 亿美元收购加拿大液化天然气公司股份</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Blackstone leads $3.1 billion deal to acquire LNG Canada stake</p>
+      <p class="sum">据彭博报道，黑石牵头的投资者集团已同意以 31 亿美元，从三菱商事的一家子公司手中收购加拿大液化天然气公司（LNG Canada）液化业务的股份。交易涉及该业务 49.9% 的权益，是当日能源与并购领域的一笔大额交易。转载报道在“其他投资者”处截断，未载明除黑石外的全部投资者名单，本条不补写名单。报道的落点是大型资管机构继续加码液化天然气资产，而非单纯的股价消息。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 13:57</span><span>来源：彭博社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国 万圣节 糖果 针头 警方 儿童">
+      <div class="time sans"><b>11月2日</b>13:48</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">德国·社会</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">德国警方调查万圣节糖果中发现针头事件</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>German police investigating after needles found in Halloween candy</p>
+      <p class="sum">德国警方表示，儿童在万圣节“不给糖就捣蛋”活动中收到的糖果中发现了针头或其他尖锐金属物，警方认为其中大多数或全部是故意放置以造成伤害。事件报告地包括图林根、巴登-符腾堡、巴伐利亚、下萨克森和莱茵兰-普法尔茨等地，纽伦堡一名儿童咬到巧克力中的针头但未受伤。巴登-符腾堡另有两起案件中针头被藏得从外表看不出来。警方已在多起案件中以涉嫌严重伤害未遂立案调查，目前尚未确认嫌疑人。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 13:48</span><span>来源：德国之声</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="国际足联 因凡蒂诺 税款 迈阿密 透明度">
+      <div class="time sans"><b>11月2日</b>13:01</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">体育·FIFA</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">国际足联悄悄为因凡蒂诺支付了数百万美元税款</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>FIFA Quietly Paid Millions in Gianni Infantino's Taxes</p>
+      <p class="sum">《纽约时报》根据文件与采访报道称，国际足联主席詹尼·因凡蒂诺从瑞士迁居迈阿密后面临更高的所得税，2024 年 5 月在曼谷召开的决定高层薪酬的三人委员会会议上，瑞士会计师布鲁诺·基奥门托提出由国际足联承担其额外税负至 2026 年，其他成员很快同意。国际足联最终将支付因凡蒂诺 100% 交给美国政府的税款，到其美国任期结束时累计约 400 万美元，而因凡蒂诺年薪约 600 万美元。尽管国际足联曾推行透明度改革、要求公开高层薪酬，但据时报查阅的文件与知情人士称，这项税收福利从未在申报文件中披露，国际足联则回应称已遵守所有内部规章、适用法律及报告与纳税要求，且账目经独立审计。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 13:01</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="中国 稀土 太阳能 无人机 制药 盾构机 印度 习近平">
+      <div class="time sans"><b>11月2日</b>13:00</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">中国·技术</span></div>
+      <h3><a href="https://www.nytimes.com/2026/11/02/world/asia/chinas-message-to-its-rivals-you-need-what-we-make.html" target="_blank" rel="noopener">中国向对手传递的信息：你们需要我们制造的东西</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>China's Message to Its Rivals: You Need What We Make</p>
+      <p class="sum">《纽约时报》指出，中国传递的信息已不只是稀土，而是让其他国家更难摆脱对其太阳能、无人机和制药技术的依赖。过去一个月，北京已着手管控数十项技术的出口，包括无人机、人工智能模型与智能体、部分先进药物研发工艺以及太阳能板制造工艺。报道以盾构机为例指出，这类巨型设备全球仅少数公司能造、多数在中国生产，而印度正用其在喜马拉雅地区开凿隧道以加强边境防御，从下月起北京可能控制印度能否买到。文章认为，习近平把中国描绘为与西方陷入一场“伟大斗争”，北京需要通过掌握关键技术来换取其所需的市场与喷气发动机、高端芯片等先进技术。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 13:00</span><span>来源：纽约时报</span><span>已核到逐篇原文直达链接</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="英国 对华政策 议会 伯恩 明阳 风电 红区 绿区">
+      <div class="time sans"><b>11月2日</b>13:00</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">英国·对华政策</span></div>
+      <h3><a href="https://www.theguardian.com/politics/2026/nov/02/uk-making-up-china-policy-as-it-goes-along-mps" target="_blank" rel="noopener">英国议员警告：对华政策是“走一步看一步”</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>UK making up China policy ‘as it goes along’, MPs warn</p>
+      <p class="sum">英国议会下院商业、创新、科学和技术特别委员会的调查结论称，英国对华政策是“走一步看一步”，缺乏连贯战略，既妨碍企业规划，也留下国家安全风险，并可能使英国的对华关系被华盛顿或北京主导。报告批评工党政府自 2024 年以来未能兑现“战略性、长期性、一致性”的对华方针，称其“兼具了两种最坏结果”；委员会主席、工党议员利亚姆·伯恩警告，这种零敲碎打的做法还危及英国与欧盟的生意，有被排除在大制造合同之外的风险。报告以今年 3 月英国以未说明的安全风险为由、阻止中国明阳公司在苏格兰建设 15 亿英镑风电厂为例，指出企业在多年谈判后仍无法预判政策。报告呼吁制定“清晰的新游戏规则”，包括为禁止中国投资的行业划定“红区”、为鼓励贸易的领域划定“绿区”，并结合贸易救济准备应对不公平竞争。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 13:00</span><span>来源：《卫报》</span><span>已核到逐篇原文直达链接</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="乌克兰 俄罗斯 应急警报 黑客 爱国者 炼油厂 泽连斯基">
+      <div class="time sans"><b>11月2日</b>12:59</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">俄乌·网络攻击</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">乌克兰与俄罗斯报告应急警报应用遭黑客攻击</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Ukraine, Russia report hacking attacks on emergency alert apps</p>
+      <p class="sum">乌克兰和俄罗斯双方官员均报告本国应急警报应用遭到黑客攻击。乌克兰空军称，周日晚间空袭警报应用被黑，手机收到关于核威胁和化学威胁的虚假警报，乌战略传播中心指责俄罗斯所为，并提醒民众忽略异常信息。数小时后，俄罗斯紧急情况部称其手机应用遭到“大规模网络攻击”，攻击者得以向公众发送虚假信息，官方称正在修复。同一篇 DW 报道还提到，泽连斯基对福克斯新闻表示，若美国提供爱国者拦截导弹，乌克兰将停止打击俄罗斯炼油厂，并称若美方提供一个月的导弹，乌方将停火一个月。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 12:59</span><span>来源：德国之声</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="习近平 阿曼 海赛姆 战略伙伴 1978年 建交">
+      <div class="time sans"><b>11月2日</b>12:35</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">中国·外交</span></div>
+      <h3><a href="https://www.reuters.com/world/china/deeper-china-oman-ties-strategic-both-sides-xi-says-2026-11-02/" target="_blank" rel="noopener">习近平称深化中阿曼关系是双方“共同战略选择”</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Deeper China-Oman ties strategic for both sides, Xi says</p>
+      <p class="sum">中国国家主席习近平周一在北京会见阿曼苏丹海赛姆·本·塔里克·阿勒赛义德时表示，扩大和深化两国关系是双方的“共同战略选择”，两国关系正处于“新的历史起点”。习近平表示，愿与对方一道把中阿曼战略伙伴关系推向更高水平，更好造福两国人民，并为地区和平稳定繁荣作出贡献。海赛姆于周日抵达北京进行为期两天的访问，这是自两国 1978 年建交以来阿曼国家元首的首次访华。本条时间以抓取核验时间为准，原文未显示精确首发时间。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 12:35</span><span>来源：路透</span><span>已核到逐篇原文直达链接</span><span>时间以抓取核验时间为准</span></p></div>
+    </article>
+
+  </div>
+  <div class="empty sans" id="empty">没有匹配的条目，换个关键词试试。</div>
+</main>
+
+<footer class="sans">
+  <p>本版为 2026-11-02 12:30–20:00 窗口内新稿（北京时间），不含当日午版；本版只含该窗口内新稿，时间均为北京时间。</p>
+  <p>同一事件在不同来源下分别保留：密歇根决裂在美联社与《纽约时报》各保留一条，俄乌应急警报应用遭攻击在美联社、德国之声与《经济学人》简报中各保留一条，英国永居改革在 BBC 与路透各保留一条，未合并、未删减。</p>
+  <p>未编造标题、时间和链接：标题为中文译题并附英文原题（法文原题的条目如实标注法文原题），时间为发布时间（北京时间），点标题前往来源。</p>
+  <p>链接说明：部分条目未核到逐篇原文链接，链接指向该媒体官网；已核到逐篇原文直达链接的条目已在条目下方注明。其中路透两条的时间以抓取核验时间为准，原文未显示精确首发时间。</p>
+  <p>来源缺口说明：VOA、RFA 本窗口内查无可核对新稿，计 0 条。</p>
+</footer>
+
+<script>
+(function(){
+  var btns=document.querySelectorAll('[data-f]');
+  var arts=document.querySelectorAll('article[data-src]');
+  var q=document.getElementById('q');
+  var empty=document.getElementById('empty');
+  var cur='all';
+  function apply(){
+    var kw=q.value.trim().toLowerCase(); var any=false;
+    arts.forEach(function(a){
+      var showSrc=(cur==='all'||a.dataset.src===cur);
+      var hit=showSrc && (!kw || (a.textContent.toLowerCase().indexOf(kw)>-1 || (a.dataset.k||'').toLowerCase().indexOf(kw)>-1));
+      a.classList.toggle('hidden',!hit); if(hit)any=true;
+    });
+    empty.style.display=any?'none':'block';
+  }
+  btns.forEach(function(b){ b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true'); cur=b.dataset.f; apply();
+  });});
+  q.addEventListener('input',apply);
+  var d=document.getElementById('density');
+  d.addEventListener('click',function(){
+    var on=document.body.classList.toggle('compact');
+    d.setAttribute('aria-pressed',on?'true':'false');
+    d.textContent=on?'舒适模式（显示简介）':'紧凑模式（只看标题）';
+  });
+  var hdr=document.querySelector('header');
+  var toggle=document.getElementById('hdrToggle');
+  var ticking=false;
+  function onScroll(){
+    var y=window.scrollY||window.pageYOffset;
+    if(y>90){ hdr.classList.add('is-shrunk'); }
+    else if(y<40){
+      hdr.classList.remove('is-shrunk'); hdr.classList.remove('show-controls');
+      toggle.setAttribute('aria-expanded','false'); toggle.textContent='筛选 ▾';
+    }
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){ ticking=true; window.requestAnimationFrame(onScroll); }
+  },{passive:true});
+  onScroll();
+  toggle.addEventListener('click',function(){
+    var open=hdr.classList.toggle('show-controls');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'筛选 ▴':'筛选 ▾';
+  });
+})();
+</script>
+</body>
+</html>
