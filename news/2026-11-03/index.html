@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
 <link rel="icon" href="data:," />
-<title>新闻阅读 · 11月3日早版时间线</title>
+<title>新闻阅读 · 11月3日晚版时间线</title>
 <style>
   :root{
     --bg:#f7f5f0; --panel:#fffdf8; --ink:#1a1814; --muted:#5c574d; --line:#ddd6c8;
@@ -92,8 +92,8 @@
 <body>
 <header>
   <div class="toprow">
-    <h1>新闻阅读 · 11月3日早版时间线</h1>
-    <div class="edition sans"><span class="ed-full">早版 · 2026年11月2日 20:00 至 11月3日 约 08:30（北京时间） · 本版为窗口内新稿 · 共 27 条 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>早版 20:00–约08:30</b> · 共 27 条</span></div>
+    <h1>新闻阅读 · 11月3日晚版时间线</h1>
+    <div class="edition sans"><span class="ed-full">晚版 · 2026年11月3日 12:30 至约 20:00（北京时间） · 本版为窗口内新稿 · 共 13 条 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>晚版 12:30–约20:00</b> · 共 13 条</span></div>
     <button class="hdr-toggle sans" id="hdrToggle" aria-expanded="false" aria-controls="controlsBar">筛选 ▾</button>
   </div>
   <div class="controls sans" id="controlsBar" role="group" aria-label="筛选">
@@ -109,268 +109,142 @@
     <button class="chipbtn" data-f="guardian" aria-pressed="false">《卫报》</button>
     <button class="chipbtn" data-f="voa" aria-pressed="false">美国之音</button>
     <button class="chipbtn" data-f="rfa" aria-pressed="false">自由亚洲</button>
-    <input class="search" id="q" type="search" placeholder="搜关键词：中期选举 / 最高法院 / 坠机 / 霍尔木兹 / 芯片 / Meta…" aria-label="搜索标题" />
+    <input class="search" id="q" type="search" placeholder="搜关键词：中期选举 / 霍尔木兹 / 西班牙 / 军情五处 / 泽连斯基 / 黄金…" aria-label="搜索标题" />
     <button class="chipbtn" id="density" aria-pressed="false">紧凑模式（只看标题）</button>
   </div>
 </header>
 
 <main>
   <div class="brief">
-    <h2>3 分钟总览 — 早版 5 条主线</h2>
+    <h2>3 分钟总览 — 晚版 5 条主线</h2>
     <ol>
-      <li><b>投票日当天：</b>最高法院投票前夜驳回特朗普政府搁置加州约 2 万张选票的请求，司法部在加州“选民欺诈”打击中再指控六人；今日决出众议院全部 435 席与参议院 35 席，密歇根史蒂文斯背书余波与得州塔拉里科竞选成看点。</li>
-      <li><b>佛州坠机调查：</b>9 人遇难，调查称飞机可能在空中就已开始解体，天气是重点；BBC 还原最后时刻，NYT 梳理须知。</li>
-      <li><b>俄乌与中东：</b>俄军轰炸扎波罗热援助中心致 26 死，赫尔松有限停火到期后战火回归；内塔尼亚胡推动对伊新打击，伊朗称协议后两天重开霍尔木兹海峡，油价大跌 8%。</li>
-      <li><b>市场与科技：</b>芯片抛售拖累标普收跌、纳斯达克 100 进入技术性调整；Meta 拟发债至少 200 亿美元加码 AI 基建，苹果盘后财报受关注；阿联酋脱离欧佩克后称出口上升。</li>
-      <li><b>其他：</b>阿富汗脊髓灰质炎接种运动启动、法治指数倒数第二；华盛顿州禽流感死亡一例；乌干达开始从索马里撤军；塞尔维亚银行家被捕；布什比 28 年徒步环球归乡。</li>
+      <li><b>投票日：</b>选举日到来，提前投票超 5700 万创中期选举纪录（美联社 13:12、《卫报》约 16:49）；路透/益普索民调显示生活成本是 48% 选民的首要议题，近半数选民称自己的选票意在反对特朗普（路透约 19:30）；首批投票站自东向西开放，首批结果待东部投票站关闭后陆续出炉。</li>
+      <li><b>伊朗：打击与谈判并行：</b>经济学人午间更新确认美军在中期选举前对格什姆岛目标实施“有限”“防御性”打击（18:52）；油价在周一大跌后反弹，布伦特回升至 106 美元下方，但伊朗官员称达成协议仍遥远，通胀担忧再起。</li>
+      <li><b>欧洲一日多线：</b>西班牙铁路事故追责与援助并行（69 死，交通大臣受质询，拟在信号故障时限速 40 公里/时），马德里太阳门住房营地凌晨清场（334 人，11 月 11 日总罢工在即）；英国富时 100 下滑、军情五处免于藐视法庭程序，泽连斯基突访柏林。</li>
+      <li><b>市场与科技：</b>美股在投票前徘徊，纳斯达克 100 进入技术性回调后小幅反弹，苹果盘初跌 4.4%；Anthropic 计划未来几年在 AI 基建上支出 8950 亿美元；路透专栏警告，超市冷柜黑客与金融攻击凸显 AI 正在为网络破坏增压。</li>
+      <li><b>其他：</b>南亚雾霾加剧，拉合尔 AQI 447 居全球最差，德里启动分级响应；印度非法黄金进口因加税激增至三年高点，第三季度非官方渠道出货量达 50 吨。</li>
     </ol>
-    <p class="note sans">本版共 27 条：美联社 5、《卫报》5、美国之音 5、纽约时报 3、BBC 2、彭博社 2、路透 2、法广 2、德国之声 1；经济学人、自由亚洲本窗口内无可核实新稿，记 0 条。全部 27 条汇入下方同一条时间线，按时间倒序；每条保留发布时间（北京时间）、中文标题、英文原题（法广条目为法文原题并注明无英文原题）与详细 summary。</p>
+    <p class="note sans">本版共 13 条：路透 6、彭博社 2、美联社 1、BBC 1、《卫报》1、德国之声 1、经济学人 1；纽约时报、法广、美国之音、自由亚洲本窗口内无可核实原创稿，记 0 条。全部 13 条汇入下方同一条时间线，按时间倒序；每条保留发布时间（北京时间）、中文标题、英文原题与详细 summary。</p>
   </div>
-  <div class="tl-head"><h2>时间线 · 11月2日 20:00 至 11月3日 约 08:30</h2><span class="sans">由新到旧 ↓ · 时间均为北京时间</span></div>
+  <div class="tl-head"><h2>时间线 · 11月3日 12:30 至约 20:00</h2><span class="sans">由新到旧 ↓ · 时间均为北京时间</span></div>
 
   <div class="timeline" id="timeline">
 
-    <article data-src="ap" data-k="俄军 轰炸 扎波罗热 援助中心 避难所 26死 泽连斯基 赫尔松 停火">
-      <div class="time sans"><b>11月3日</b>08:07</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">俄乌·空袭</span></div>
-      <h3><a href="https://apnews.com" target="_blank" rel="noopener">俄军轰炸乌克兰南部援助中心和避难所，致 26 人死亡</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Russia bombs aid center and shelter in southern Ukraine, killing 26, officials say</p>
-      <p class="sum">扎波罗热州 Komyshuvakha 村一处学校建筑（人道援助分发点）及邻近避难所遭到轰炸，造成 26 人死亡、约 20 人失踪。泽连斯基称，首轮空袭之后，俄军又以 9 枚炸弹实施了“二次打击”。此次袭击发生在赫尔松有限停火于周一到期之后，战火随之回归。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 08:07</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="reuters" data-k="中期选举 民调 生活成本 特朗普 伊朗 数据中心">
+      <div class="time sans"><b>11月3日</b>约 19:30</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·民调</span></div>
+      <h3><a href="https://www.reuters.com/world/us/nine-things-us-voters-minds-ahead-midterm-elections-according-reutersipsos-poll-2026-11-03/" target="_blank" rel="noopener">路透/益普索民调：生活成本是选民首要议题，近半数选民称投票意在反对特朗普</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Nine things on US voters&#x27; minds ahead of midterm elections, according to Reuters/Ipsos poll</p>
+      <p class="sum">路透/益普索对 1765 名美国成年人进行的民调（上周四至周一，登记选民误差范围 3 个百分点）显示，生活成本是选民的首要议题：48% 的登记选民称生活成本是决定投票的最重要问题，26% 称是民主规范，13% 称是移民。48% 已投票或计划投票的人称自己的选票是投给反对特朗普，25% 称是投给支持特朗普。伊朗问题上，25% 的选民认为军事行动值得付出代价，55% 认为不值得；49% 的美国人认为自 2025 年 1 月特朗普重返白宫以来家庭财务状况恶化，13% 认为好转，37% 认为差不多。另有 42% 的登记选民称限制用于人工智能的数据中心建设“非常重要”或“最重要”。民调指出，自 2 月美以与伊朗开战以来，美国燃油价格大幅上涨。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 19:30</span><span>来源：路透 Reuters</span><span>链接为搜索结果返回的原文地址</span></p></div>
     </article>
 
-    <article data-src="ap" data-k="最高法院 特朗普 加州 选票 非公民 邮寄选票 司法部 中期选举">
-      <div class="time sans"><b>11月3日</b>07:45</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国·选举</span></div>
-      <h3><a href="https://apnews.com/article/midterm-elections-immigration-voter-fraud-trump-48998968a23a4af2f59eaea3dba4d2f3" target="_blank" rel="noopener">最高法院驳回特朗普政府要求搁置加州数千张选票的请求</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Supreme Court rejects Trump administration push to set aside thousands of California ballots</p>
-      <p class="sum">投票前夜，最高法院拒绝介入，驳回了要求加州搁置约 2 万张涉非公民争议邮寄选票的紧急请求，无大法官公开表示异议。下级法院此前亦已驳回该请求，司法部承认其名单并非完全可靠。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:45</span><span>来源：美联社</span><span>已核到逐篇原文直达链接</span></p></div>
+    <article data-src="reuters" data-k="西班牙 马德里 住房抗议 太阳门 清场 提前大选">
+      <div class="time sans"><b>11月3日</b>约 19:00</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">西班牙·住房</span></div>
+      <h3><a href="https://www.reuters.com/world/spanish-police-clear-remaining-housing-protesters-madrid-encampment-2026-11-03/" target="_blank" rel="noopener">西班牙警方清场马德里太阳门住房抗议营地，结束五周占领</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Spanish police clear remaining housing protesters from Madrid encampment</p>
+      <p class="sum">西班牙警方在凌晨采取行动，清除了马德里太阳门广场住房抗议营地的剩余人员和帐篷，结束了为期五周的占领。马德里中央政府代表办公室称，防暴警察于凌晨约 3 点（格林尼治时间 02:00）进入营地，约 400 名警察连同消防员和社会服务人员参与行动，清场剩余 334 人，并以不服从和抗拒执法为由逮捕 2 人。抗议者在其 Telegram 频道上称清场过程暴力、多名露营者被殴打并遭辣椒喷雾袭击；政府则在另一份声明中称没有发生暴力或骚乱。这场抗议由一名 87 岁老妇被驱逐后去世引发，租户联盟随后在西班牙各地组织游行，太阳门营地成为西班牙住房危机的象征，并促使首相桑切斯决定于 11 月 29 日提前举行大选。营地主要组织者已于 10 月 30 日宣布解散组织委员会，称政府通过多项住房措施后原诉求已达成，接下来将聚焦 11 月 11 日为住房权利和生活成本举行的总罢工；政府称仍留宿营地者中有不少是无家可归者或其他弱势群体。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 19:00</span><span>来源：路透 Reuters</span><span>链接为搜索结果返回的原文地址</span></p></div>
     </article>
 
-    <article data-src="guardian" data-k="塔拉里科 得州 民主党 参议员 奥斯汀 教师 竞选">
-      <div class="time sans"><b>11月3日</b>07:32</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·选举</span></div>
-      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">五维棋局：詹姆斯·塔拉里科打破得州民主党困局的非凡竞选</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Five dimensional chess: inside James Talarico's extraordinary bid to break Texas Democrats'…（原题在聚合页显示为截断形式）</p>
-      <p class="sum">得州自 1988 年以来未选出民主党参议员，年轻的前教师塔拉里科在奥斯汀向捐助者发表讲话，开启竞选，力图打破得州民主党的这一困局。报道以其竞选开局为切口，呈现这场非凡竞选的内情。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:32</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="economist" data-k="经济学人 世界简报 伊朗 格什姆岛 Anthropic 人工智能">
+      <div class="time sans"><b>11月3日</b>18:52</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人 The Economist</span><span class="cat">美国·伊朗</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">《世界简报》午间更新：美国在中期选举前对伊朗实施打击；Anthropic 巨额支出计划</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>America strikes Iran before midterms; Anthropic&#x27;s big spending plans, and more</p>
+      <p class="sum">经济学人《世界简报》当日午间更新以美国在中期选举前对伊朗的打击为头条：美国对伊朗格什姆岛目标实施了“有限”且“防御性”的打击。同期更新还提到，Anthropic 已承诺在人工智能基础设施上支出 8950 亿美元，依据是其计划 IPO 前提交的监管文件。经济学人当日早间简报则以 Anthropic 的支出计划与苹果财报超预期为头条；午间更新把伊朗打击推至首位，显示选举日当天中东局势仍是首要变量。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 18:52</span><span>来源：经济学人 The Economist</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
     </article>
 
-    <article data-src="ap" data-k="佛州 坠机 Learjet 解体 NTSB 天气 结冰 Greenacres 西棕榈滩">
-      <div class="time sans"><b>11月3日</b>07:27</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国·事故</span></div>
-      <h3><a href="https://apnews.com" target="_blank" rel="noopener">调查人员称佛州坠机 Learjet 可能在空中就已开始解体</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Parts of a Learjet may have broken off midair before Florida crash that killed 9, investigators say</p>
-      <p class="sum">NTSB 委员 Tom Chapman 周一称，残骸散落范围较广，显示飞机可能在空中就已开始解体。该机周日自奥斯汀起飞前往巴哈马，在西棕榈滩附近 Greenacres 坠毁，9 人遇难。调查的重点为天气：事发时有暴雨，也有飞行员报告高空结冰。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:27</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="reuters" data-k="富时100 油价 通胀 英国央行 中期选举">
+      <div class="time sans"><b>11月3日</b>18:43</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">英国·市场</span></div>
+      <h3><a href="https://www.reuters.com/world/uk/ftse-100-slips-inflation-fears-build-oil-rise-2026-11-03/" target="_blank" rel="noopener">英国富时 100 指数下滑，油价反弹加剧通胀担忧</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>FTSE 100 slips as inflation fears build on oil rise</p>
+      <p class="sum">英国富时 100 指数周二走低，截至格林尼治时间 10:43 跌 0.5% 至 10705.31 点，富时 250 指数跌 0.3%，油价回升打压风险情绪。原油价格在周一下跌 7% 后反弹逾 1.5%，此前一名伊朗官员称结束战争的协议仍遥遥无期；油价高企助长通胀担忧，而多家央行已纷纷加息，市场普遍预期英国央行将于周四加息 25 个基点。航空航天与防务股是最大拖累，跌 1.2%，劳斯莱斯与 Relx 均跌逾 1.6%。市场同时关注美国中期选举，民主党强势表现已被定价，可能为本周全球市场定调。个股方面，Drax 因与 Brookfield 资产管理和 Radiant 合作开发数据中心而大涨 9%，领涨富时 250；Primark 母公司 Associated British Foods 跌 3% 垫底富时 100，保险商 Hiscox 公布业绩后涨 3%。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 18:43</span><span>来源：路透 Reuters</span><span>链接为搜索结果返回的原文地址</span></p></div>
     </article>
 
-    <article data-src="ap" data-k="内塔尼亚胡 伊朗 打击 特朗普 霍尔木兹海峡 核谈判 胡塞 沙特 希伯伦">
-      <div class="time sans"><b>11月3日</b>07:27</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">中东·伊朗</span></div>
-      <h3><a href="https://apnews.com" target="_blank" rel="noopener">消息人士称内塔尼亚胡推动美国对伊朗发动新一轮打击</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Netanyahu pushes for new strikes on Iran, officials tell AP, and other Mideast news</p>
-      <p class="sum">多名官员称，内塔尼亚胡希望特朗普政府对伊朗实施新一轮打击，特朗普尚未作出承诺。伊朗方面称，若华盛顿满足要求，可在两天内重开霍尔木兹海峡并恢复核谈判。同一汇总还提到胡塞指控沙特袭击红海港口，以及以军收尾希伯伦枪击事件后的行动。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:27</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="bbc" data-k="军情五处 MI5 藐视法庭 法官 撒谎">
+      <div class="time sans"><b>11月3日</b>约 18:23</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">英国·司法</span></div>
+      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">法官裁定军情五处虽承认向三家法院撒谎，仍不面临藐视法庭程序</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>MI5 will not face contempt of court proceedings despite admitting lying to three courts, judges rule</p>
+      <p class="sum">据 BBC 通知，法官裁定英国国内情报机构军情五处（MI5）不会面临藐视法庭程序，尽管该机构已承认向三家法院撒谎。本条依据 BBC 通知转载核对，通知仅给出上述裁定结论，未核到 BBC 原文全文，故不展开案件细节与法官说理；标题译文以通知原文为准。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 18:23</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
     </article>
 
-    <article data-src="ap" data-k="AI 科技股 华尔街 标普 道指 纳指 苹果 Palantir 财报">
-      <div class="time sans"><b>11月3日</b>07:27</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">市场·综述</span></div>
-      <h3><a href="https://apnews.com" target="_blank" rel="noopener">AI 与科技股继续下跌，拖累华尔街多数个股的涨幅</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>More drops for AI and tech stocks overshadow gains for most of Wall Street</p>
-      <p class="sum">标普 500 指数周一早盘上涨 1.1% 后回吐涨幅，收跌 0.5%；道指上涨 0.4%，纳指下跌 1.1%。科技与 AI 板块在上周抛售后仍不稳定，多数个股的涨幅被其下跌所掩盖。盘后，苹果与 Palantir 的财报受到关注。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:27</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="bloomberg" data-k="美股 期货 中期选举 苹果 原油 黄金">
+      <div class="time sans"><b>11月3日</b>约 18:08</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">市场·综述</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">美股在中期选举前徘徊，交易员保持谨慎：市场综述</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>US Stocks Drift as Midterms Keep Traders Cautious: Markets Wrap</p>
+      <p class="sum">彭博市场综述称，投票开始前数小时，美国股指期货缺乏方向，投资者不愿增加风险：标普 500 期货基本持平，纳斯达克 100 期货涨 0.5%，显示在该指数进入技术性回调后小幅反弹；布伦特原油跌破 106 美元，交易员权衡美伊达成和平协议的前景；苹果因利润率收紧在早盘交易中跌 4.4%。国债在最新的职位空缺报告（本周一系列美国就业数据中的第一份）公布前基本持平，美元持稳，黄金恢复跌势，交投于 3900 美元一盎司附近。欧洲方面，斯托克 600 指数截至伦敦时间 10:02 跌 0.3%，补跌美股周一欧洲收盘后的跌幅；亚洲方面，MSCI 亚太指数跌 1.2%，韩国 Kospi 跌逾 3%。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 18:08</span><span>来源：彭博社 Bloomberg</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
     </article>
 
-    <article data-src="guardian" data-k="司法部 选民欺诈 加州 指控 六人 选票">
-      <div class="time sans"><b>11月3日</b>07:22</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·选举</span></div>
-      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">特朗普的司法部在加州“选民欺诈”打击中再指控六人</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Trump’s DoJ charges six more people in ‘voter fraud’ crackdown in California</p>
-      <p class="sum">司法部在加州又指控六人涉嫌选民欺诈。此前，司法部未能迫使州方隔离约 2 万张选票，最新逮捕是这一打击行动的后续动作。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:22</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="reuters" data-k="西班牙 铁路事故 普恩特 援助 信号系统">
+      <div class="time sans"><b>11月3日</b>约 18:00</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">西班牙·铁路事故</span></div>
+      <h3><a href="https://www.reuters.com/world/europe/spain-readies-aid-rail-crash-victims-transport-minister-face-lawmakers-2026-11-03/" target="_blank" rel="noopener">西班牙为铁路事故遇难者准备援助，交通大臣将接受议员质询</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Spain readies aid for rail crash victims, transport minister to face lawmakers</p>
+      <p class="sum">西班牙交通大臣奥斯卡·普恩特将于周二接受议员质询，回应他对上周高铁相撞事故的处理；这起欧洲自 2013 年以来最严重的铁路事故已确认造成 69 人死亡，且是同一线路今年第二起事故——1 月的一起事故曾造成 46 人死亡。辞职呼声广泛，包括执政联盟盟友在内都要求普恩特下台，但他拒绝辞职，称承担责任的方式是“直面”危机、向公众解释事发经过并修复系统。他定于格林尼治时间 16:00 在常设代表团（11 月 29 日大选前的看守性质缩减议会）面前作证。首相桑切斯周一称，内阁将于周二批准援助方案，把强制旅客保险项下的遇难者赔付翻倍、提前支付赔偿并改善临时伤残保障，优先事项是“以一切必要手段尽快恢复公众对高铁的信心”。《国家报》援引消息人士称，正在考虑的措施包括：信号系统故障、需依赖司机目视确认前方障碍时限速 40 公里/时，增聘人手并改善列车控制中心的工作条件，以及加快推进在该线路上进度落后的欧洲铁路交通管理系统（ERTMS）标准化建设。普恩特上周五称，电脑故障导致信号系统瘫痪，并称随后控制中心下令列车恢复行驶的指令“无法解释”；调查人员估计撞击速度为 160 至 200 公里/时。多个铁路工会拒绝在调查完成前把责任归咎于人为失误。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 18:00</span><span>来源：路透 Reuters</span><span>链接为搜索结果返回的原文地址</span></p></div>
     </article>
 
-    <article data-src="guardian" data-k="史蒂文斯 罗杰斯 密歇根 民主党 背书 特朗普 参议员">
-      <div class="time sans"><b>11月3日</b>07:22</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·选举</span></div>
-      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">“可鄙的背叛”：民主党人对海莉·史蒂文斯支持迈克·罗杰斯感到愤怒</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>‘A despicable betrayal’: Democrats incensed by Haley Stevens’s endorsement of Mike Rogers</p>
-      <p class="sum">史蒂文斯在最后时刻支持密歇根共和党参议员候选人罗杰斯，引发党内激烈反弹，特朗普对此表示赞赏。这一背书发生在投票前夕，令民主党人愤怒。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:22</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="reuters" data-k="拉合尔 德里 空气污染 雾霾 排灯节">
+      <div class="time sans"><b>11月3日</b>约 17:00</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">南亚·污染</span></div>
+      <h3><a href="https://www.reuters.com/business/environment/lahore-delhi-choke-air-pollution-spikes-parts-south-asia-2026-11-03/" target="_blank" rel="noopener">拉合尔与德里窒息于南亚空气污染加剧</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Lahore, Delhi choke as air pollution spikes in parts of South Asia</p>
+      <p class="sum">随着入冬前雾霾的到来，印度北部和邻近巴基斯坦部分地区的空气质量周二急剧恶化，拉合尔成为全球污染最严重的城市，德里当局则采取限制措施对抗笼罩首都的有毒雾霾。瑞士空气质量监测组织 IQAir 的数据显示，周二清晨拉合尔的空气质量指数（AQI）为 447，其 PM2.5 浓度为世界卫生组织年均暴露指南值的 60 倍；德里 AQI 为 215。每年这个时候，寒冷稠密的空气会困住车辆、建筑和秸秆焚烧产生的排放，使该地区污染水平达到全球最高，居民面临严重的呼吸道风险。印度中央污染控制委员会的分级响应措施已于周一生效，包括限制污染车辆、建筑活动以及餐馆使用煤炭和柴火，并增加公共交通运力。由于排灯节（今年为 11 月 8 日）的烟花预计会加重污染，印度最高法院已只允许在周六和周日燃放低污染烟花各三小时。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 17:00</span><span>来源：路透 Reuters</span><span>链接为搜索结果返回的原文地址</span></p></div>
     </article>
 
-    <article data-src="guardian" data-k="最高法院 特朗普 加州 选票 隔离 非公民">
-      <div class="time sans"><b>11月3日</b>07:09</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·选举</span></div>
-      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">最高法院驳回特朗普强制加州搁置选票的请求</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Supreme court rules against Trump over bid to force California to set aside ballots</p>
-      <p class="sum">最高法院周一驳回特朗普政府要求强制加州隔离约 2 万张选票的请求，这些选票来自政府声称可能是非公民的选民。这是特朗普政府干预多州选举程序的又一次司法挫败。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:09</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="guardian" data-k="卫报 中期选举 直播 投票 特朗普 国会">
+      <div class="time sans"><b>11月3日</b>约 16:49</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·选举直播</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">美国中期选举直播：选民走向投票站，对特朗普议程的公投</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>US MIDTERM ELECTIONS 2026 LIVE: AMERICANS GO TO THE POLLS IN REFERENDUM ON TRUMP&#x27;S AGENDA</p>
+      <p class="sum">《卫报》选举日直播报道：美国选民周二走向投票站，参加被视为对特朗普议程公投的中期选举，决定共和党能否保住国会控制权。此次改选众议院全部 435 席、参议院 35 席和 36 个州长职位；民主党若要全面夺回国会，需要在参议院净增 4 席、在众议院净增 3 席。提前投票已创中期选举纪录，超过 5700 万美国人已在选举日前投票。各州投票站自东向西陆续开放，首批投票站关闭后将陆续公布初步计票结果，胶着选区的最终归属可能需要更长时间才能确定。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 16:49</span><span>来源：《卫报》 The Guardian</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
     </article>
 
-    <article data-src="bbc" data-k="BBC Verify 佛罗里达 坠机 最后时刻 空管 飞行追踪 9人遇难">
-      <div class="time sans"><b>11月3日</b>07:05</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">美国·事故</span></div>
-      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">BBC 还原佛罗里达致命坠机事件的最后时刻</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>BBC reconstructs final moments before deadly Florida plane crash（标题经转载页核对，未直接打开 BBC 原文页）</p>
-      <p class="sum">一架私人喷气机周日在佛州坠毁，9 人遇难。BBC Verify 利用空管音频和飞行追踪数据，还原了坠机前的最后时刻。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 07:05</span><span>来源：BBC（BBC Verify）</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="dw" data-k="泽连斯基 柏林 默茨 突访 乌克兰">
+      <div class="time sans"><b>11月3日</b>约 16:23</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">德国·乌克兰</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">默茨称泽连斯基将于周二突访柏林</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Ukrainian President Zelenskyy to make surprise Berlin visit this Tuesday, Merz says</p>
+      <p class="sum">据德国之声通知，德国总理默茨表示，乌克兰总统泽连斯基将于本周二对柏林进行一次事先未宣布的访问。本条依据德国之声通知转载核对，通知仅给出上述访问消息，未核到德国之声原文全文，故不展开访问议程与背景细节；标题译文以通知原文为准。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 16:23</span><span>来源：德国之声 DW</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
     </article>
 
-    <article data-src="voa" data-k="中期选举 众议院 参议院 州长 国会 特朗普 解说">
-      <div class="time sans"><b>11月3日</b>06:31</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">美国·选举</span></div>
-      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">解说：美国中期选举</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Explainer: US midterm elections</p>
-      <p class="sum">选举定于 11 月 3 日举行，众议院全部 435 席、参议院 35 席及多州州长和地方官员改选。选举结果将决定国会控制权，影响特朗普剩余任期的立法、开支、任命和监督议程。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 06:31</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="reuters" data-k="网络攻击 AI安全 冷柜 黑客 乌克兰 超市">
+      <div class="time sans"><b>11月3日</b>约 16:00</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">专栏·AI 安全</span></div>
+      <h3><a href="https://www.reuters.com/commentary/reuters-open-interest/fridge-hacks-finance-attacks-flag-ai-insecurity-mike-dolan-2026-11-03/" target="_blank" rel="noopener">路透专栏：冰箱黑客与金融攻击凸显 AI 不安全</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Fridge hacks and finance attacks flag AI insecurity: Mike Dolan</p>
+      <p class="sum">路透专栏作家迈克·多兰写道，黑客入侵超市冷柜听起来微不足道，实则不然：它是对人工智能可能给日益脆弱的世界带来经济冲击的警告。仅在过去几天，未知犯罪团伙或国家行为体就制造了史上最大的网络盗窃案、入侵了乌克兰的防空警报系统，并在欧洲各地一夜之间关闭了超市冷柜；对加密金融账户的未遂入侵以及经济与军事破坏已成为家常便饭，业界估计全球损失高达数万亿美元。专栏认为，在地缘政治压力上升的背景下，国家支持的网络行动似乎已从间谍活动扩展到攻击公共基础设施、安全、供应链和金融，而模型与系统——连顶尖人工智能实验室都担心它们可能破坏人类系统乃至人类本身——正在为这类活动增压，经济代价只会上升。世界经济论坛的风险排序显示，“错误信息与虚假信息”和“网络不安全”在两年期风险中分别位列第二和第六，而“人工智能的不利后果”在十年期风险中攀升 25 位至第五。英国投资公司协会周一的调查显示，近四分之三的受访成员担心人工智能的整体影响；上月的科技股震荡则发生在融资收紧、所谓超大规模企业大举烧钱的背景下。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 16:00</span><span>来源：路透 Reuters</span><span>链接为搜索结果返回的原文地址</span></p></div>
     </article>
 
-    <article data-src="voa" data-k="朝鲜 地雷 布雷 禁雷组织 ICBL 边境 非军事区">
-      <div class="time sans"><b>11月3日</b>06:10</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">朝鲜·地雷</span></div>
-      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">禁雷组织：朝鲜被报道的布雷可能是 2001 年以来最大规模</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>ICBL: North Korea’s reported mine-laying could be world’s largest since 2001</p>
-      <p class="sum">地雷监测报告指出，在 2024 年中至 2025 年 10 月的报告期内，朝鲜沿与韩国、中国的边境使用杀伤人员地雷。朝鲜在 2023–2024 年亦被报道在朝韩非军事区布雷。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 06:10</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="bloomberg" data-k="印度 黄金 非法进口 关税 世界黄金协会">
+      <div class="time sans"><b>11月3日</b>15:26</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">印度·黄金</span></div>
+      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">印度加税推动非法黄金进口升至三年高点</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>India&#x27;s tax hike drives illegal gold imports to 3-year high</p>
+      <p class="sum">据世界黄金协会援引咨询机构 Metals Focus 的数据，印度非法黄金进口在第三季度升至 2023 年以来的最高水平，原因是政府上调关税促使更多黄金走非官方渠道。7 月至 9 月，非正式渠道的黄金出货量同比激增逾 1500%，从一年前的 3 吨升至 50 吨。背景是黄金在 10 月大跌 6.8%，跌破每盎司 4000 美元的关键价位，此后一直交投于该水平下方；关税上调与金价波动叠加，推高了通过非官方渠道进口的动机。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 15:26</span><span>来源：彭博社 Bloomberg</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
     </article>
 
-    <article data-src="guardian" data-k="华盛顿州 禽流感 死亡 基础疾病 卫生官员">
-      <div class="time sans"><b>11月3日</b>05:59</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 The Guardian</span><span class="cat">美国·公共卫生</span></div>
-      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">华盛顿州居民感染禽流感后因“重病”死亡</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Washington state resident dies from ‘severe illness’ after contracting bird flu</p>
-      <p class="sum">该患者同时患有基础疾病，在接触禽流感后住院治疗，最终死亡。当地卫生官员于周日通报了这一死亡病例。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 05:59</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="voa" data-k="阿富汗 脊髓灰质炎 疫苗接种 儿童 世卫">
-      <div class="time sans"><b>11月3日</b>05:50</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">阿富汗·公共卫生</span></div>
-      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">阿富汗脊髓灰质炎疫苗接种运动开始，病例激增</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Polio vaccination campaign begins in Afghanistan, as cases surge</p>
-      <p class="sum">阿富汗卫生部于 11 月 2 日启动全国接种运动，目标为超过 1270 万名 5 岁以下儿童。世卫组织报告称，截至 9 月 13 日，阿富汗在 2026 年已确认 25 例野生脊髓灰质炎病毒 1 型病例。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 05:50</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="bloomberg" data-k="芯片 标普 纳斯达克 技术性调整 油价 黄金 苹果 甲骨文 Meta Alphabet 发债">
-      <div class="time sans"><b>11月3日</b>约 05:49</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">市场·综述</span></div>
-      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">芯片股抛售抵消美伊希望带来的油价下跌，标普 500 收跌</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>S&amp;P 500 Falls as Chip Rout Offsets US-Iran Hopes: Markets Wrap</p>
-      <p class="sum">标普 500 指数下跌 0.5%，纳斯达克 100 指数下跌 1.4%，较峰值下跌 10%，进入技术性调整；道指上涨 0.4%。WTI 原油下跌 8%，至 95.79 美元/桶；现货黄金上涨 1.9%，至 3946.57 美元/盎司。盘后，苹果销售增长放缓，中国收入不及预期。甲骨文发售 100 亿美元债券，Meta 的 200 亿美元发债计划与 Alphabet 的 60 亿欧元发债亦在文中提及。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 05:49</span><span>来源：彭博社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="nyt" data-k="佛州 坠机 Learjet Cresthaven 棕榈滩 FAA NTSB 结冰 颠簸">
-      <div class="time sans"><b>11月3日</b>约 05:38</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·事故</span></div>
-      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">关于造成 9 人死亡的佛州飞机坠毁事件，你需要知道的事</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>What to Know About the Florida Plane Crash That Killed 9</p>
-      <p class="sum">一架 Learjet 60 周日自奥斯汀起飞前往巴哈马，在棕榈滩县 Cresthaven 附近坠毁，9 人遇难，地面暂无伤亡报告。FAA 与 NTSB 已展开调查，空管录音与飞行追踪显示，飞机在报告结冰、颠簸和降水后急速下降。AP 周一的进展称，飞机可能在空中就已解体。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 05:38</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="voa" data-k="阿富汗 法治指数 世界正义工程 委内瑞拉 刑事司法">
-      <div class="time sans"><b>11月3日</b>05:15</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">阿富汗·法治</span></div>
-      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">报告：阿富汗在全球法治指数中排名倒数第二</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Report: Afghanistan ranks second worst globally in rule of law</p>
-      <p class="sum">世界正义工程 2026 年法治指数显示，阿富汗在 143 个国家和地区中排名第 142 位，仅高于委内瑞拉，得分 0.31（满分 1 分）。其中，基本权利和秩序安全均排第 140 位，刑事司法排第 135 位。该报告本身发布于 10 月 28 日，VOA 聚合页标注时间为 11 月 2 日。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 05:15</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="nyt" data-k="怀孕 就业保护 怀孕工人公平法案 EEOC 试管婴儿 职场便利">
-      <div class="time sans"><b>11月3日</b>约 05:03</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·劳工</span></div>
-      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">特朗普政府据称计划削减与怀孕相关的就业保护</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Trump Administration Said to Plan Rolling Back Pregnancy-Related Job Protections</p>
-      <p class="sum">据七名知情人士透露，政府准备缩小《怀孕工人公平法案》下雇主须提供的职场便利范围，EEOC 最快本月公布拟议修改。现行规则明确将生育治疗（含试管婴儿）列为须合理便利的情形，拟议修改可能取消对未怀孕人群相关情形的明确保护。孕期女性的核心保护预计不会取消，具体文本尚未公布，须公开征求意见。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 05:03</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="nyt" data-k="伊朗 霍尔木兹海峡 美国协议 核谈判 多哈 七步计划 封锁">
-      <div class="time sans"><b>11月3日</b>约 04:25</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">中东·伊朗</span></div>
-      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">伊朗称作为与美国协议的一部分，将在两天内重开霍尔木兹海峡</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Iran Says It Would Reopen Strait of Hormuz in 2 Days as Part of U.S. Deal</p>
-      <p class="sum">伊朗称，若美国满足要求，可在两天内重开海峡并恢复核谈判。据多哈会谈的报道，伊朗谈判人员已离开多哈，正在传阅协议草案，其基础为伊朗 9 月提出的七步计划，包括重开海峡和结束美国对伊朗的海上封锁。伊朗外长称，实施期可由七天缩短至两天。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 约 04:25</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="bbc" data-k="佛州 坠机 直播 官员 NTSB Cresthaven 海湖庄园 副驾驶">
-      <div class="time sans"><b>11月3日</b>02:30</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">美国·事故</span></div>
-      <h3><a href="https://www.bbc.com/news" target="_blank" rel="noopener">直播：美国官员将就佛罗里达致命喷气机坠机事件作更新</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>LIVE: US officials to update on deadly Florida jet crash | BBC News</p>
-      <p class="sum">官员将就周日佛州坠机事件作更新，机上 9 人全部遇难，其中一名遇难者为该机的 20 岁副驾驶，地面无人受伤。NTSB 正在调查，坠机地点在 Cresthaven 附近，距海湖庄园约 9 英里。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 02:30</span><span>来源：BBC</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="voa" data-k="俄罗斯 政治犯 死亡 人权 羁押 酷刑 纪念">
-      <div class="time sans"><b>11月3日</b>02:13</div><div class="rail"><span class="dot" style="background:var(--voa)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--voa)">美国之音 VOA</span><span class="cat">俄罗斯·人权</span></div>
-      <h3><a href="https://www.voanews.com" target="_blank" rel="noopener">人权组织：自 2022 年 2 月以来至少 69 名政治犯在俄罗斯羁押中死亡</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Human rights group: at least 69 political prisoners in Russian custody have died since February 2022</p>
-      <p class="sum">据“声援政治犯·纪念”项目 2026 年 10 月的报告，至少 69 人在羁押场所、搜查期间、居家监禁期间或获释后不久死亡，其中包括 63 名男性和 6 名女性。按年份划分：2022 年 4 人、2023 年 10 人、2024 年 26 人、2025 年 13 人、2026 年 10 月底前 16 人。至少 29 人死于疾病和缺乏医疗，至少 20 人死于殴打、酷刑或其后果，10 人被推定为自杀或类似情形，8 人死因不明。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 02:13</span><span>来源：美国之音</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="rfi" data-k="塞尔维亚 银行家 马库拉 资本转移 武契奇 反腐 贝尔格莱德">
-      <div class="time sans"><b>11月3日</b>02:06</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI（法文版）</span><span class="cat">塞尔维亚·反腐</span></div>
-      <h3><a href="https://www.rfi.fr" target="_blank" rel="noopener">塞尔维亚银行家达沃尔·马库拉在试图向境外转移资本后被捕</a></h3>
-      <p class="orig"><span class="lbl">法文原题：</span>En Serbie, le banquier Davor Macura arrêté après une tentative de transfert de capitaux à l’étranger（无英文原题）</p>
-      <p class="sum">塞尔维亚警方于 11 月 2 日逮捕了银行家马库拉，他拥有 1 家银行、15 家企业和贝尔格莱德 135 公顷建筑用地。法广称，其财富在武契奇执政 14 年期间积累，其银行在被捕前一个星期五被关闭，原因是试图向境外转移资本。逮捕发生在反腐学生名单赢得选举约 8 天后、新政府预计 12 月中旬交接的过渡期。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 02:06</span><span>来源：法广（法文版）</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="bloomberg" data-k="Meta 发债 200亿美元 AI 基础设施 花旗 摩根士丹利 标普">
-      <div class="time sans"><b>11月3日</b>01:56</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">科技·融资</span></div>
-      <h3><a href="https://www.bloomberg.com" target="_blank" rel="noopener">彭博报道：Meta 拟发债筹资至少 200 亿美元</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Meta eyes at least $20 billion from potential bond offerings, Bloomberg News reports</p>
-      <p class="sum">Meta 考虑通过跨境债券发行筹资至少 200 亿美元，用于 AI 基础设施，最终规模可能随投资者需求扩大，尚未最终决定。Meta 已请花旗与摩根士丹利在周一周二举行投资者电话会，美元债期限为 5 至 30 年，欧元债约 4 年至 38 年以上。此前一周，Meta 刚宣布约 975 亿美元的史上最大股权融资计划，标普全球上周五已将其展望由“稳定”下调至“负面”。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 01:56</span><span>来源：彭博社</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="reuters" data-k="能源 中期选举 油价 伊朗 霍尔木兹海峡 卡塔尔 核计划 制裁">
-      <div class="time sans"><b>11月3日</b>01:06</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters（专栏）</span><span class="cat">能源·评论</span></div>
-      <h3><a href="https://www.reuters.com/commentary/reuters-open-interest/energy-watch-midterm-mist-2026-11-02/" target="_blank" rel="noopener">能源观察：中期选举的迷雾</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Energy Watch: Midterm mist</p>
-      <p class="sum">能源市场数周以来对政治信号作出反应，关键不仅是中期选举后特朗普是否被削弱，更是选举结果对中东冲突和能源市场意味着什么。周一油价大幅下跌，因市场重燃对美以与伊朗战争达成协议的希望。伊朗谈判人员已完成与卡塔尔调解人的三天会谈，据称正在推进一项提案：可在美伊达成协议后两天内重开霍尔木兹海峡。但在伊朗核计划、制裁解除与更广泛的安全问题上，仍存在重大分歧。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 01:06</span><span>来源：路透（专栏）</span><span>已核到逐篇原文直达链接</span></p></div>
-    </article>
-
-    <article data-src="reuters" data-k="阿联酋 欧佩克 石油出口 ADIPEC 产量 ADNOC">
-      <div class="time sans"><b>11月2日</b>23:57</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">能源·阿联酋</span></div>
-      <h3><a href="https://www.reuters.com/business/energy/freed-opec-quotas-uae-says-oil-exports-have-risen-it-hosts-industry-event-2026-11-02/" target="_blank" rel="noopener">摆脱欧佩克配额后，阿联酋称其石油出口已上升</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Freed from OPEC quotas, UAE says oil exports have risen as it hosts industry event</p>
-      <p class="sum">脱离欧佩克六个月后，阿联酋周一开始主办大型能源会议 ADIPEC，能源部长称其出口在伊朗战争期间有时好于战前，但未给出精确细节。欧佩克二手资料显示，阿联酋 9 月原油产量为 391.7 万桶/日，较 2 月上升 15%；国际能源署的评估更高，称 9 月预期产量为 440 万桶/日。ADNOC 否认了路透引用的数据，称报道不准确，但未说明何处不准确，也未提供替代数据。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 23:57</span><span>来源：路透</span><span>已核到逐篇原文直达链接</span></p></div>
-    </article>
-
-    <article data-src="dw" data-k="乌干达 索马里 撤军 青年党 非盟 摩加迪沙">
-      <div class="time sans"><b>11月2日</b>22:30</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">非洲·撤军</span></div>
-      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">乌干达开始从索马里撤军，结束近 20 年任务</a></h3>
-      <p class="orig"><span class="lbl">英文原题：</span>Uganda begins withdrawing troops from Somalia after nearly 20 years of mission</p>
-      <p class="sum">乌干达已开始逐步从索马里撤军，军队近 20 年来支持政府军打击青年党。首批撤军分队已返回乌干达，军方称将到 2027 年底前撤出全部部队，包括经非盟索马里稳定团及双边协议部署的人员。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 22:30</span><span>来源：德国之声</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
-    </article>
-
-    <article data-src="rfi" data-k="布什比 徒步 环球 赫尔 英吉利海峡 蓬塔阿雷纳斯">
-      <div class="time sans"><b>11月2日</b>21:02</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
-      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI（法文版）</span><span class="cat">英国·人物</span></div>
-      <h3><a href="https://www.rfi.fr" target="_blank" rel="noopener">英国人卡尔·布什比徒步环球 28 年后回到故乡赫尔</a></h3>
-      <p class="orig"><span class="lbl">法文原题：</span>Le Britannique Karl Bushby de retour à Hull, sa ville natale, après un tour du monde à pied de 28 ans（无英文原题）</p>
-      <p class="sum">布什比于 11 月 2 日回到英格兰东北部故乡赫尔，受到数百人欢迎。他于 1998 年从智利蓬塔阿雷纳斯出发，当时 29 岁，徒步穿越美洲、亚洲和欧洲，全程不使用交通工具，途中游泳横渡英吉利海峡。仪式后，他将走完最后一段路回到母亲家中，与 36 岁的儿子和从未见过面的 12 岁孙女团聚。</p>
-      <p class="meta sans"><span>发布时间（北京时间）：2026年11月2日 21:02</span><span>来源：法广（法文版）</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
+    <article data-src="ap" data-k="美联社 中期选举 选举日 提前投票 投票站 特朗普">
+      <div class="time sans"><b>11月3日</b>13:12</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国·选举日</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">选举日到来，提前投票激增，观察员严密注视投票站</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Election Day arrives after a surge in early voting, with observers keeping close watch at the polls</p>
+      <p class="sum">美联社华盛顿报道：今年中期选举的最后投票日于周二到来，背景是过去一年特朗普总统试图干预各州选举运作、并在共和党可能失利时播下对结果的怀疑。已有数百万美国人提前投票，提前投票率有望超过两年前的上次中期选举；与总统关于选举舞弊的持续言论形成对照，迄今投票总体上问题较少。报道梳理了联邦干预的链条：司法部与国土安全部大举搜查所谓非美国公民选民，包括一次在加州黎明前采取行动、逮捕 20 多人的作秀式行动；司法部计划在选举日派出史上最大规模的投票站监测力量，民主党及盟友团体则以更大规模的行动对冲；总统还曾敦促起诉，以在参议院竞选有利于民主党时阻止阿拉斯加结果的认证。但政府的法律动作大多被法院挡下：最高法院周一晚间驳回了要求加州单列选票的请求，不到两个月前还驳回了其通过邮政服务改革限制邮寄投票的企图。周二首批投票站定于早上 6 点在康涅狄格、印第安纳、肯塔基、路易斯安那、缅因、密苏里、新泽西、纽约和弗吉尼亚等州开放；西南部周末的暴雨和山洪可能使科罗拉多、亚利桑那和新墨西哥部分选民更难抵达投票站。选举管理者与投票权倡导者建议，迟交的缺席选票应使用投递箱或亲自送至投票站，而非邮寄，以免邮政服务近期改革导致的邮戳延误使选票作废。特朗普一周前被问及是否接受结果时给出了附条件的回答：“如果结果诚实，我会接受。”</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月3日 13:12</span><span>来源：美联社 AP</span><span>未核到逐篇原文链接，链接指向该媒体官网</span></p></div>
     </article>
 
   </div>
@@ -378,10 +252,11 @@
 </main>
 
 <footer class="sans">
-  <p>本版为 2026-11-02 20:00 至 2026-11-03 约 08:30（北京时间）窗口内新稿，不含 11 月 2 日晚版；同一事件在不同来源下分别保留；未编造标题、时间和链接。同一事件在不同来源下分别保留，例如最高法院驳回加州选票请求在美联社与《卫报》各保留一条，佛州坠机在美联社、BBC 与纽约时报各保留一条，未合并、未删减。</p>
-  <p>部分条目未核到逐篇原文链接，链接指向该媒体官网。已核到逐篇原文直达链接的 3 条（美联社最高法院条、路透专栏与路透阿联酋条）已在条目下方注明。</p>
-  <p>经济学人、自由亚洲在本窗口内无可核实新稿，记 0 条，未用旧闻冒充。</p>
-  <p>时间标注说明：《卫报》条目时间为聚合页标注的美东时间换算（按格林尼治换算亦落入本窗口）；纽约时报 3 条与彭博 Markets Wrap 条时间系聚合页或转载页标注换算，标“约”；BBC Verify 条目标题经转载页核对；法广 2 条为法文原题；《卫报》塔拉里科条原题在聚合页显示为截断形式。</p>
+  <p>本版为 2026-11-03 12:30 至约 20:00（北京时间）窗口内新稿，不含午版；同一事件在不同来源下分别保留；未编造标题、时间和链接。</p>
+  <p>路透 6 条的链接为搜索结果返回的原文地址，条目下方已注明；其余条目未核到逐篇原文链接，链接指向该媒体官网。</p>
+  <p>纽约时报、法广、美国之音、自由亚洲在本窗口内无可核实原创稿，记 0 条，未用旧闻冒充：其中纽约时报选举日直播稿件仅见第三方转述，未核到可确认的原稿条目与发布时间；法广当日中期选举稿件仅见转载与通讯社稿，未核到法广原文；美国之音、自由亚洲窗口内未核到可确认原创条目。</p>
+  <p>时间标注说明：标“约”的条目时间为搜索、转载或通知页标注换算（路透民调、马德里清场、西班牙铁路、拉合尔污染、专栏 5 条，彭博美股条，BBC、卫报、德国之声通知条，经济学人播客条均属此类）；彭博印度黄金条时间为印度时间换算；美联社条时间为转载页标注换算；BBC 与德国之声条依据通知转载核对，详情未核到原文全文，故 summary 仅陈述通知结论。</p>
+  <p>本版覆盖同一文件后，今日午版（12 条）不再出现在线上文件内；午版此前未推送成功，本次晚版按“当日三版覆盖同一文件、以最新版为准”的规则直接覆盖。</p>
 </footer>
 
 <script>
