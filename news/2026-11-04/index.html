@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>新闻阅读 · 11月4日午版时间线</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --panel:#fffdf8; --ink:#1a1814; --muted:#5c574d; --line:#ddd6c8;
+    --accent:#9a2a1e; --accent-ink:#fff; --chip:#ece7da; --live:#b42318;
+    --ap:#111111; --rfi:#0055a4; --reuters:#e8710a; --bbc:#b80000; --nyt:#121212; --bloom:#2800d7; --econ:#e3120b;
+    --dw:#0072bc; --guardian:#052962; --voa:#17648c; --rfa:#8a6d00;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141311; --panel:#1d1c19; --ink:#ece7dc; --muted:#a8a193; --line:#33302a; --chip:#2a2823; --accent:#e0654f; --ap:#d8d2c4; --nyt:#d8d2c4; --guardian:#7aa2e0; --bloom:#9d8cff; --rfa:#d9b84a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif SC","Songti SC",Georgia,serif;line-height:1.6}
+  .sans{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px;transition:padding .3s ease,box-shadow .3s ease}
+  .toprow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0;letter-spacing:.02em;transition:font-size .3s ease}
+  .edition{font-size:13px;color:var(--muted)}
+  .edition b{color:var(--accent)}
+  .ed-mini{display:none}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px;max-height:340px;opacity:1;overflow:hidden;transition:max-height .32s ease,opacity .25s ease,margin .32s ease}
+  .hdr-toggle{display:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:3px 11px;font-size:12.5px;cursor:pointer;line-height:1.5;flex:none}
+  header.is-shrunk{padding:6px 16px;box-shadow:0 8px 20px rgba(20,16,8,.14)}
+  header.is-shrunk h1{font-size:15.5px}
+  header.is-shrunk .edition{font-size:12px}
+  header.is-shrunk .ed-full{display:none}
+  header.is-shrunk .ed-mini{display:inline}
+  header.is-shrunk .hdr-toggle{display:inline-block}
+  header.is-shrunk .toprow{flex-wrap:nowrap;align-items:center}
+  header.is-shrunk .controls{max-height:0;opacity:0;margin-top:0;pointer-events:none}
+  header.is-shrunk.show-controls .controls{max-height:340px;opacity:1;margin-top:8px;pointer-events:auto}
+  @media (prefers-reduced-motion: reduce){
+    header,h1,.controls{transition:none}
+  }
+  .chipbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .search{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
+  main{max-width:920px;margin:0 auto;padding:14px 16px 40px}
+  .brief{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--accent);padding:14px 16px;margin-bottom:8px}
+  .brief h2{font-size:16px;margin:0 0 8px}
+  .brief ol{margin:0;padding-left:20px;font-size:14.5px}
+  .brief li{margin:5px 0}
+  .brief li b{color:var(--accent)}
+  .brief .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 0 4px}
+  .tl-head h2{font-size:17px;margin:0}
+  .tl-head span{font-size:12.5px;color:var(--muted)}
+  .timeline{position:relative;margin-top:6px}
+  .timeline::before{content:"";position:absolute;left:103px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  article{position:relative;display:grid;grid-template-columns:88px 22px 1fr;gap:0 6px;padding:12px 0 14px}
+  .time{font-size:12px;line-height:1.4;text-align:right;padding-top:2px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .time b{display:block;font-size:13px;color:var(--ink)}
+  .rail{display:flex;justify-content:center}
+  .dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none;box-shadow:0 0 0 3px var(--bg);z-index:1}
+  .card{background:var(--panel);border:1px solid var(--line);padding:12px 14px 10px;min-width:0}
+  .srcrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:5px}
+  .srcbadge{font-size:11.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 7px;letter-spacing:.02em}
+  @media (prefers-color-scheme: dark){ .srcbadge{color:#101010} .srcbadge.on-dark{color:#fff} }
+  .cat{font-size:11.5px;color:var(--muted)}
+  article h3{font-size:16.5px;line-height:1.45;margin:0 0 4px}
+  article h3 a{color:var(--ink);text-decoration:none}
+  article h3 a:hover{text-decoration:underline}
+  .orig{font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 5px;line-height:1.45}
+  .orig .lbl{font-style:normal;font-weight:700}
+  .sum{font-size:14px;color:var(--ink);margin:0}
+  .meta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+  body.compact article{padding:7px 0 8px}
+  body.compact .sum,body.compact .orig{display:none}
+  body.compact article h3{font-size:15px}
+  body.compact .card{padding:8px 12px}
+  .hidden{display:none!important}
+  .empty{padding:30px;text-align:center;color:var(--muted);display:none}
+  footer{max-width:920px;margin:0 auto;padding:0 16px 28px;font-size:12px;color:var(--muted)}
+  footer p{margin:6px 0}
+  @media(max-width:560px){
+    .timeline::before{left:83px}
+    article{grid-template-columns:70px 18px 1fr;gap:0 4px}
+    .time{font-size:11px}
+    .time b{font-size:12px}
+    article h3{font-size:15.5px}
+    .sum{font-size:13.5px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="toprow">
+    <h1>新闻阅读 · 11月4日午版时间线</h1>
+    <div class="edition sans"><span class="ed-full">午版 · 2026年11月4日 08:00 至约 12:30（北京时间） · 本版为窗口内新稿 · 共 17 条 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>午版 08:00–约12:30</b> · 共 17 条</span></div>
+    <button class="hdr-toggle sans" id="hdrToggle" aria-expanded="false" aria-controls="controlsBar">筛选 ▾</button>
+  </div>
+  <div class="controls sans" id="controlsBar" role="group" aria-label="筛选">
+    <button class="chipbtn" data-f="all" aria-pressed="true">全部</button>
+    <button class="chipbtn" data-f="ap" aria-pressed="false">美联社</button>
+    <button class="chipbtn" data-f="rfi" aria-pressed="false">法广</button>
+    <button class="chipbtn" data-f="reuters" aria-pressed="false">路透</button>
+    <button class="chipbtn" data-f="bbc" aria-pressed="false">BBC</button>
+    <button class="chipbtn" data-f="nyt" aria-pressed="false">纽约时报</button>
+    <button class="chipbtn" data-f="bloomberg" aria-pressed="false">彭博社</button>
+    <button class="chipbtn" data-f="economist" aria-pressed="false">经济学人</button>
+    <button class="chipbtn" data-f="dw" aria-pressed="false">德国之声</button>
+    <button class="chipbtn" data-f="guardian" aria-pressed="false">《卫报》</button>
+    <button class="chipbtn" data-f="voa" aria-pressed="false">美国之音</button>
+    <button class="chipbtn" data-f="rfa" aria-pressed="false">自由亚洲</button>
+    <input class="search" id="q" type="search" placeholder="搜关键词：中期选举 / 塔拉里科 / 众议院 / 参议院 / 油价 / 服务业…" aria-label="搜索标题" />
+    <button class="chipbtn" id="density" aria-pressed="false">紧凑模式（只看标题）</button>
+  </div>
+</header>
+
+<main>
+  <div class="brief">
+    <h2>3 分钟总览 — 午版 5 条主线</h2>
+    <ol>
+      <li><b>众议院易手，参议院仍在争夺：</b>BBC 引 CBS 预测民主党至少赢得 218 席、《卫报》称民主党有望夺回众议院（约 11:57、约 11:01）；美联社计票快照显示众议院民主党得票领先、计票仅约 68%（约 12:27），预测不等于已计票结果；特朗普接受《纽约时报》采访称愿接受结果、愿与民主党合作（路透约 12:11）；《纽约时报》直播估计民主党两院胜率均超 95%，但当时指出最终判定还需数小时（约 10:46）。截至截稿，各来源口径中参议院控制权归属仍未最终确定。</li>
+      <li><b>参议院三大翻转与州长历史性胜利：</b>库珀翻转北卡罗来纳（路透约 09:30）、安德鲁斯爆冷赢得南卡罗来纳——28 年来首位（路透约 11:20）、塔拉里科赢得得克萨斯——32 年来首位全州民主党人（路透约 12:07）；鲍텀斯赢得佐治亚州长，成为美国历史上首位黑人女性州长、结束共和党 24 年执政（美联社约 10:24）。</li>
+      <li><b>市场：早盘涨跌互现，午盘蓝潮押注下齐跌：</b>亚洲早盘 MSCI 亚太微涨、Kospi 涨 1.48%、日经跌 1.55%（彭博经转述 09:26）；至约 11:30，标普 500 期货跌 1.3%、纳斯达克 100 期货跌 2.3%，美元走低，10 年期美债收益率降至 4.90%，Kospi 由早盘一度涨 3.2% 转为跌 2.1%，日经期货跌 3.9%，比特币跌 2.5%（彭博约 11:30）。</li>
+      <li><b>中国经济与能源：</b>清洁工业投资占全球近半——2026 年 450 亿美元、占在运在建工厂 49%（路透 11:32）；服务业 PMI 由 51.6 降至 50.8，为三个月低点（路透约 09:57）；股票回购再贷款申请超 2000 亿元人民币（路透约 09:40）；油价小幅下滑，布伦特 103.34 美元、WTI 95.56 美元，卡塔尔斡旋以避免选举后袭击升级，伊朗官员称协议仍相距甚远（路透约 10:14）。</li>
+      <li><b>选民情绪与开局信号：</b>德国之声引 SSRS 调查：约半数选民把中期选举视为表达对总统不满的机会，约四分之三对国家方向感到愤怒或不满，且在两党倾向州都占多数；民主党先赢弗吉尼亚参议员席位（11:19）；奥索夫在佐治亚连任是七州投票站关闭后首个重要判定（路透约 09:10）。</li>
+    </ol>
+    <p class="note sans">本版共 17 条：路透 9、美联社 2、彭博社 2、BBC 1、德国之声 1、《卫报》1、纽约时报 1；经济学人、法广、美国之音、自由亚洲本窗口内无可核实新稿，记 0 条。全部 17 条汇入下方同一条时间线，按时间倒序；每条保留发布时间（北京时间）、中文标题、英文原题与详细 summary；同一事件在不同来源下分别保留。</p>
+  </div>
+  <div class="tl-head"><h2>时间线 · 11月4日 08:00 至约 12:30</h2><span class="sans">由新到旧 ↓ · 时间均为北京时间</span></div>
+
+  <div class="timeline" id="timeline">
+
+    <article data-src="ap" data-k="众议院 计票 民主党 共和党 选区 中期选举">
+      <div class="time sans"><b>11月4日</b>约 12:27</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国·选举计票</span></div>
+      <h3><a href="https://apnews.com/projects/elections-2026/?ap_doc=ap%2Fv2%2F20261103%2Fl%2F999999%2FUS%2Fn%2F178506" target="_blank" rel="noopener">美联社众议院全国计票：民主党得票领先，计票仍在进行</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>（美联社原文标题未核到，不编造；以下为美联社选举结果数据页核实的内容）</p>
+      <p class="sum">美联社全国众议院计票数据显示，民主党得票 46,214,531 票，共和党 37,310,227 票。已报告选区 90,532 个，共 172,484 个，估计已计选票比例约 67.99%。该数据页为滚动更新快照，抓取时数字仍在变动，数据页本身未宣布众议院控制权归属，控制权预测见 BBC 与《卫报》条目。计票未完成，最终席位数仍会变动，本条不把预测写成已计票结果。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 12:27</span><span>来源：美联社</span><span>链接为已打开核对的美联社选举结果数据页</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="特朗普 接受结果 民主党 合作 众议院 中期选举">
+      <div class="time sans"><b>11月4日</b>约 12:11</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.reuters.com/world/us/trump-says-he-is-willing-accept-midterm-election-results-nyt-reports-2026-11-04/" target="_blank" rel="noopener">特朗普称愿接受中期选举结果，并愿与民主党合作</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Trump says he is willing to accept midterm election results, NYT reports</p>
+      <p class="sum">美国总统特朗普在周二接受《纽约时报》采访时表示，愿意接受中期选举结果，当时共和党被预测将失去众议院控制权。特朗普被引述说：“我们会与民主党合作，我们期待与他们合作，我们大概能达成一些安排。”该采访发生在白宫看票期间、美东时间周二晚约 22:30 之前。路透该短稿未展开特朗普对具体选区结果的评论，也未称参议院控制权已定。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 12:11</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址（路透转述《纽约时报》采访）</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="塔拉里科 得克萨斯 参议院 帕克斯顿 1994">
+      <div class="time sans"><b>11月4日</b>约 12:07</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.reuters.com/world/us/james-talarico-becomes-first-democrat-win-statewide-texas-since-1994-2026-11-04/" target="_blank" rel="noopener">塔拉里科赢得得州参议院席位，终结民主党 32 年全州连败</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>James Talarico becomes first Democrat to win statewide in Texas since 1994</p>
+      <p class="sum">得州州众议员詹姆斯·塔拉里科周二赢得美国参议院得州席位，据媒体预测击败了获特朗普支持的共和党人、得州总检察长肯·帕克斯顿，终结了民主党 32 年的全州连败，并为民主党争夺参议院控制权带来重大助力。路透指出这是在共和党长期主导的州取得的突破，特朗普 2024 年曾以 14 个百分点赢得该州。帕克斯顿曾经历 2023 年弹劾和证券欺诈案等争议。塔拉里科是四届州议员，也是本周期全国筹款最多的参议院候选人之一，他在最昂贵的参议院选战中克服了巨额外部支出。共和党为保住该席花费超过 3.16 亿美元；选举前共和党以 53 比 47 占据参议院多数，民主党需净增 4 席才能夺取控制权。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 12:07</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="bbc" data-k="众议院 CBS 预测 218席 民主党 中期选举">
+      <div class="time sans"><b>11月4日</b>约 11:57</div><div class="rail"><span class="dot" style="background:var(--bbc)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bbc)">BBC</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.bbc.com" target="_blank" rel="noopener">BBC 报道：民主党预计赢得众议院控制权</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Democrats projected to win control of House of Representatives | BBC News</p>
+      <p class="sum">BBC 报道称，据其美国合作伙伴 CBS 新闻预测，民主党预计赢得美国众议院控制权，从共和党多数手中翻转该院。CBS 预测民主党至少赢得 218 席、共和党至少 160 席，218 席为 435 席众议院的多数门槛。众议院是美国国会下院，议员任期固定为两年。该条为 BBC 视频标题及转载稿核对的口径，未见 BBC 在此时点宣布参议院控制权归属。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 11:57</span><span>来源：BBC</span><span>未核到 bbc.com 逐篇原文地址，链接指向该媒体官网；口径经 BBC 视频标题页核对</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="中国 清洁工业 投资 脱碳 可再生电力">
+      <div class="time sans"><b>11月4日</b>11:32</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">中国·能源</span></div>
+      <h3><a href="https://www.reuters.com/business/energy/china-accounts-nearly-half-clean-industry-investments-research-shows-2026-11-04/" target="_blank" rel="noopener">研究显示中国占清洁工业投资近半</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>China accounts for nearly half of clean industry investments, research shows</p>
+      <p class="sum">全球投资追踪机构周三表示，中国 2026 年在清洁工业获得 450 亿美元投资，目前占全球正在运营或在建的清洁工业工厂的 49%。过去 12 个月，创纪录的 36 个商业规模工业脱碳项目达成最终投资决定，其中 23 个在中国。可持续航空燃料、甲醇和清洁氨是同期领先领域。全球此类已融资或已建成项目总数达 189 个，其中 93 个在中国，另有 838 个已宣布或在开发中。Mission Possible Partnership 首席执行官表示，过去 12 个月最终投资决定数量创纪录，但每年需要从几十个融资工厂扩大到几百个。获得低成本可再生电力对许多低碳工业工厂落地至关重要，已宣布项目管线每年需约 3500 太瓦时电力，约占当前全球电力需求的 12%。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 11:32</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="蓝潮 股指期货 美元 美债 Kospi 日经 比特币">
+      <div class="time sans"><b>11月4日</b>约 11:30</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">市场·综述</span></div>
+      <h3><a href="https://www.swissinfo.ch/eng/stocks-slide-with-dollar-on-rising-blue-wave-bets:-markets-wrap/92323391" target="_blank" rel="noopener">蓝潮押注升温，股市与美元齐跌：市场综述</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Stocks Slide With Dollar on Rising Blue-Wave Bets: Markets Wrap</p>
+      <p class="sum">民主党横扫国会的可能性上升，冲击全球市场：标普 500 期货跌 1.3%、纳斯达克 100 期货跌 2.3%，美元兑多数 G10 货币走低，10 年期美债收益率下降 6 个基点至 4.90%，MSCI 亚太指数跌 1.8%，比特币跌 2.5%。Kalshi 定价显示民主党赢得众议院和参议院的概率均为约 99%，多家新闻机构已预计民主党赢得众议院多数。投资者认为民主党浪潮可能收紧对科技与人工智能的监管、并以政治僵局限制进一步减税与支出，这对美债相对有利，但也放大了市场对 AI 估值已承压的担忧。亚洲方面，韩国 Kospi 指数由早盘一度上涨 3.2% 转为下跌 2.1%，日经 225 期货跌 3.9%，离岸人民币跌 0.2% 至 6.6821，瑞郎兑美元涨 0.7%、日元涨 0.6%。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 11:30</span><span>来源：彭博社</span><span>链接为已打开的彭博转载页，彭博官网逐篇直链未核到</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="安德鲁斯 南卡罗来纳 参议院 爆冷 格雷厄姆">
+      <div class="time sans"><b>11月4日</b>约 11:20</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.reuters.com/world/us/democrat-annie-andrews-wins-us-senate-seat-south-carolina-upset-2026-11-04/" target="_blank" rel="noopener">民主党人安妮·安德鲁斯在南卡罗来纳爆冷赢得参议院席位</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Democrat Annie Andrews wins US Senate seat in South Carolina upset</p>
+      <p class="sum">民主党人安妮·安德鲁斯周二在保守派州南卡罗来纳赢得美国参议院席位，据媒体预测击败共和党人达琳·格雷厄姆，而特朗普两年前曾以 18 个百分点赢得该州。安德鲁斯是一名儿科医生，是 28 年来首位在南卡罗来纳赢得参议院席位的民主党人，对需要净增 4 席以推翻共和党 53 比 47 多数优势的民主党而言是一次显著收获。路透称，这场胜利发生在一个直到最近几周两党都不认为有竞争力的州，体现了对特朗普及其前两年经济处理方式的更广泛拒绝。特朗普支持率因伊朗战争、高柴油价格和生活成本问题上的选民不满而触及纪录低点，使曾经稳固的共和党席位进入争夺范围。安德鲁斯筹款比格雷厄姆多 2200 万美元，共和党外部团体投入 2700 万美元保席，民主党团体投入 2400 万美元翻盘。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 11:20</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="弗吉尼亚 参议院 选民 不满 众议院 州长">
+      <div class="time sans"><b>11月4日</b>11:19</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.dw.com" target="_blank" rel="noopener">民主党先赢弗吉尼亚参议员席位，中期选举结果陆续出炉</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>（德国之声原文标题未核到，不编造；转载页标题为 Democrats win first Senate race in Virginia，仅作核对参考）</p>
+      <p class="sum">美国中期选举结果开始陆续出炉，民主党先在弗吉尼亚赢得一个参议员席位。本次选举改选众议院全部 435 席、参议院 35 席，36 个州同时选州长。选前共和党及其盟友在参议院占 53 席、在众议院占 220 席，仅比多数所需的 218 席多 2 席。德国之声说明其依据美联社数据宣布各选区胜者，并引用 SSRS 为美联社等媒体所做的逾 7.5 万名核实选民调查：约半数选民把中期选举视为表达对总统不满的机会，约四分之三受访者对国家方向感到愤怒或不满，这种不满在民主党倾向州和共和党主导州都占多数。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 11:19</span><span>来源：德国之声</span><span>未核到逐篇原文链接，链接指向该媒体官网；内容经转载页核对</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="卫报 众议院 控制权 选区重划 监督">
+      <div class="time sans"><b>11月4日</b>约 11:01</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 Guardian</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">特朗普动荡两年后，民主党有望赢得众议院控制权</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Democrats look poised to win House control in midterm elections after two turbulent years of Trump</p>
+      <p class="sum">民主党有望在特朗普第二个总统任期动荡两年后夺回众议院控制权。众议院控制权易手将使民主党获得一个有力平台，在特朗普任期的最后两年对政府进行强有力的监督。这一胜利是在共和党为重新划分国会选区做出不同寻常且激进的努力之后取得的。选前共和党在众议院占 218 席、民主党占 214 席，另有一个共和党席位空缺、一个独立议员席位，民主党只需净增数席即可达到 218 席的多数门槛。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 11:01</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网；内容经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="纽约时报 直播 参议院 众议院 概率">
+      <div class="time sans"><b>11月4日</b>约 10:46</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·选举直播</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">纽约时报直播：民主党在参众两院争夺中占据明显优势</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>（纽约时报原文标题未核到，不编造；以下为转载《纽约时报》直播页内容核实的报道）</p>
+      <p class="sum">据转载《纽约时报》直播页的内容，截至美东时间 11 月 3 日 21:46 更新，民主党参议院候选人在南卡罗来纳和得克萨斯等共和党传统重镇表现良好。《纽约时报》估计民主党赢得参议院的概率超过 95%，赢得众议院的概率也超过 95%。民主党已翻转北卡罗来纳参议院席位，并在佐治亚和新罕布什尔保住席位，并于当晚在北卡罗来纳西部翻转了第一个众议院席位。《纽约时报》当时指出最终判定可能还需数小时，民主党已赢得或有望赢得夺取参议院所需的四个共和党席位：得克萨斯、南卡罗来纳、北卡罗来纳和俄亥俄。以上为转载引用口径，非《纽约时报》原文直接核对。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 10:46</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；《纽约时报》原站因策略屏蔽未能直接打开</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="鲍텀斯 佐治亚州长 黑人女性 杰克逊 肯普">
+      <div class="time sans"><b>11月4日</b>约 10:24</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">鲍텀斯赢得佐治亚州长，成为美国历史上首位黑人女性州长</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>（美联社原文标题未核到，不编造；以下为经转载交叉核实的报道内容）</p>
+      <p class="sum">民主党人凯莎·兰斯·鲍텀斯赢得佐治亚州长选举，击败共和党商人里克·杰克逊，成为美国历史上首位当选州长的黑人女性，同时也是佐治亚首位女性州长和首位黑人州长。她是前亚特兰大市长，将接替因任期限制不能寻求第三任的共和党州长布赖恩·肯普。她的胜利使民主党自 1998 年以来首次赢得佐治亚州长竞选，结束了共和党 24 年的执政。杰克逊在竞选中投入超过 2 亿美元个人财富；鲍텀斯是周二选票上八名黑人主要政党州长候选人之一，此前美国历史上仅有三名当选的黑人州长且均为民主党男性。选举结果仍待官方认证。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 10:24</span><span>来源：美联社</span><span>未核到美联社逐篇原文链接，链接指向该媒体官网；宣布口径经多家转载交叉核对</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="油价 布伦特 WTI 伊朗 谈判 格什姆岛">
+      <div class="time sans"><b>11月4日</b>约 10:14</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">能源·油价</span></div>
+      <h3><a href="https://www.reuters.com/business/energy/oil-edges-down-investors-await-us-midterm-election-results-2026-11-04/" target="_blank" rel="noopener">油价小幅下滑，投资者等待美国中期选举结果</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Oil edges down as investors await US midterm election results</p>
+      <p class="sum">油价周三早盘下滑，投资者等待美国中期选举结果及其对中东和平谈判的潜在影响，尽管行业数据显示上周美国原油库存意外下降。布伦特期货截至 0157 GMT 跌 26 美分、约 0.25%，至每桶 103.34 美元；美国 WTI 跌 53 美分、约 0.55%，至 95.56 美元。前一交易日布伦特跌逾 1%，至近四周最低，交易员权衡结束乌克兰和伊朗战争的谈判。市场继续关注结束美国与以色列对伊朗战争的谈判进展，卡塔尔正加紧斡旋以避免中期选举后袭击升级。一名伊朗高级官员周二告诉路透，伊朗与美国在结束战争的协议上仍相距甚远。美国官员周二称，美国对伊朗格什姆岛实施了针对用于攻击美国资产的地对空导弹的“防御性”打击，另一名官员称打击似乎有限，不标志重返大规模作战行动。特朗普周二告诉《金融时报》，美国没有立即打击伊朗的计划。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 10:14</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="服务业 PMI 50.8 中国 信心 成本">
+      <div class="time sans"><b>11月4日</b>约 09:57</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">中国·经济</span></div>
+      <h3><a href="https://www.reuters.com/business/finance/chinas-services-growth-slows-three-month-low-confidence-weakens-2026-11-04/" target="_blank" rel="noopener">中国服务业增长放缓至三个月低点，信心减弱</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>China's services growth slows to three-month low as confidence weakens</p>
+      <p class="sum">私营部门调查周三显示，中国 10 月服务业活动扩张速度为 7 月以来最慢，企业信心减弱，企业面临激烈竞争和成本上升。RatingDog 中国通用服务业 PMI 从 9 月的 51.6 降至 10 月的 50.8，仍高于区分扩张与收缩的 50 荣枯线，但为 7 月以来最弱读数。新业务增速与 9 月基本持平。新出口业务连续第六个月增长，创下 2024 年以来最长连增。服务企业继续增聘全职和兼职员工以应对现有工作量。但竞争加剧导致服务企业平均售价连续第二个月下调，十一黄金周假期提振有限。投入价格以五个月来最快速度上涨，受投入材料、燃料和工资成本上涨推动。企业信心降至 7 月以来最低，企业对投入价格上涨和竞争加剧表示担忧。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 09:57</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="央行 回购 再贷款 2000亿 资本市场">
+      <div class="time sans"><b>11月4日</b>约 09:40</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">中国·金融</span></div>
+      <h3><a href="https://www.reuters.com/world/asia-pacific/china-stock-re-lending-applications-hit-nearly-30-billion-2026-11-04/" target="_blank" rel="noopener">中国股票回购再贷款申请近 300 亿美元</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>China stock re-lending applications hit nearly $30 billion</p>
+      <p class="sum">中国人民银行周三表示，向央行申请股票回购和再贷款的金额已超过 2000 亿元人民币（299.8 亿美元）。央行表示，已加强实施股票回购和再贷款政策，以维护资本市场稳定运行。央行与金融证券监管部门周一召集主要银行讨论优化股票回购和增持的再贷款政策。文中汇率换算为 1 美元兑 6.6701 元人民币。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 09:40</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="库珀 北卡罗来纳 参议院 沃特利 蒂利斯">
+      <div class="time sans"><b>11月4日</b>约 09:30</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.reuters.com/legal/government/democrat-roy-cooper-flips-republican-held-us-senate-seat-north-carolina-2026-11-04/" target="_blank" rel="noopener">民主党人罗伊·库珀翻转北卡罗来纳参议院席位</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Democrat Roy Cooper flips Republican-held US Senate seat in North Carolina</p>
+      <p class="sum">民主党人罗伊·库珀周二赢得北卡罗来纳美国参议院竞选，据媒体预测击败获特朗普支持的共和党人迈克尔·沃特利，为民主党争夺参议院控制权带来关键收获。库珀是知名两届前州长，在特朗普支持率下滑之际以食品和能源高成本为竞选议题，击败了特朗普亲手挑选的候选人。选举前共和党以 53 比 47 占据参议院多数，民主党需净增 4 席才能夺取控制权。库珀 69 岁，将接替共和党参议员汤姆·蒂利斯，后者在就特朗普标志性减税与支出法案中的医疗补助削减问题与特朗普决裂后宣布退休。库珀凭借全州知名度建立了显著民调领先，并获得独立选民的强力支持。沃特利是前共和党全国委员会主席，从未担任过民选职务，曾与特朗普一同在北卡竞选。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 09:30</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="亚洲市场 Kospi 日经 恒生 美股期货 人民币">
+      <div class="time sans"><b>11月4日</b>09:26</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">市场·亚洲</span></div>
+      <h3><a href="https://www.cnbctv18.com/market/asian-stock-markets-share-price-kospi-nikkei-us-midterm-elections-democrats-congress-gift-nifty-wall-street-20026454.htm" target="_blank" rel="noopener">亚洲市场涨跌互现，投资者权衡美国中期选举结果</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>（彭博社原文标题未核到，不编造；转述页标题为 Asian markets mixed as investors weigh US midterm results; Kospi jumps 1.5%, Nikkei falls，仅作核对参考）</p>
+      <p class="sum">11 月 4 日周三亚洲市场涨跌互现，投资者权衡民主党可能赢得国会控制权、以及随之而来的华盛顿僵局。MSCI 亚太指数微涨 0.1%，韩国 Kospi 指数领涨 1.48%，日本市场在周二休市后复市，日经 225 指数跌 1.55%、东证指数跌 0.67%，香港恒生指数期货预示跌 0.5%。美股期货回吐涨幅，纳斯达克 100 期货由一度涨 0.7% 转为跌 0.3%，标普 500 期货由一度涨 0.5% 转为回落。转述引述彭博报道称，Polymarket 定价显示民主党赢得众议院的概率约 98%、赢得参议院约 88%，即可能横扫两院。同时，中国人民银行将银行外汇存款准备金率由 4% 上调至 6%（11 月 15 日生效），终结了在岸人民币 13 连涨、为 1996 年以来最长连涨，离岸人民币基本持平于 6.6651，日元兑美元涨 0.2% 至 158.36。布伦特原油早盘报 104.27 美元/桶、WTI 约 97 美元/桶，油价在连跌两日后波动，交易员同时权衡美伊和平谈判的混杂信号。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 09:26</span><span>来源：彭博社</span><span>链接为已打开的彭博转述页，彭博官网逐篇直链未核到</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="美股期货 美元 奥索夫 AMD 霍尔木兹 中期选举">
+      <div class="time sans"><b>11月4日</b>约 09:10</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">市场·综述</span></div>
+      <h3><a href="https://www.reuters.com/world/china/global-markets-wrapup-1-2026-11-04/" target="_blank" rel="noopener">美股期货下跌，投资者等待中期选举结果</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>US stock futures dip as investors await midterm election results</p>
+      <p class="sum">美股期货周三下滑、美元走软，投资者为美国中期选举结果做准备，焦点是民主党能否从特朗普的共和党手中夺取国会控制权。民主党人乔恩·奥索夫在佐治亚连任，标志着七个州投票站关闭后当晚第一个重要竞选的判定。民主党被看好赢得众议院，两党在参议院展开激烈的逐州争夺，令投资者和市场紧张。Pepperstone 研究主管克里斯·韦斯顿表示，对交易员而言，微弱的民主党多数与压倒性胜利之间的区别至关重要，微弱的蓝色浪潮可能已基本被市场消化。标普 500 期货跌 0.5%，纳斯达克期货跌 0.9%。亚太股市小幅走高，芯片制造商 AMD 强劲业绩缓解了对 AI 交易持续性的担忧后，表现疲软的科技股受到青睐；MSCI 亚太（除日本）指数涨 0.4%，韩国股市涨逾 2%，日本日经在假期后回落跌 1.5%。霍尔木兹海峡的有效封锁已重塑能源流动，该海峡此前是全球 20% 石油供应的通道。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月4日 约 09:10</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+  </div>
+  <div class="empty sans" id="empty">没有匹配的条目，换个关键词试试。</div>
+</main>
+
+<footer class="sans">
+  <p>本版为 2026-11-04 08:00 至约 12:30（北京时间）窗口内新稿，不含当日早版；同一事件在不同来源下分别保留；未编造标题、时间和链接。选举结果均为媒体预测或宣布口径，非官方最终认证；众议院控制权预测不等于已计票结果，参议院控制权归属截至截稿仍未最终确定。</p>
+  <p>链接说明：路透 9 条为已打开核对的逐篇原文地址；美联社众议院条链接为已打开核对的美联社选举结果数据页；彭博 2 条链接为已打开的转载页（瑞士资讯、CNBC TV18），德国之声条内容经转载页核对、《卫报》条经聚合页核对、《纽约时报》条经转载直播页核对、BBC 条口径经视频标题页核对，其官网逐篇直链未核到；其余条目链接指向媒体官网。</p>
+  <p>经济学人、法广、美国之音、自由亚洲在本窗口内无可核实新稿，记 0 条，未用旧闻冒充：经济学人仅见选前模型预测与 10 月 31 日那期解读，未见窗口内新稿；法广聚合页最新条目均为 11 月 2–3 日稿件；美国之音仅见机构宣传页；自由亚洲存档页最新一条为 11 月 3 日。法广、美国之音官网直连受限，未重复尝试。</p>
+  <p>未单独成条的重复口径：《卫报》塔拉里科得州推送与美联社得州参议院数据页均为路透得州条同一事件的不同来源口径，已在交叉核对中确认，未重复计入；彭博经《经济时报》转述的众议院预测与 BBC、《卫报》众议院条为同一预测链，未重复计入。</p>
+  <p>时间标注说明：标“约”的条目时间为转载页、直播页、结果数据页快照或抓取时间标注换算；路透清洁工业条为原文页时间戳换算；美联社众议院条时间为滚动数据页抓取快照。</p>
+</footer>
+
+<script>
+(function(){
+  var btns=document.querySelectorAll('[data-f]');
+  var arts=document.querySelectorAll('article[data-src]');
+  var q=document.getElementById('q');
+  var empty=document.getElementById('empty');
+  var cur='all';
+  function apply(){
+    var kw=q.value.trim().toLowerCase(); var any=false;
+    arts.forEach(function(a){
+      var showSrc=(cur==='all'||a.dataset.src===cur);
+      var hit=showSrc && (!kw || (a.textContent.toLowerCase().indexOf(kw)>-1 || (a.dataset.k||'').toLowerCase().indexOf(kw)>-1));
+      a.classList.toggle('hidden',!hit); if(hit)any=true;
+    });
+    empty.style.display=any?'none':'block';
+  }
+  btns.forEach(function(b){ b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true'); cur=b.dataset.f; apply();
+  });});
+  q.addEventListener('input',apply);
+  var d=document.getElementById('density');
+  d.addEventListener('click',function(){
+    var on=document.body.classList.toggle('compact');
+    d.setAttribute('aria-pressed',on?'true':'false');
+    d.textContent=on?'舒适模式（显示简介）':'紧凑模式（只看标题）';
+  });
+  var hdr=document.querySelector('header');
+  var toggle=document.getElementById('hdrToggle');
+  var ticking=false;
+  function onScroll(){
+    var y=window.scrollY||window.pageYOffset;
+    if(y>90){ hdr.classList.add('is-shrunk'); }
+    else if(y<40){
+      hdr.classList.remove('is-shrunk'); hdr.classList.remove('show-controls');
+      toggle.setAttribute('aria-expanded','false'); toggle.textContent='筛选 ▾';
+    }
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){ ticking=true; window.requestAnimationFrame(onScroll); }
+  },{passive:true});
+  onScroll();
+  toggle.addEventListener('click',function(){
+    var open=hdr.classList.toggle('show-controls');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'筛选 ▴':'筛选 ▾';
+  });
+})();
+</script>
+</body>
+</html>
