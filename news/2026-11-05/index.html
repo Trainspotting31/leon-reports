@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>新闻阅读 · 11月5日晚版时间线</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --panel:#fffdf8; --ink:#1a1814; --muted:#5c574d; --line:#ddd6c8;
+    --accent:#9a2a1e; --accent-ink:#fff; --chip:#ece7da; --live:#b42318;
+    --ap:#111111; --rfi:#0055a4; --reuters:#e8710a; --bbc:#b80000; --nyt:#121212; --bloom:#2800d7; --econ:#e3120b;
+    --dw:#0072bc; --guardian:#052962; --voa:#17648c; --rfa:#8a6d00;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141311; --panel:#1d1c19; --ink:#ece7dc; --muted:#a8a193; --line:#33302a; --chip:#2a2823; --accent:#e0654f; --ap:#d8d2c4; --nyt:#d8d2c4; --guardian:#7aa2e0; --bloom:#9d8cff; --rfa:#d9b84a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif SC","Songti SC",Georgia,serif;line-height:1.6}
+  .sans{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px;transition:padding .3s ease,box-shadow .3s ease}
+  .toprow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0;letter-spacing:.02em;transition:font-size .3s ease}
+  .edition{font-size:13px;color:var(--muted)}
+  .edition b{color:var(--accent)}
+  .ed-mini{display:none}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px;max-height:340px;opacity:1;overflow:hidden;transition:max-height .32s ease,opacity .25s ease,margin .32s ease}
+  .hdr-toggle{display:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:3px 11px;font-size:12.5px;cursor:pointer;line-height:1.5;flex:none}
+  header.is-shrunk{padding:6px 16px;box-shadow:0 8px 20px rgba(20,16,8,.14)}
+  header.is-shrunk h1{font-size:15.5px}
+  header.is-shrunk .edition{font-size:12px}
+  header.is-shrunk .ed-full{display:none}
+  header.is-shrunk .ed-mini{display:inline}
+  header.is-shrunk .hdr-toggle{display:inline-block}
+  header.is-shrunk .toprow{flex-wrap:nowrap;align-items:center}
+  header.is-shrunk .controls{max-height:0;opacity:0;margin-top:0;pointer-events:none}
+  header.is-shrunk.show-controls .controls{max-height:340px;opacity:1;margin-top:8px;pointer-events:auto}
+  @media (prefers-reduced-motion: reduce){
+    header,h1,.controls{transition:none}
+  }
+  .chipbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .search{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
+  main{max-width:920px;margin:0 auto;padding:14px 16px 40px}
+  .brief{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--accent);padding:14px 16px;margin-bottom:8px}
+  .brief h2{font-size:16px;margin:0 0 8px}
+  .brief ol{margin:0;padding-left:20px;font-size:14.5px}
+  .brief li{margin:5px 0}
+  .brief li b{color:var(--accent)}
+  .brief .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 0 4px}
+  .tl-head h2{font-size:17px;margin:0}
+  .tl-head span{font-size:12.5px;color:var(--muted)}
+  .timeline{position:relative;margin-top:6px}
+  .timeline::before{content:"";position:absolute;left:103px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  article{position:relative;display:grid;grid-template-columns:88px 22px 1fr;gap:0 6px;padding:12px 0 14px}
+  .time{font-size:12px;line-height:1.4;text-align:right;padding-top:2px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .time b{display:block;font-size:13px;color:var(--ink)}
+  .rail{display:flex;justify-content:center}
+  .dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none;box-shadow:0 0 0 3px var(--bg);z-index:1}
+  .card{background:var(--panel);border:1px solid var(--line);padding:12px 14px 10px;min-width:0}
+  .srcrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:5px}
+  .srcbadge{font-size:11.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 7px;letter-spacing:.02em}
+  @media (prefers-color-scheme: dark){ .srcbadge{color:#101010} .srcbadge.on-dark{color:#fff} }
+  .cat{font-size:11.5px;color:var(--muted)}
+  article h3{font-size:16.5px;line-height:1.45;margin:0 0 4px}
+  article h3 a{color:var(--ink);text-decoration:none}
+  article h3 a:hover{text-decoration:underline}
+  .orig{font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 5px;line-height:1.45}
+  .orig .lbl{font-style:normal;font-weight:700}
+  .sum{font-size:14px;color:var(--ink);margin:0}
+  .meta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+  body.compact article{padding:7px 0 8px}
+  body.compact .sum,body.compact .orig{display:none}
+  body.compact article h3{font-size:15px}
+  body.compact .card{padding:8px 12px}
+  .hidden{display:none!important}
+  .empty{padding:30px;text-align:center;color:var(--muted);display:none}
+  footer{max-width:920px;margin:0 auto;padding:0 16px 28px;font-size:12px;color:var(--muted)}
+  footer p{margin:6px 0}
+  @media(max-width:560px){
+    .timeline::before{left:83px}
+    article{grid-template-columns:70px 18px 1fr;gap:0 4px}
+    .time{font-size:11px}
+    .time b{font-size:12px}
+    article h3{font-size:15.5px}
+    .sum{font-size:13.5px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="toprow">
+    <h1>新闻阅读 · 11月5日晚版时间线</h1>
+    <div class="edition sans"><span class="ed-full">晚版 · 2026年11月5日约 12:30 至约 20:00（北京时间） · 本版为窗口内新稿 · 共 13 条 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>晚版 11月5日约12:30–约20:00</b> · 共 13 条</span></div>
+    <button class="hdr-toggle sans" id="hdrToggle" aria-expanded="false" aria-controls="controlsBar">筛选 ▾</button>
+  </div>
+  <div class="controls sans" id="controlsBar" role="group" aria-label="筛选">
+    <button class="chipbtn" data-f="all" aria-pressed="true">全部</button>
+    <button class="chipbtn" data-f="ap" aria-pressed="false">美联社</button>
+    <button class="chipbtn" data-f="rfi" aria-pressed="false">法广</button>
+    <button class="chipbtn" data-f="reuters" aria-pressed="false">路透</button>
+    <button class="chipbtn" data-f="bbc" aria-pressed="false">BBC</button>
+    <button class="chipbtn" data-f="nyt" aria-pressed="false">纽约时报</button>
+    <button class="chipbtn" data-f="bloomberg" aria-pressed="false">彭博社</button>
+    <button class="chipbtn" data-f="economist" aria-pressed="false">经济学人</button>
+    <button class="chipbtn" data-f="dw" aria-pressed="false">德国之声</button>
+    <button class="chipbtn" data-f="guardian" aria-pressed="false">《卫报》</button>
+    <button class="chipbtn" data-f="voa" aria-pressed="false">美国之音</button>
+    <button class="chipbtn" data-f="rfa" aria-pressed="false">自由亚洲</button>
+    <input class="search" id="q" type="search" placeholder="搜关键词：中期选举 / 英伟达 / 乌克兰 / 法国罢工 / 市场轮动 / 内塔尼亚胡…" aria-label="搜索标题" />
+    <button class="chipbtn" id="density" aria-pressed="false">紧凑模式（只看标题）</button>
+  </div>
+</header>
+
+<main>
+  <div class="brief">
+    <h2>3 分钟总览 — 晚版 5 条主线</h2>
+    <ol>
+      <li><b>分治政府开局：民主党誓言约束特朗普：</b>路透主线稿称民主党将用新多数约束特朗普、聚焦可负担性与问责，杰弗里斯称“众议院不再是特朗普政府的全资子公司”（15:04）；特朗普在舞厅工地称“可能与民主党相处”，但提醒自己手握否决权；纽约时报称民主党已把经济授权理解为削减成本、回滚税收与贸易政策的空间（约 18:04）。</li>
+      <li><b>选举余波两端：佛罗里达坚守、以色列生变：</b>佛罗里达顶住蓝色浪潮，成为共和党最后的主要堡垒（纽约时报约 18:04）；以色列总理内塔尼亚胡指控阿拉伯选民“偷走”上月选举，选举官员称舞弊调查不影响结果（约 19:04），各党领袖同日会见总统磋商由谁先组阁（约 18:56）。</li>
+      <li><b>乌克兰：援助点死亡升至 42 人：</b>扎波罗热援助点遇袭死亡升至 42 人、仍有 33 人埋于废墟，成为今年针对平民最致命袭击之一（路透约 18:31）；俄军称夜袭乌邮政物流枢纽、变电站与黑海货船，路透称无法独立核实战场说法（15:49）。</li>
+      <li><b>市场轮动第二天：芯片续跌、金价逼近 4150 美元：</b>彭博综述称资金继续从芯片股轮出、流向中国与澳大利亚，三星与 SK 海力士均跌逾 7%，斯托克 600 与富时 100 双双刷新收盘纪录（约 16:15）；路透独家称约 60 万枚英伟达 H200 芯片滞留香港，北京未放行大批量进口（约 19:37）。</li>
+      <li><b>欧洲与民生：法国大罢工、航班迫降：</b>法国全国大罢工当日预计 220 多场示威，抗议生活成本（纽约时报约 13:01）；都柏林—罗马航班因炸弹威胁迫降法国埃夫勒空军基地（德国之声约 19:21）；旧德里在建楼房倒塌致 2 死、1 人受伤（德国之声约 15:46）。</li>
+    </ol>
+    <p class="note sans">本版共 13 条：路透 4、纽约时报 6、德国之声 2、彭博社 1；美联社、BBC、《卫报》、经济学人、法广、美国之音、自由亚洲本窗口内无可核实逐篇新稿，记 0 条。全部 13 条汇入下方同一条时间线，按时间倒序；每条保留发布时间（北京时间）、中文标题、英文原题与详细 summary；同一事件在不同来源下分别保留。黄之锋案纽约时报版（约 13:20）与午版路透、《卫报》为同一事件、不同来源。</p>
+  </div>
+  <div class="tl-head"><h2>时间线 · 11月5日约 12:30 至约 20:00</h2><span class="sans">由新到旧 ↓ · 时间均为北京时间</span></div>
+
+  <div class="timeline" id="timeline">
+
+    <article data-src="reuters" data-k="路透 英伟达 H200 香港 芯片 进口">
+      <div class="time sans"><b>11月5日</b>约 19:37</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">中国·芯片</span></div>
+      <h3><a href="https://www.reuters.com/world/china/nvidia-chips-pile-up-hong-kong-china-withholds-import-approval-2026-11-05/" target="_blank" rel="noopener">约 60 万枚英伟达 H200 芯片滞留香港，北京未放行大批量进口</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Nvidia chips pile up in Hong Kong as China withholds import approval</p>
+      <p class="sum">路透独家报道，约 60 万枚英伟达先进 AI 芯片 H200 存放在香港等待运往中国内地，两名知情人士称，尽管中国科技公司需求旺盛，北京仍未批准大批量进口。部分大厂近几个月各获约 1 万枚；小批量芯片经中间商与间接渠道流入，八卡 H200 服务器 10 月底在内地报价超 600 万元、约一年前三倍。H200 并非英伟达最新处理器，但其能力仍为中国国产替代暂未企及，配合英伟达软件对训练 AI 模型尤其实用；美方去年已允许向获批中国客户出售 H200，但北京出于减少对美技术依赖的考虑自行设限。本条为路透逐篇原文，时间以抓取时间为准，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 19:37</span><span>来源：路透 Reuters</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国之声 航班 炸弹威胁 迫降 法国">
+      <div class="time sans"><b>11月5日</b>约 19:21</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">欧洲·航空安全</span></div>
+      <h3><a href="https://ua.news/en/dovkolo-svitu/litak-dublin-rim-siv-u-frantsiyi-cherez-zagrozu-vibukhu-deutsche-welle" target="_blank" rel="noopener">都柏林—罗马航班因炸弹威胁迫降法国空军基地</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Dublin–Rome plane lands in France over bomb threat</p>
+      <p class="sum">德国之声报道，一架执飞都柏林—罗马航线的空客 A320 客机在收到炸弹威胁后，于 11 月 5 日迫降法国埃夫勒空军基地。法国总理勒科尔尼办公室当日表示正密切关注事态。德国之声指出，本周早些时候欧洲多架航班已收到类似炸弹威胁。本条为德国之声转载页，发布时间换算为北京时间约 19:21，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 19:21</span><span>来源：德国之声 DW</span><span>链接为已打开的德国之声转载页，德国之声官网逐篇直链未核到</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="纽约时报 内塔尼亚胡 以色列 选举 舞弊">
+      <div class="time sans"><b>11月5日</b>约 19:04</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">以色列·选举</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">内塔尼亚胡指控阿拉伯选民“偷走”上月选举，选举官员称舞弊调查不影响结果</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Netanyahu Alleges Election Fraud in Connection With Arab Turnout</p>
+      <p class="sum">纽约时报报道，以色列总理内塔尼亚胡及其盟友指控阿拉伯选民在上月选举中“偷走”了选举。选举官员表示，虽然舞弊问题正在调查中，但不可能影响选举结果。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 19:04</span><span>来源：纽约时报 NYT</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="纽约时报 以色列 组阁 赫尔佐格">
+      <div class="time sans"><b>11月5日</b>约 18:56</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">以色列·组阁</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">以色列各党领袖会见总统，磋商由谁先组阁</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Here&#x27;s Who Is Meeting Israel&#x27;s President to Recommend a Prime Minister</p>
+      <p class="sum">纽约时报报道，以色列各党领袖正与总统赫尔佐格会谈，商议由谁获得首次组阁机会；选举后的组阁磋商与内塔尼亚胡的舞弊指控同日推进。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 18:56</span><span>来源：纽约时报 NYT</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="路透 乌克兰 扎波罗热 援助点 空袭">
+      <div class="time sans"><b>11月5日</b>约 18:31</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">乌克兰·空袭</span></div>
+      <h3><a href="https://www.reuters.com/world/europe/death-toll-russian-strike-ukrainian-aid-centre-reaches-42-police-say-2026-11-05/" target="_blank" rel="noopener">俄袭乌援助点死亡升至 42 人，仍有 33 人埋于废墟</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Death toll from Russian strike on Ukrainian aid centre reaches 42, police say</p>
+      <p class="sum">路透报道，扎波罗热州警方 11 月 5 日称，周一俄军轰炸该州科梅舒瓦哈村一处援助物资发放点造成的死亡人数已升至 42 人，成为今年针对平民最致命的袭击之一；仍有至多 33 人埋于废墟，搜救与遗体辨认仍在继续。乌警方称袭击包括一枚 3 吨 FAB 滑翔炸弹；路透核实的遇难警察随身摄像画面显示，第二枚炸弹在警报后击中了居民躲避的地堡。俄国防部称袭击目标是科梅舒瓦哈及另两处居民点附近的乌军部队、称击毙至多 25 名乌军；俄乌双方均否认蓄意针对平民。本条为路透逐篇原文，时间以抓取时间为准，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 18:31</span><span>来源：路透 Reuters</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="纽约时报 民主党 经济 可负担性 税收 贸易">
+      <div class="time sans"><b>11月5日</b>约 18:04</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·经济</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">胜选后民主党看到经济授权：削减成本、约束特朗普</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>In Victory, Democrats See Economic Mandate to Cut Costs and Curtail Trump</p>
+      <p class="sum">纽约时报报道，民主党在中期选举大胜后迅速释放信号：可能尝试回滚特朗普的税收与贸易政策，无视其早先的否决威胁。报道指出，特朗普在竞选期间常把可负担性说成“骗局”议题、同时夸耀经济空前强劲，而选民的回答是把两院交给民主党。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 18:04</span><span>来源：纽约时报 NYT</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="纽约时报 佛罗里达 共和党 中期选举">
+      <div class="time sans"><b>11月5日</b>约 18:04</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">佛罗里达顶住蓝色浪潮，成为共和党最后的主要堡垒</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>&#x27;Florida Is the Last Main Anchor Standing&#x27; for Republicans</p>
+      <p class="sum">纽约时报报道，佛罗里达在周二的选举中顶住了全国性的民主党浪潮，成为共和党最后的主要堡垒；与此同时，共和党在得克萨斯及全国选举版图上遭遇深度失利。该州是全美第三人口大州，其坚守与共和党在传统票仓的溃退形成对照。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 18:04</span><span>来源：纽约时报 NYT</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="彭博 市场综述 轮动 芯片股 斯托克600 富时100 金价">
+      <div class="time sans"><b>11月5日</b>约 16:15</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">市场·轮动</span></div>
+      <h3><a href="https://www.swissinfo.ch/eng/stock-rotation-rolls-on-as-chipmakers-retreat:-markets-wrap/92330151" target="_blank" rel="noopener">彭博市场综述：轮动进入第二天，芯片股续跌、中国与澳洲领涨</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Stock Rotation Rolls On as Chipmakers Retreat: Markets Wrap</p>
+      <p class="sum">彭博市场综述称，受美国中期选举推动的轮动交易进入第二天，此前不受青睐的市场与经济敏感股继续跑赢，芯片股承压。中国与澳大利亚是亚洲最强市场之一；三星电子与 SK 海力士均跌逾 7%，因投资者担心民主党大胜后美国数据中心监管收紧会冲击其存储芯片需求。欧洲斯托克 600 与富时 100 双双刷新此前收盘纪录，矿业与消费股领涨，能源与科技板块落后；纳斯达克 100 期货跌 0.9%，标普 500 期货基本持平。金价一度涨 2.1%、逼近每盎司 4150 美元，布伦特原油报 94.78 美元。德国商业银行公布利润大增 45%，好于预期。本条为彭博署名转载页，发布时间为转载页标注换算为北京时间约 16:15，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 16:15</span><span>来源：彭博社 Bloomberg</span><span>链接为已打开的彭博署名转载页，彭博官网逐篇直链未核到</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="路透 俄罗斯 乌克兰 物流 邮政枢纽 黑海">
+      <div class="time sans"><b>11月5日</b>15:49</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">乌克兰·战事</span></div>
+      <h3><a href="https://www.reuters.com/world/russia-says-it-struck-logistics-transport-targets-ukraine-overnight-2026-11-05/" target="_blank" rel="noopener">俄称夜袭乌克兰物流与运输目标，炸毁邮政枢纽与黑海货船</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Russia says it struck logistics and transport targets in Ukraine overnight</p>
+      <p class="sum">路透报道，俄罗斯军方 11 月 5 日称，俄军夜间打击了乌克兰多地的物流与运输目标：哈尔科夫州一处新邮政（Nova Poshta）物流枢纽被击中，俄国防部称该枢纽被乌军用于组装无人机；同一地区还有铁路机车与热电厂 2 号机组工业建筑遇袭；第聂伯罗彼得罗夫斯克州一座变电站被击中；一艘载有军用物资的干货船在黑海距敖德萨港西南 52 公里处遇袭。路透称无法独立核实战场说法。本条为路透逐篇原文，发布时间为原文标注换算为北京时间 15:49。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 15:49</span><span>来源：路透 Reuters</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="德国之声 德里 楼房倒塌 印度">
+      <div class="time sans"><b>11月5日</b>约 15:46</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">印度·事故</span></div>
+      <h3><a href="https://english.webdunia.com/article/deutsche-welle-news/two-people-killed-as-building-under-construction-collapses-in-old-delhi-126110500009_1.html" target="_blank" rel="noopener">旧德里在建楼房倒塌，2 人死亡、1 人受伤</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Two people killed as building under construction collapses in Old Delhi</p>
+      <p class="sum">德国之声报道，11 月 5 日上午，印度旧德里乔里巴扎尔一处在建楼房倒塌，造成 2 人死亡，另有 1 人受伤获救。倒塌地点位于加利西塔拉、乔里巴扎尔地铁站附近。本条为德国之声转载页，转载页更新时间换算为北京时间约 15:46，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 15:46</span><span>来源：德国之声 DW</span><span>链接为已打开的德国之声转载页，德国之声官网逐篇直链未核到</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="路透 民主党 特朗普 中期选举 国会 舞厅">
+      <div class="time sans"><b>11月5日</b>15:04</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·国会</span></div>
+      <h3><a href="https://www.reuters.com/legal/government/democrats-vow-rein-trump-he-shows-off-white-house-ballroom-2026-11-05/" target="_blank" rel="noopener">民主党誓言用中期选举大胜约束特朗普，特朗普秀舞厅、称愿合作但手握否决权</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Democrats vow to rein in Trump as he shows off White House ballroom</p>
+      <p class="sum">路透报道，民主党誓言利用中期选举大胜约束特朗普，为华盛顿未来两年可能的僵局定调；特朗普则在选后首次公开露面中带记者参观在建的白宫舞厅。选民对特朗普政策、尤其是美伊战争推高生活成本的愤怒，帮助民主党夺取参议院（至少 54 比 44）与众议院（至少多 30 席）。候任众议院议长杰弗里斯称新多数将聚焦可负担性与问责，“众议院不再是特朗普政府的全资子公司”。特朗普在近一小时的参观中仅短暂谈及选举，称“可能与民主党相处，除非他们想搞破坏，但我有否决权”。阿拉斯加与密西西比的参议院席位仍未定，民主党多数理论上可增至 56 比 44；众议院议长约翰逊表示明年不再领导党团。本条为路透逐篇原文，更新时间换算为北京时间 15:04。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 15:04</span><span>来源：路透 Reuters</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="纽约时报 黄之锋 香港 国安法">
+      <div class="time sans"><b>11月5日</b>约 13:20</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">香港·国安法</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">纽约时报：香港民主派活动人士黄之锋因国安案被判 10 年</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Joshua Wong, Hong Kong Democracy Activist, Is Sentenced to 10 Years in Prison</p>
+      <p class="sum">纽约时报 11 月 5 日条目以此为题，记录黄之锋因国安法案件被判 10 年；他是 2020 年运动被镇压后最受关注的成员之一，被控勾结外国势力。量刑细节见本日午版路透转载稿：量刑起点 13 年、认罪减至 10 年，其中 2 个月 2 天与现正服刑的刑期同期执行；黄之锋原定明年 1 月服完“颠覆”案刑期获释。本条与午版路透、《卫报》为同一事件、不同来源，分别保留。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 13:20</span><span>来源：纽约时报 NYT</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="纽约时报 法国 罢工 抗议 生活成本">
+      <div class="time sans"><b>11月5日</b>约 13:01</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">法国·罢工</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">法国先有骚乱与抗议，如今迎来全国大罢工</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>First, France Had Riots and Protests. Now It&#x27;s Bracing for a General Strike.</p>
+      <p class="sum">纽约时报报道，法国 11 月 5 日迎来全国大罢工，当日预计举行 220 多场示威，抗议生活成本持续上涨；此前数周法国已出现骚乱与抗议。巴黎街头商店提前安装木板防范。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 13:01</span><span>来源：纽约时报 NYT</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+  </div>
+  <div class="empty sans" id="empty">没有匹配的条目，换个关键词试试。</div>
+</main>
+
+<footer class="sans">
+  <p>本版为 2026-11-05 约 12:30 至约 20:00（北京时间）窗口内新稿，不含当日早版与午版；同一事件在不同来源下分别保留；未编造标题、时间和链接。选举结果均为媒体预测或计票快照口径，非官方最终认证。</p>
+  <p>链接说明：路透 4 条均为已打开核对的逐篇原文地址；彭博市场综述条为已打开的彭博署名转载页；德国之声 2 条为已打开的德国之声转载页，德国之声官网逐篇直链未核到；纽约时报 6 条未核到逐篇原文链接，链接指向该媒体官网，其标题与时间经纽约时报 Top Stories 聚合页核对，页脚特此明示。</p>
+  <p>美联社、BBC、《卫报》、经济学人、法广、美国之音、自由亚洲在本窗口内无可核实逐篇新稿，记 0 条，未用旧闻冒充：美联社众议院数据页本窗口内仅见得票数微动（民主党约 6023.3 万票，报告选区仍为 77.78%），无新文章，未单独成条；BBC 埃博拉返英稿实为 11 月 4 日刊发、BBC 万斯分析稿为午版窗口（11:47）刊发，均未计入本晚版；《卫报》未检索到本窗口可核实逐篇新稿；经济学人未见本窗口可核实逐篇新稿或推送级标题；法广聚合页最新条目时间未确证；美国之音仅见节目页、自由亚洲存档页最新为 11 月 3 日稿件，均未提取到本窗口逐篇新稿。</p>
+  <p>未单独成条的重复口径与排除项：午版已含的黄之锋案路透与《卫报》版、朝鲜导弹、亚洲市场、贸易议价、油价等内容未重复计入，仅纽约时报版黄之锋案作为不同来源单列；早版、午版已含的特朗普舞厅活动、万斯切割、伊朗战争“值得”表态等内容未重复计入；午版窗口内漏入的纽约时报“跛脚鸭”分析（约 09:08）与 BBC 万斯分析（11:47）按窗口规则不追补进晚版；德国之声波兰间谍案（20:44）与芬兰电缆案（20:40）均在 20:00 截稿之后，未计入。</p>
+  <p>时间标注说明：标“约”的条目时间为转载页、聚合页或抓取时间标注换算；UTC 时间换算为北京时间（+8 小时），欧洲中部时间换算为北京时间（+7 小时），印度标准时间换算为北京时间（+2.5 小时）；纽约时报 6 条时间为其 Top Stories 聚合页所载时间换算；路透乌克兰物流条时间为原文标注，路透民主党条时间为原文更新标注。</p>
+  <p>本版覆盖同一文件后，11 月 5 日的早版与午版不再出现在线上文件内；按“当日三版覆盖同一文件、以最新版为准”的规则，本晚版为 11 月 5 日最新版，写入 news/2026-11-05/index.html。</p>
+</footer>
+
+<script>
+(function(){
+  var btns=document.querySelectorAll('[data-f]');
+  var arts=document.querySelectorAll('article[data-src]');
+  var q=document.getElementById('q');
+  var empty=document.getElementById('empty');
+  var cur='all';
+  function apply(){
+    var kw=q.value.trim().toLowerCase(); var any=false;
+    arts.forEach(function(a){
+      var showSrc=(cur==='all'||a.dataset.src===cur);
+      var hit=showSrc && (!kw || (a.textContent.toLowerCase().indexOf(kw)>-1 || (a.dataset.k||'').toLowerCase().indexOf(kw)>-1));
+      a.classList.toggle('hidden',!hit); if(hit)any=true;
+    });
+    empty.style.display=any?'none':'block';
+  }
+  btns.forEach(function(b){ b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true'); cur=b.dataset.f; apply();
+  });});
+  q.addEventListener('input',apply);
+  var d=document.getElementById('density');
+  d.addEventListener('click',function(){
+    var on=document.body.classList.toggle('compact');
+    d.setAttribute('aria-pressed',on?'true':'false');
+    d.textContent=on?'舒适模式（显示简介）':'紧凑模式（只看标题）';
+  });
+  var hdr=document.querySelector('header');
+  var toggle=document.getElementById('hdrToggle');
+  var ticking=false;
+  function onScroll(){
+    var y=window.scrollY||window.pageYOffset;
+    if(y>90){ hdr.classList.add('is-shrunk'); }
+    else if(y<40){
+      hdr.classList.remove('is-shrunk'); hdr.classList.remove('show-controls');
+      toggle.setAttribute('aria-expanded','false'); toggle.textContent='筛选 ▾';
+    }
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){ ticking=true; window.requestAnimationFrame(onScroll); }
+  },{passive:true});
+  onScroll();
+  toggle.addEventListener('click',function(){
+    var open=hdr.classList.toggle('show-controls');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'筛选 ▴':'筛选 ▾';
+  });
+})();
+</script>
+</body>
+</html>
