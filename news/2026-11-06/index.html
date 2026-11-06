@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>新闻阅读 · 11月6日早版时间线</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --panel:#fffdf8; --ink:#1a1814; --muted:#5c574d; --line:#ddd6c8;
+    --accent:#9a2a1e; --accent-ink:#fff; --chip:#ece7da; --live:#b42318;
+    --ap:#111111; --rfi:#0055a4; --reuters:#e8710a; --bbc:#b80000; --nyt:#121212; --bloom:#2800d7; --econ:#e3120b;
+    --dw:#0072bc; --guardian:#052962; --voa:#17648c; --rfa:#8a6d00;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141311; --panel:#1d1c19; --ink:#ece7dc; --muted:#a8a193; --line:#33302a; --chip:#2a2823; --accent:#e0654f; --ap:#d8d2c4; --nyt:#d8d2c4; --guardian:#7aa2e0; --bloom:#9d8cff; --rfa:#d9b84a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif SC","Songti SC",Georgia,serif;line-height:1.6}
+  .sans{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 16px 8px;transition:padding .3s ease,box-shadow .3s ease}
+  .toprow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between;max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0;letter-spacing:.02em;transition:font-size .3s ease}
+  .edition{font-size:13px;color:var(--muted)}
+  .edition b{color:var(--accent)}
+  .ed-mini{display:none}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px auto 0;align-items:center;max-width:920px;max-height:340px;opacity:1;overflow:hidden;transition:max-height .32s ease,opacity .25s ease,margin .32s ease}
+  .hdr-toggle{display:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:3px 11px;font-size:12.5px;cursor:pointer;line-height:1.5;flex:none}
+  header.is-shrunk{padding:6px 16px;box-shadow:0 8px 20px rgba(20,16,8,.14)}
+  header.is-shrunk h1{font-size:15.5px}
+  header.is-shrunk .edition{font-size:12px}
+  header.is-shrunk .ed-full{display:none}
+  header.is-shrunk .ed-mini{display:inline}
+  header.is-shrunk .hdr-toggle{display:inline-block}
+  header.is-shrunk .toprow{flex-wrap:nowrap;align-items:center}
+  header.is-shrunk .controls{max-height:0;opacity:0;margin-top:0;pointer-events:none}
+  header.is-shrunk.show-controls .controls{max-height:340px;opacity:1;margin-top:8px;pointer-events:auto}
+  @media (prefers-reduced-motion: reduce){
+    header,h1,.controls{transition:none}
+  }
+  .chipbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .search{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
+  main{max-width:920px;margin:0 auto;padding:14px 16px 40px}
+  .brief{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--accent);padding:14px 16px;margin-bottom:8px}
+  .brief h2{font-size:16px;margin:0 0 8px}
+  .brief ol{margin:0;padding-left:20px;font-size:14.5px}
+  .brief li{margin:5px 0}
+  .brief li b{color:var(--accent)}
+  .brief .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 0 4px}
+  .tl-head h2{font-size:17px;margin:0}
+  .tl-head span{font-size:12.5px;color:var(--muted)}
+  .timeline{position:relative;margin-top:6px}
+  .timeline::before{content:"";position:absolute;left:103px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  article{position:relative;display:grid;grid-template-columns:88px 22px 1fr;gap:0 6px;padding:12px 0 14px}
+  .time{font-size:12px;line-height:1.4;text-align:right;padding-top:2px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .time b{display:block;font-size:13px;color:var(--ink)}
+  .rail{display:flex;justify-content:center}
+  .dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none;box-shadow:0 0 0 3px var(--bg);z-index:1}
+  .card{background:var(--panel);border:1px solid var(--line);padding:12px 14px 10px;min-width:0}
+  .srcrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:5px}
+  .srcbadge{font-size:11.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 7px;letter-spacing:.02em}
+  @media (prefers-color-scheme: dark){ .srcbadge{color:#101010} .srcbadge.on-dark{color:#fff} }
+  .cat{font-size:11.5px;color:var(--muted)}
+  article h3{font-size:16.5px;line-height:1.45;margin:0 0 4px}
+  article h3 a{color:var(--ink);text-decoration:none}
+  article h3 a:hover{text-decoration:underline}
+  .orig{font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 5px;line-height:1.45}
+  .orig .lbl{font-style:normal;font-weight:700}
+  .sum{font-size:14px;color:var(--ink);margin:0}
+  .meta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+  body.compact article{padding:7px 0 8px}
+  body.compact .sum,body.compact .orig{display:none}
+  body.compact article h3{font-size:15px}
+  body.compact .card{padding:8px 12px}
+  .hidden{display:none!important}
+  .empty{padding:30px;text-align:center;color:var(--muted);display:none}
+  footer{max-width:920px;margin:0 auto;padding:0 16px 28px;font-size:12px;color:var(--muted)}
+  footer p{margin:6px 0}
+  @media(max-width:560px){
+    .timeline::before{left:83px}
+    article{grid-template-columns:70px 18px 1fr;gap:0 4px}
+    .time{font-size:11px}
+    .time b{font-size:12px}
+    article h3{font-size:15.5px}
+    .sum{font-size:13.5px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="toprow">
+    <h1>新闻阅读 · 11月6日早版时间线</h1>
+    <div class="edition sans"><span class="ed-full">早版 · 2026年11月5日约 20:00 至 2026年11月6日约 08:00（北京时间） · 本版为窗口内新稿 · 共 35 条 · 按时间由新到旧 · 点标题前往来源</span><span class="ed-mini"><b>早版 11月5日约20:00–11月6日约08:00</b> · 共 35 条</span></div>
+    <button class="hdr-toggle sans" id="hdrToggle" aria-expanded="false" aria-controls="controlsBar">筛选 ▾</button>
+  </div>
+  <div class="controls sans" id="controlsBar" role="group" aria-label="筛选">
+    <button class="chipbtn" data-f="all" aria-pressed="true">全部</button>
+    <button class="chipbtn" data-f="ap" aria-pressed="false">美联社</button>
+    <button class="chipbtn" data-f="rfi" aria-pressed="false">法广</button>
+    <button class="chipbtn" data-f="reuters" aria-pressed="false">路透</button>
+    <button class="chipbtn" data-f="bbc" aria-pressed="false">BBC</button>
+    <button class="chipbtn" data-f="nyt" aria-pressed="false">纽约时报</button>
+    <button class="chipbtn" data-f="bloomberg" aria-pressed="false">彭博社</button>
+    <button class="chipbtn" data-f="economist" aria-pressed="false">经济学人</button>
+    <button class="chipbtn" data-f="dw" aria-pressed="false">德国之声</button>
+    <button class="chipbtn" data-f="guardian" aria-pressed="false">《卫报》</button>
+    <button class="chipbtn" data-f="voa" aria-pressed="false">美国之音</button>
+    <button class="chipbtn" data-f="rfa" aria-pressed="false">自由亚洲</button>
+    <input class="search" id="q" type="search" placeholder="搜关键词：美股暴跌 / 英国央行 / 法国罢工 / 布兰德 / 纽森 / 博索纳罗…" aria-label="搜索标题" />
+    <button class="chipbtn" id="density" aria-pressed="false">紧凑模式（只看标题）</button>
+  </div>
+</header>
+
+<main>
+  <div class="brief">
+    <h2>3 分钟总览 — 早版 5 条主线</h2>
+    <ol>
+      <li><b>美股历史级暴跌：AI 监管担忧下的科技股崩盘：</b>纳斯达克 100 单日跌 6.4%，创 2020 年 3 月以来最差单日，市值蒸发 2.3 万亿美元；纳斯达克综合跌 5.5% 进入修正区间，芯片巨头指数跌 12%（路透约 06:04、彭博约 05:53）；英国央行同日三年多来首次加息至 4%，交易员押注进一步加息（路透约 00:51）。</li>
+      <li><b>中期选举后续：民主党战果扩大与分治政府开局：</b>阿拉斯加佩尔托拉有望守住参议员席位（纽约时报约 07:16），南方黑人选民助力民主党多州获胜（约 04:33），拉曼赢得洛杉矶市长、成首位亚裔市长（《卫报》约 00:12）；路透分析称民主党能否兑现降物价承诺存疑，华盛顿最可能立法僵局（约 03:50）；赫格塞思誓言留任并为伊朗战争辩护（约 07:28）。</li>
+      <li><b>欧洲动荡：法国大罢工、波兰间谍案、航班炸弹威胁潮：</b>法国全国大罢工当日预计 220 场示威，部署 7 万警力（路透约 21:02、法广约 20:34）；波兰 6 人涉向俄供应武器部件、4 人被控间谍罪（德国之声约 20:44）；炸弹威胁迫使欧洲至少 22 架次航班改道与紧急降落（《卫报》约 07:02）。</li>
+      <li><b>司法两端：布兰德强奸罪成立、纽森减刑加州全部 548 名死囚：</b>陪审团裁定布兰德一项强奸罪与三项性侵罪成立，法官称周一量刑时将面临“重大”刑期（美联社约 00:15、《卫报》约 05:00）；纽森将加州全部死囚减刑，称死刑在道德上令人反感，548 人约占全美死刑判决总数四分之一（纽约时报约 03:28）。</li>
+      <li><b>外交与世界：伊朗审议核提议、博索纳罗逃亡、约旦遇袭：</b>官员称伊朗正在审议关于核计划的“具体提议”，卡塔尔斡旋现进展（纽约时报约 01:18）；博索纳罗逃离巴西得到米莱顾问在阿根廷机场的协助（约 01:43）；约旦安曼斯里兰卡使馆附近安全人员遇袭身亡（美联社约 20:39）；塞浦路斯首个气田预计 2028 年上半年投产（约 21:34）；联合国儿童基金会警告冲突地区供水袭击五年增两倍（法广约 22:59）。</li>
+    </ol>
+    <p class="note sans">本版共 35 条：路透 7、美联社 5、纽约时报 9、彭博社 1、经济学人 1、德国之声 3、《卫报》5、法广 4；BBC、美国之音、自由亚洲本窗口内无可核实逐篇新稿，记 0 条。全部 35 条汇入下方同一条时间线，按时间倒序；每条保留发布时间（北京时间）、中文标题、英文原题与详细 summary；同一事件在不同来源下分别保留。</p>
+  </div>
+  <div class="tl-head"><h2>时间线 · 11月5日约 20:00 至 11月6日约 08:00</h2><span class="sans">由新到旧 ↓ · 时间均为北京时间</span></div>
+
+  <div class="timeline" id="timeline">
+
+    <article data-src="reuters" data-k="赫格塞思 五角大楼 伊朗战争 弹劾 国防">
+      <div class="time sans"><b>11月6日</b>约 07:28</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·国防</span></div>
+      <h3><a href="https://www.reuters.com/legal/government/hegseth-vows-keep-fighting-pentagon-defends-iran-war-2026-11-05/" target="_blank" rel="noopener">赫格塞思誓言继续在五角大楼战斗，并为伊朗战争辩护</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Hegseth vows to keep fighting from Pentagon, defends Iran war</p>
+      <p class="sum">美国国防部长赫格塞思周四发布视频，誓言抵制国会弹劾他的努力，称伊朗战争“勇敢且具有历史意义”。此前选民在中期选举中因伊朗战争惩罚了共和党；众议院民主党领袖杰弗里斯发问“为什么皮特·赫格塞思还在？”，共和党众议员马西承诺下周重新提出针对赫格塞思的弹劾条款。特朗普周四称赞赫格塞思“干得非常出色”，称反对声源于他解雇多名将军；副总统万斯周三公开质疑伊朗战争是否值得，称这场战争让共和党失去了国会控制权。本条为路透逐篇原文，时间以抓取时间为准，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 07:28</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="阿拉斯加 佩尔托拉 沙利文 排序选择投票 参议员">
+      <div class="time sans"><b>11月6日</b>约 07:16</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">阿拉斯加：排序选择投票恐怕不足以让沙利文翻盘</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>In Alaska, Ranked-Choice Ballots Are Unlikely to Be Enough for Dan Sullivan</p>
+      <p class="sum">分析显示，玛丽·佩尔托拉有望在阿拉斯加州参议员竞选中保持领先，部分原因是她会在排序选择计票中获得另一位沙利文支持者的选票，现任参议员丹·沙利文难以凭借排序选择投票实现逆转。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 07:16</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="LIV 高尔夫 清算 沙特 融资">
+      <div class="time sans"><b>11月6日</b>约 07:09</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 Guardian</span><span class="cat">体育·高尔夫</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">LIV 高尔夫清算，此前最后一刻融资救援协议破裂</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>LIV Golf to liquidate after last-ditch financing rescue deal falls apart</p>
+      <p class="sum">沙特方面撤资后，LIV 高尔夫的前途存疑，破产程序已在新泽西州法院启动，声明称“有序清盘是最负责任的路径”。该赛事自 2022 年搅动高尔夫格局以来一直依赖沙特资金；DP World Tour 预计明年将迎来一批前 LIV 球员，并准备向所有前“叛将”伸出橄榄枝。本条标题与时间经《卫报》聚合页核对，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 07:09</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="炸弹威胁 欧洲 航班 混合战争 航空安全">
+      <div class="time sans"><b>11月6日</b>约 07:02</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 Guardian</span><span class="cat">欧洲·航空安全</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">炸弹威胁扰乱欧洲至少 22 架次航班，引发“混合战争”担忧</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Bomb threats disrupt at least 22 flights across Europe, raising hybrid war fears</p>
+      <p class="sum">周四的炸弹威胁迫使欧洲至少 22 架次航班改道与紧急降落，涉及意大利、爱尔兰、英国、西班牙、保加利亚、罗马尼亚、波兰、芬兰、奥地利、丹麦、比利时、葡萄牙、法国、希腊、塞尔维亚和捷克之间的航班，执飞航司包括瑞安、爱尔兰航空、Wizz Air、芬兰航空、易捷等；所有飞机均安全降落，搜查未发现可疑物品。此前周二已有 7 架次飞机因类似恶意虚假炸弹警报被搜查或改道；国际航协谴责了这一干扰并敦促当局查明威胁来源，欧洲空中航行安全组织称受影响航班仅占周四欧洲计划航班 27,400 架次的一小部分。目前尚无情报指向任何特定组织或国家行为体。本条标题、时间与细节经《卫报》聚合页及注明出处的转载报道核对，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 07:02</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="美股暴跌 交易日 纳斯达克 标普 芯片 修正区间">
+      <div class="time sans"><b>11月6日</b>约 06:04</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·市场</span></div>
+      <h3><a href="https://www.reuters.com/commentary/reuters-open-interest/global-markets-trading-day-graphic-2026-11-05/" target="_blank" rel="noopener">交易日：11 月 5 日市场大火</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>TRADING DAY: A November 5 market bonfire</p>
+      <p class="sum">美国股市周四暴跌，科技股和 AI 相关股领跌，投资者重新评估民主党在中期选举中大获全胜对 AI 数据中心建设的影响，芯片股创下有记录以来第二大跌幅。纳斯达克指数下跌 5.5%，标普 500 指数下跌 4.4%，道琼斯指数下跌 3.4%；标普 500 所有 11 个板块全部下跌，科技板块跌 7.3%，费城半导体指数跌 12%。纳斯达克市值一日蒸发约 2 万亿美元，指数较一个月前创下的历史高点下跌达 14%，进入修正区间；利率交易员将美联储下一次加息的预期时间推迟至 3 月。本条为路透逐篇原文，内容为 11 月 5 日美股收盘后综述，时间以抓取时间为准，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 06:04</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="bloomberg" data-k="美股暴跌 标普500 纳斯达克100 AI抛售 芯片 比特币">
+      <div class="time sans"><b>11月6日</b>约 05:53</div><div class="rail"><span class="dot" style="background:var(--bloom)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--bloom)">彭博社 Bloomberg</span><span class="cat">美国·市场</span></div>
+      <h3><a href="https://www.swissinfo.ch/eng/nasdaq-100-sinks-5%25-as-chipmaker-selloff-deepens%3a-markets-wrap/92330151" target="_blank" rel="noopener">标普 500 跌 4%，AI 抛售震动华尔街：市场收盘</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>S&amp;P 500 Sinks 4% as AI Washout Rattles Wall Street: Markets Wrap</p>
+      <p class="sum">民主党赢得国会两院后，投资者押注新国会对人工智能行业加强监管，芯片股领跌，纳斯达克 100 指数单日下跌 6.4%，为 2020 年 3 月以来最差单日，市值蒸发 2.3 万亿美元；标普 500 跌 4.4%，道指跌 3.4%，芯片巨头指数跌 12%。高通与 Arm 因业绩展望不及预期大跌，特斯拉与 SpaceX 至少跌 9%，比特币跌 5.4% 至 75,809.84 美元；JonesTrading 的迈克尔·奥罗克称，数据中心放缓“会是真的”，支撑看涨论点的盈利预期已不再成立。文中另提到，众议院共和党人要求英伟达 CEO 黄仁勋就其与一名被《纽约时报》报道称正接受美国政府调查的 Megaspeed International 高管的往来作简报；甲骨文在新墨西哥州拟建的 1650 亿美元数据中心综合体因电力开发商同意给州监管机构更多时间审查关键空气许可而面临又一次潜在延期。本条为彭博署名转载页，发布时间为转载页标注换算为北京时间约 05:53，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 05:53</span><span>来源：彭博社</span><span>链接为已打开的彭博署名转载页，彭博官网逐篇直链未核到</span></p></div>
+    </article>
+
+    <article data-src="economist" data-k="伯纳姆 英国首相 专访 普京 G20">
+      <div class="time sans"><b>11月6日</b>约 05:03</div><div class="rail"><span class="dot" style="background:var(--econ)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--econ)">经济学人 Economist</span><span class="cat">英国·外交</span></div>
+      <h3><a href="https://www.economist.com" target="_blank" rel="noopener">专访英国首相安迪·伯纳姆实录</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Transcript: An interview with Andy Burnham</p>
+      <p class="sum">经济学人刊发对英国首相安迪·伯纳姆的专访实录；路透社同日报道称，伯纳姆在接受《经济学人》采访时表示，俄罗斯总统普京不会获邀参加明年在英国举行的 G20 峰会，回答只有一个词“No”，下届 G20 峰会将于明年 11 月在曼彻斯特举行。上述普京不获邀的事实引自路透社对该专访的报道，非经济学人正文；经济学人正文在付费墙后，聚合页仅见标题与时间。本条标题与时间经聚合页核对，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 05:03</span><span>来源：经济学人</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="数据中心 英伟达 CoreWeave AI 公投">
+      <div class="time sans"><b>11月6日</b>约 05:00</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">市场·科技</span></div>
+      <h3><a href="https://www.reuters.com" target="_blank" rel="noopener">全球巨头将淘汰弱小的数据中心运营商</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Global muscle will sift puny data center providers</p>
+      <p class="sum">纳斯达克指数在 11 月 5 日确认进入修正区间，有望创下自 2025 年 4 月“解放日”暴跌以来最糟糕的一天；AI 和数据中心股票下跌，英伟达和 CoreWeave 在午后交易中分别下跌 9% 和 12%。民主党在中期选举中大获全胜，引发了人们对 AI 快速扩张可能面临障碍的担忧；根据 Ballotpedia 的数据，本周投票的 41 项与数据中心相关的公投中，除一项外全部反对建设服务器农场。本条仅经搜索摘要核对，逐篇原文未打开，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 05:00</span><span>来源：路透</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题经搜索摘要核对</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="布兰德 强奸 性侵 陪审团 量刑">
+      <div class="time sans"><b>11月6日</b>约 05:00</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 Guardian</span><span class="cat">英国·司法</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">罗素·布兰德被判强奸与性侵罪成立</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Russell Brand found guilty of rape and sexual assault</p>
+      <p class="sum">伦敦南华克刑事法院陪审团裁定，喜剧演员罗素·布兰德（51 岁）犯有一项强奸罪和三项性侵罪，涉及四名女性，时间跨度为 1999 年至 2009 年；陪审团同时裁定另外两项强奸指控与一项企图猥亵指控不成立，布兰德对全部七项指控均不认罪。法官本纳森将其还押候审，称其面临“重大”刑期，量刑定于 11 月 9 日周一；伦敦警察厅仍在调查另外两名女性提出的强奸指控。本条标题与时间经《卫报》聚合页核对，事实细节引自路透社与多家同题报道的转述，未核到逐篇原文链接，链接指向该媒体官网；与美联社版为同一事件、不同来源，分别保留。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 05:00</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="南方 黑人选民 民主党 选举">
+      <div class="time sans"><b>11月6日</b>约 04:33</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">在南方，黑人选民助力民主党获胜</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Across the South, Black Voters Help Propel Democratic Wins</p>
+      <p class="sum">南方各州的民主党人利用选民对重新划分选区、削减关键联邦项目以及攻击黑人历史的愤怒，动员了这一关键选民群体前往投票站；黑人选民的投票帮助推动了民主党在南方多州的胜利。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 04:33</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="民主党 国会 物价 立法僵局 特朗普">
+      <div class="time sans"><b>11月6日</b>约 03:50</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">美国·政治</span></div>
+      <h3><a href="https://www.reuters.com/world/us/democrats-won-congress-can-they-meet-voters-demands-2026-11-05/" target="_blank" rel="noopener">民主党赢得了国会，但能满足选民的要求吗？</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Democrats won Congress, but can they meet voters' demands?</p>
+      <p class="sum">民主党在周二的选举中大胜，将特朗普的共和党赶出国会山，但两党策略人士警告，这更多是对特朗普及其未能降低物价的强烈否定，而非对民主党议程的空白支票。选民对食品、汽油和住房成本感到愤怒，伊朗战争和特朗普的关税加剧了这种不满，但民主党降低物价的能力有限，未来两年华盛顿最可能出现立法僵局。特朗普仍掌握否决权和行政权力，白宫助手称他将继续通过行政命令推进议程；民主党将能够阻止特朗普的人事任命，并对特朗普政府展开调查，预计将出现大量传票和文件索取要求。本条为路透逐篇原文，时间以抓取时间为准，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 03:50</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="小肯尼迪 卫生工作组 药品股票 利益冲突">
+      <div class="time sans"><b>11月6日</b>约 03:47</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·卫生</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">小肯尼迪任命的卫生工作组成员中四人获准保留药品股票</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>RFK Jr.’s Appointees to Health Task Force Included Four Allowed to Keep Drug Stocks</p>
+      <p class="sum">美国预防服务工作组的新成员获得了豁免，得以在存在经济利益冲突的情况下任职，其中四名被任命者被允许保留药品类股票。该工作组是具有影响力的联邦卫生咨询机构。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 03:47</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="纽森 减刑 死囚 加州 死刑">
+      <div class="time sans"><b>11月6日</b>约 03:28</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·司法</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">纽森减刑加州 548 名死囚</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Newsom Commutes the Sentences of California’s 548 Death Row Inmates</p>
+      <p class="sum">加州州长加文·纽森在任期尾声将所有死刑犯的刑期减刑，称死刑在道德上令人反感；尽管加州已有 20 年没有执行过死刑，但这 548 人约占全美死刑判决总数的四分之一。纽森正在考虑竞选总统，这是其任期尾声的举措之一。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写；与《卫报》版为同一事件、不同来源，《卫报》版未计入本版，见页脚。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 03:28</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="外国干预 中期选举 俄罗斯 影响力行动">
+      <div class="time sans"><b>11月6日</b>约 02:43</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">美国发现中期选举中外国干预行动较为克制</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>U.S. Finds Subdued Foreign Meddling Operations in Midterm Elections</p>
+      <p class="sum">俄罗斯被指与针对民主党的影响力行动有关，但这些行动收效甚微；克里姆林宫可能将更多注意力转向明年春季的法国选举。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 02:43</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="黑森州 Z世代 抗议 禁止 法兰克福 骚乱">
+      <div class="time sans"><b>11月6日</b>约 02:35</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">德国·抗议</span></div>
+      <h3><a href="https://ua.news/en/dovkolo-svitu/ministr-gessenu-zaproponuvav-zaboroniti-protesti-gen-z-deutsche-welle" target="_blank" rel="noopener">黑森州内政部长提议禁止进一步的“Z 世代”抗议</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Hesse minister proposes banning Gen Z protests</p>
+      <p class="sum">德国黑森州内政部长罗曼·波泽克在 10 月 31 日示威后发生骚乱后，提议禁止进一步的“Z 世代”抗议；法兰克福集会后发生街头冲突，100 多名警察受伤，其中一人重伤，商店被损坏和抢劫，科隆、汉堡和柏林的局势也升级。波泽克针对计划于 11 月 20 日举行的集会表示，集会权宝贵，但公共安宁同样重要，并称示威期间发生了大规模袭警事件，而组织者未能控制集会；抗议组织者否认指控并与暴力划清界限。骚乱发生前，数万名年轻人在全国各地参加了大多和平的示威，诉求包括对未来的关切、更好的教育机会、可负担住房和更积极的气候行动；联邦内政部长多布林特称和平晚间示威被暴力左翼团体和移民流氓劫持，总理默茨表示支持，国防部长皮斯托里乌斯与融合事务专员帕夫利克等人则对“移民群体”的笼统表述提出质疑或批评。本条为德国之声转载页，转载页发布时间换算为北京时间约 02:35，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 02:35</span><span>来源：德国之声</span><span>链接为已打开的德国之声转载页，德国之声官网逐篇直链未核到</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="博索纳罗 米莱 阿根廷 逃离 巴西">
+      <div class="time sans"><b>11月6日</b>约 01:43</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">巴西·政治</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">博索纳罗逃离巴西得到米莱顾问在阿根廷机场的协助</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Bolsonaro’s Escape From Brazil Was Aided by Milei Adviser at Argentine Airport</p>
+      <p class="sum">三名参与行动的人士表示，阿根廷总统哈维尔·米莱的一名高级顾问在阿根廷一座机场会见了败选的巴西总统候选人弗拉维奥·博索纳罗，协助其逃离巴西。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 01:43</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="俄罗斯 举重 药检 反兴奋剂 宁波">
+      <div class="time sans"><b>11月6日</b>约 01:28</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">体育·反兴奋剂</span></div>
+      <h3><a href="https://ua.news/en/dovkolo-svitu/lishe-4-iz-16-rosiiskikh-vazhkoatletiv-testuvali-poza-zmaganniami-deutsche-welle" target="_blank" rel="noopener">16 名俄罗斯举重选手中仅 4 人接受赛外药检</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Only 4 of 16 Russian weightlifters tested out of competition</p>
+      <p class="sum">正在中国宁波参加世界举重锦标赛的 16 名俄罗斯运动员中，国际检测机构（ITA）在 2026 年前九个月仅对其中 4 人做过赛外检测，依据为 ITA 季度反兴奋剂报告；12 名未接受赛外检测者中包括曾因违反反兴奋剂规则被禁赛两年的两届欧洲冠军阿纳斯塔西娅·罗曼诺娃。作为对比，朝鲜队 13 名队员同期每人至少接受过一次 ITA 检测；ITA 告诉德国之声，16 名俄罗斯运动员在参赛前均已在宁波接受检测。运动员组织 Global Athlete 负责人罗布·科勒称，缺乏赛外检测“不可接受”，赛外检查是反兴奋剂体系的基础；ITA 发言人称俄罗斯运动员是今年举重项目受检最频繁的十个国籍之一，但最高优先级检测组中仅有两名俄罗斯举重选手。本条为德国之声转载页，转载页发布时间换算为北京时间约 01:28，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 01:28</span><span>来源：德国之声</span><span>链接为已打开的德国之声转载页，德国之声官网逐篇直链未核到</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="伊朗 核计划 卡塔尔 斡旋 提议">
+      <div class="time sans"><b>11月6日</b>约 01:18</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">伊朗·核问题</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">官员称伊朗正在审议关于核计划的“具体提议”</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Iran is Reviewing ‘Concrete Proposals’ on Nuclear Program, Officials Say</p>
+      <p class="sum">伊朗愿意重新就核问题进行接触，表明由卡塔尔主导、旨在避免美国与伊朗之间爆发全面战争的外交努力取得了一些成功；官员称伊朗正在审议关于其核计划的具体提议。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 01:18</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="rfi" data-k="马克龙 新书 私下评论 对手">
+      <div class="time sans"><b>11月6日</b>约 00:59</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI</span><span class="cat">法国·政治</span></div>
+      <h3><a href="https://www.rfi.fr" target="_blank" rel="noopener">马克龙私下评论对手言论曝光：一本新书披露“我们会收拾他们”</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>'We'll get them': Macron's private comments on rivals revealed in new book</p>
+      <p class="sum">法国总统马克龙与记者弗朗索瓦丝·德戈伊斯两年间的私人信息被收入一本新书出版，披露了他对政治对手、极右翼崛起以及自身领导风格的看法；据称，总统在新书发布前三天才得知该书的存在。本条标题与时间经法广聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；聚合页相对时间倒推，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 00:59</span><span>来源：法广</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="英国央行 加息 交易员 利率 通胀 英镑">
+      <div class="time sans"><b>11月6日</b>约 00:51</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">英国·利率</span></div>
+      <h3><a href="https://www.reuters.com/business/traders-eye-further-rate-hikes-after-first-boe-increase-three-years-2026-11-05/" target="_blank" rel="noopener">英国央行三年来首次加息后，交易员押注进一步加息</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Traders eye further rate hikes after first BoE increase in three years</p>
+      <p class="sum">英国央行三年多来首次加息后，交易员加大了对英国进一步加息的押注，推高政府债券收益率；货币政策委员会以 8 比 1 的投票结果加息，委员凯瑟琳·曼主张更大幅度加息 50 个基点。英国央行预计通胀将在 2027 年年中升至 5% 左右，9 月通胀率为 3.5%，远高于 2% 的目标；市场目前预计到 2027 年底将进一步收紧约 76 个基点，12 月加息的概率从此前的约 30% 升至 50%。英镑兑美元在决议后基本持平于 1.347，富时 100 指数涨幅收窄至 0.3%。本条为路透逐篇原文，时间以抓取时间为准，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 00:51</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="布兰德 强奸 量刑 监禁 陪审团">
+      <div class="time sans"><b>11月6日</b>约 00:15</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">英国·司法</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">拉塞尔·布兰德被判强奸罪成立，法官称将判处监禁</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Russell Brand is convicted of rape, and judge says he'll get a prison term</p>
+      <p class="sum">伦敦南华克刑事法院陪审团周四裁定，英国演员兼喜剧人拉塞尔·布兰德强奸及性侵罪名成立，涉及四名女性，指控可追溯至 20 多年前；布兰德被判一项强奸罪和三项性侵罪成立，另两项强奸指控和一项企图猥亵指控不成立。法官乔尔·本纳森表示，布兰德将于周一量刑时面临“重大”监禁刑期；由 8 名男性和 4 名女性组成的陪审团经过两天、逾 8 小时的审议后作出裁决。本条标题与时间经转载聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；与《卫报》版为同一事件、不同来源，分别保留。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 00:15</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经转载聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="拉曼 洛杉矶市长 巴斯 亚裔 民主社会主义者">
+      <div class="time sans"><b>11月6日</b>约 00:12</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 Guardian</span><span class="cat">美国·选举</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">民主社会主义者妮蒂亚·拉曼赢得洛杉矶市长选举，击败现任市长巴斯</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Democratic socialist Nithya Raman wins Los Angeles mayoral race over incumbent Karen Bass</p>
+      <p class="sum">洛杉矶市议员妮蒂亚·拉曼当选洛杉矶市长，击败现任市长卡伦·巴斯，是美国第二大城市政治的重大变动；计票显示拉曼以略超 52% 对 48% 领先，巴斯已于周四致电拉曼认输。拉曼 45 岁，城市规划师，自 2020 年起任市议员；她将成为洛杉矶首位亚裔市长，也是民主社会主义者首次领导美国第二大城市。本条标题与时间经《卫报》聚合页核对，得票与认输细节引自注明出处的转载报道，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 00:12</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="guardian" data-k="梅拉尼娅 俄乌 停火 特朗普 斡旋">
+      <div class="time sans"><b>11月6日</b>约 00:04</div><div class="rail"><span class="dot" style="background:var(--guardian)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--guardian)">《卫报》 Guardian</span><span class="cat">俄乌·停火</span></div>
+      <h3><a href="https://www.theguardian.com" target="_blank" rel="noopener">俄乌官员感谢梅拉尼娅·特朗普斡旋停火</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Russian and Ukrainian officials thank Melania Trump for brokering ceasefire - video</p>
+      <p class="sum">俄罗斯总统普京的特使基里尔·迪米特里耶夫周四在白宫向梅拉尼娅·特朗普赠送礼物，感谢她斡旋乌克兰奥列什基地区的俄乌停火；同一活动上乌克兰方面官员也到场。文字报道称，在基辅等城市战事仍在持续之际，第一夫人在白宫大厅欢迎俄乌高级官员，庆祝这一单一城市的停火。本条标题与时间经《卫报》聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；与纽约时报梅拉尼娅版为同一事件、不同来源，纽约时报版未计入本版，见页脚。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月6日 约 00:04</span><span>来源：《卫报》</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="rfi" data-k="联合国儿童基金会 供水 袭击 冲突地区">
+      <div class="time sans"><b>11月5日</b>约 22:59</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI</span><span class="cat">联合国·儿童</span></div>
+      <h3><a href="https://www.rfi.fr" target="_blank" rel="noopener">联合国儿童基金会警告：冲突地区针对供水系统的袭击五年内增加了两倍</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Unicef warns attacks on water supply in conflict zones have tripled in five years</p>
+      <p class="sum">联合国儿童基金会周四警告，2021 年至 2025 年间，破坏或摧毁冲突地区供水与卫生系统的袭击增加了两倍，令数百万儿童更易遭受疾病、营养不良和暴力侵害。本条标题与时间经法广聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；聚合页相对时间倒推，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 22:59</span><span>来源：法广</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="皇马 利物浦 费内巴切 欧冠 逆转">
+      <div class="time sans"><b>11月5日</b>约 21:45</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">体育·足球</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">皇马再度上演逆转，利物浦负于费内巴切</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Real Madrid pulls off another comeback, Liverpool beaten by Fenerbahce</p>
+      <p class="sum">欧冠比赛中，皇马凭借费德里科·巴尔韦德在补时阶段的进球，以 3 比 2 战胜雅典 AEK，再度上演逆转；利物浦则在客场以 2 比 3 意外负于费内巴切。同一比赛日曼城同样以 3 比 2 战胜莱比锡，期间两度领先又被追平；科莫以 9 比 1 大胜朗斯。本条标题与时间经转载聚合页核对，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 21:45</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经转载聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="全球股市 中期选举 AI股 Kospi 日经">
+      <div class="time sans"><b>11月5日</b>约 21:43</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">市场·全球</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">美国中期选举后全球股市大多上涨，AI 相关股下跌</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>World shares mostly gain after US midterm elections as AI-related stocks sink</p>
+      <p class="sum">周四全球股市大多走高，但 AI 相关股遭到重挫，抵消了部分市场的涨幅；韩国 Kospi 跌超 5%，东京日经 225 指数跌近 2%。此前道琼斯工业指数在周三上涨超 3%，背景是共和党在美国国会选举中失去控制权；油价涨跌互现。本条标题与时间经转载聚合页核对，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 21:43</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经转载聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="塞浦路斯 天然气 欧盟 能源 Cronos">
+      <div class="time sans"><b>11月5日</b>约 21:34</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">塞浦路斯·能源</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">塞浦路斯总统称海上天然气储量是欧盟的机会</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Gas deposits off Cyprus are an opportunity for the EU, president says</p>
+      <p class="sum">塞浦路斯总统尼科斯·赫里斯托祖利季斯周四表示，该国南部海岸外的天然气储量是欧盟通过供应多元化加强自身能源安全的机会；他在接受美联社独家采访时表示，塞浦路斯外海发现的多个气田中首个气田 Cronos 预计将于 2028 年上半年投产。本条标题与时间经转载聚合页核对，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 21:34</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经转载聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="C罗 葡萄牙 国家队 告别 纪录">
+      <div class="time sans"><b>11月5日</b>约 21:34</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">体育·足球</span></div>
+      <h3><a href="https://www.reuters.com/sports/soccer/ronaldo-exits-portugal-stage-with-records-intact-farewell-clouded-by-rift-2026-11-05/" target="_blank" rel="noopener">C 罗带着纪录告别葡萄牙国家队，离别因与主帅不和蒙上阴影</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Ronaldo exits Portugal stage with records intact and farewell clouded by rift</p>
+      <p class="sum">C 罗周四通过社交媒体宣布退出葡萄牙国家队，而非在球场上接受欢送，他与主教练豪尔赫·热苏斯的矛盾为其非凡的国家队生涯蒙上阴影。41 岁的 C 罗共出场 234 次、打入 146 球，两项均为男子国际比赛纪录；他率领葡萄牙夺得 2016 年欧洲杯冠军，并在 2019 年和 2025 年赢得欧国联冠军。但世界杯冠军始终未能到手：他成为首位在六届世界杯上进球的球员，共打入 11 球。葡萄牙足协感谢了他的贡献，并表示他应得到“应有的致敬”，是否会在球场上举行告别赛尚不清楚。本条为路透逐篇原文，时间以抓取时间为准，标“约”；与美联社版为同一事件、不同来源，美联社版未计入本版，见页脚。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 21:34</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="reuters" data-k="法国罢工 法国抗议 示威 警力 最低工资">
+      <div class="time sans"><b>11月5日</b>约 21:02</div><div class="rail"><span class="dot" style="background:var(--reuters)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge" style="background:var(--reuters)">路透 Reuters</span><span class="cat">法国·抗议</span></div>
+      <h3><a href="https://www.reuters.com/world/europe/france-protests-what-is-behind-unrest-what-comes-next-2026-11-05/" target="_blank" rel="noopener">法国抗议：骚乱背后是什么，接下来会怎样？</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>France protests: What is behind the unrest and what comes next?</p>
+      <p class="sum">法国周四面临新一轮全国抗议，此前数周因生活成本和公共服务问题持续动荡，工会和学生团体在全国动员示威；政府已动员 7 万名警察和其他安全人员，以确保周四计划的 220 场示威和平进行，希望避免重演 10 月 17 日全国示威演变为冲突和抢劫的局面。政府表示正在考虑提高最低工资，目前最低工资为每月净 1478 欧元；法国最大工会 CFDT 要求至少每月增加 100 欧元。草根抗议运动计划于周六举行新一轮示威，部分工会和住房权利组织呼吁 11 月 20 日至 22 日举行泛欧抗议。本条为路透逐篇原文，时间以抓取时间为准，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 21:02</span><span>来源：路透</span><span>链接为已打开核对的逐篇原文地址</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="以色列 选举 组阁 联合政府 赫尔佐格">
+      <div class="time sans"><b>11月5日</b>约 20:59</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">以色列·组阁</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">以色列选举无明确赢家，各党正尝试组建联合政府</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Israel’s Election Ended With No Clear Winner. These Parties Are Trying to Form a Coalition.</p>
+      <p class="sum">以色列各党领袖周四与总统艾萨克·赫尔佐格举行会谈，讨论由谁获得首次组阁机会；以色列选举结束时没有明确的赢家，各党正在尝试组建联合政府。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 20:59</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="rfi" data-k="法国 网络攻击 互助信贷银行 1亿欧元 检方">
+      <div class="time sans"><b>11月5日</b>约 20:59</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI</span><span class="cat">法国·网络安全</span></div>
+      <h3><a href="https://www.rfi.fr" target="_blank" rel="noopener">法国检方调查针对互助信贷银行集团的 1 亿欧元网络攻击</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>French prosecutors investigate €100m cyberattack on Crédit Mutuel banking group</p>
+      <p class="sum">法国检方已对一起针对互助信贷阿尔凯亚银行（Crédit Mutuel Arkéa）的复杂网络攻击展开调查，该攻击涉及约 1 亿欧元的欺诈转账；这家总部位于布列塔尼的银行集团正全力追回被盗资金。本条标题与时间经法广聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；聚合页相对时间倒推，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 20:59</span><span>来源：法广</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="nyt" data-k="日落公园 大火 纽约 火灾 电动自行车">
+      <div class="time sans"><b>11月5日</b>约 20:54</div><div class="rail"><span class="dot" style="background:var(--nyt)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--nyt)">纽约时报 NYT</span><span class="cat">美国·火灾</span></div>
+      <h3><a href="https://www.nytimes.com" target="_blank" rel="noopener">日落公园大火致 6 人死亡，为纽约市今年最致命火灾</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>6 Killed in Sunset Park Blaze: NYC’s Deadliest Fire This Year</p>
+      <p class="sum">布鲁克林一栋房屋发生火灾，造成 6 人死亡，成为纽约市今年最致命的火灾；火灾原因尚不清楚，但市长佐赫兰·马姆达尼对电动自行车表示担忧。今年以来纽约市致命火灾数量大幅上升。本条标题与时间经纽约时报 Top Stories 聚合页核对，未核到逐篇原文链接，链接指向该媒体官网；正文细节以聚合页摘要为准，不扩写。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 20:54</span><span>来源：纽约时报</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="dw" data-k="波兰 间谍罪 俄罗斯 武器部件 拘留">
+      <div class="time sans"><b>11月5日</b>约 20:44</div><div class="rail"><span class="dot" style="background:var(--dw)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--dw)">德国之声 DW</span><span class="cat">波兰·间谍案</span></div>
+      <h3><a href="https://ua.news/en/dovkolo-svitu/u-polshchi-chotirom-zatrimanim-visunuli-obvinuvachennia-u-shpigunstvi-deutsche-welle" target="_blank" rel="noopener">波兰四名被拘者被控间谍罪</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Four detainees in Poland charged with espionage</p>
+      <p class="sum">波兰在一宗涉嫌向俄罗斯非法供应弹药与武器系统部件的案件中拘留六人，其中四人被控间谍罪并被羁押候审三个月，另两人采取非羁押强制措施；被拘者包括五名 25 至 52 岁的波兰公民和一名 37 岁的俄罗斯公民，四名被控者中有一人为俄罗斯公民。波兰情报部门协调员托马斯·谢莫尼亚克称，该团伙涉嫌绕过对俄严格禁运，向莫斯科供应大量用于制造弹药与武器系统的部件；六人还被控违反关于具有国防与国际安全战略意义货物与技术国际贸易的规定。本条为德国之声转载页，转载页发布时间换算为北京时间约 20:44，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 20:44</span><span>来源：德国之声</span><span>链接为已打开的德国之声转载页，德国之声官网逐篇直链未核到</span></p></div>
+    </article>
+
+    <article data-src="ap" data-k="约旦 安曼 恐怖袭击 安全人员 斯里兰卡使馆">
+      <div class="time sans"><b>11月5日</b>约 20:39</div><div class="rail"><span class="dot" style="background:var(--ap)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--ap)">美联社 AP</span><span class="cat">约旦·袭击</span></div>
+      <h3><a href="https://apnews.com" target="_blank" rel="noopener">约旦称一名安全人员在安曼“恐怖袭击”中遇害</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>Jordan says security officer killed in Amman in 'terrorist attack'</p>
+      <p class="sum">周四，一名袭击者在约旦首都安曼斯里兰卡大使馆附近袭击并杀害了一名安全人员，约旦当局称这是一起恐怖行为；此次袭击发生在数周前约旦南部一座教堂葬礼上发生枪击、造成 9 人死亡、数十人受伤之后。本条标题与时间经转载聚合页核对，未核到逐篇原文链接，链接指向该媒体官网。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 20:39</span><span>来源：美联社</span><span>未核到逐篇原文链接，链接指向该媒体官网；标题与时间经转载聚合页核对</span></p></div>
+    </article>
+
+    <article data-src="rfi" data-k="法国罢工 黄背心 工会 示威 工资">
+      <div class="time sans"><b>11月5日</b>约 20:34</div><div class="rail"><span class="dot" style="background:var(--rfi)"></span></div>
+      <div class="card"><div class="srcrow sans"><span class="srcbadge on-dark" style="background:var(--rfi)">法广 RFI</span><span class="cat">法国·罢工</span></div>
+      <h3><a href="https://www.rfi.fr/cn/" target="_blank" rel="noopener">法国社会不满进一步合流：工会、新老黄背心、学生、公私营等领域今日罢工示威</a></h3>
+      <p class="orig"><span class="lbl">英文原题：</span>（法广中文版原题，无英文原题）</p>
+      <p class="sum">11 月 5 日星期四，法国多个工会组织联合发起全国性罢工和示威，主要诉求包括提振工资、立即启动工资谈判、增加对公共服务的投入、维护就业和工业发展，并通过对大额财富征税实现税收公平；本次罢工示威不仅涉及公共部门，也扩大至私营领域，预计在交通、教育、医疗、能源等多个领域造成冲击。截至午间，法国总工会称至少 73 个城市有超过 25 万人开始示威；法国内政部长洛朗·努涅兹表示全国将部署 7 万名警察和宪兵，并配备装甲车、无人机、直升机、水炮车、警犬队等。法国民主劳工联盟、法国总工会、工人力量总工会、统一工会联合会和全国自治工会联盟共同发出罢工号召；法国国民教育部估计小学阶段教师罢工比例为 17.54%。本条标题与时间经法广中文版核对，未核到逐篇原文链接，链接指向该媒体中文版；发表时间按巴黎时间换算为北京时间约 20:34，标“约”。</p>
+      <p class="meta sans"><span>发布时间（北京时间）：2026年11月5日 约 20:34</span><span>来源：法广</span><span>未核到逐篇原文链接，链接指向该媒体中文版；标题与时间经法广中文版核对</span></p></div>
+    </article>
+
+  </div>
+  <div class="empty sans" id="empty">没有匹配的条目，换个关键词试试。</div>
+</main>
+
+<footer class="sans">
+  <p>本版为 2026-11-05 约 20:00 至 2026-11-06 约 08:00（北京时间）窗口内新稿，不含当日午版与晚版；同一事件在不同来源下分别保留；未编造标题、时间和链接。选举结果均为媒体预测或计票快照口径，非官方最终认证。</p>
+  <p>链接说明：路透 6 条均为已打开核对的逐篇原文地址，另 1 条路透专栏仅经搜索摘要核对、链接指向该媒体官网；彭博市场综述条为已打开的彭博署名转载页；德国之声 3 条为已打开的德国之声转载页，德国之声官网逐篇直链未核到；美联社 5 条、纽约时报 9 条、《卫报》5 条、法广 4 条、经济学人 1 条未核到逐篇原文链接，链接指向各媒体官网（法广中文罢工条指向法广中文版），其标题与时间经转载/聚合页核对，页脚特此明示。</p>
+  <p>BBC、美国之音、自由亚洲在本窗口内无可核实逐篇新稿，记 0 条，未用旧闻冒充：BBC 官网未能直接打开，唯一可得首页镜像抓取时间在窗口开始之前，定向搜索亦无结果；美国之音直播页无文章列表、多次检索未见原创窗口稿；自由亚洲档案页最新为 10 月 15 日稿件、检索到的原创稿为 11 月 3 日，均未提取到本窗口逐篇新稿。</p>
+  <p>未单独成条的重复口径与排除项：英国央行加息的美联社版与《卫报》版、C 罗告别的美联社版、布兰德案的路透版与纽约时报版、纽森减刑的《卫报》版、梅拉尼娅斡旋停火的纽约时报版、美股暴跌的纽约时报版与《卫报》版，均与本版已含条目为同一事件、不同来源，未重复计入；经济学人仅见标题的 6 条补充稿与《卫报》仅见标题的 3 条补充稿、经济学人蓝色浪潮与英国永居等仅见标题条目、《卫报》英镑与最贫困国家债务等仅见标题条目，因无可核实 summary 未成条；纽约时报密西西比竞选、司法部泄密调查、国民警卫队巡逻、法广共和党失利分析、美联社凯恩续约与科莫 9 球条、彭博 Daybreak 节目共和党互相指责与高通展望条，因篇幅、重复口径或节目文案口径未单独成条，相关事实见市场综述与欧冠综述条；德国之声德国政界祝贺民主党条原始时间存疑、都柏林—罗马航班迫降条为窗口外，均未计入。</p>
+  <p>时间标注说明：全部 35 条时间均标“约”：路透 6 条逐篇原文时间为抓取时间换算，路透专栏条为搜索结果相对时间推算；美联社 5 条为转载聚合页 UTC 时间戳换算；纽约时报 9 条为 Top Stories 聚合页美东时间换算；彭博条为转载页标注换算；经济学人条为聚合页格林尼治时间换算；德国之声 3 条为转载页 UTC 时间戳换算；《卫报》5 条为聚合页格林尼治时间或相对时间换算；法广 4 条为聚合页相对时间倒推或巴黎时间换算。</p>
+  <p>按“当日三版覆盖同一文件、以最新版为准”的规则，本早版写入 news/2026-11-06/index.html，为 11 月 6 日当前最新版。</p>
+</footer>
+
+<script>
+(function(){
+  var btns=document.querySelectorAll('[data-f]');
+  var arts=document.querySelectorAll('article[data-src]');
+  var q=document.getElementById('q');
+  var empty=document.getElementById('empty');
+  var cur='all';
+  function apply(){
+    var kw=q.value.trim().toLowerCase(); var any=false;
+    arts.forEach(function(a){
+      var showSrc=(cur==='all'||a.dataset.src===cur);
+      var hit=showSrc && (!kw || (a.textContent.toLowerCase().indexOf(kw)>-1 || (a.dataset.k||'').toLowerCase().indexOf(kw)>-1));
+      a.classList.toggle('hidden',!hit); if(hit)any=true;
+    });
+    empty.style.display=any?'none':'block';
+  }
+  btns.forEach(function(b){ b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true'); cur=b.dataset.f; apply();
+  });});
+  q.addEventListener('input',apply);
+  var d=document.getElementById('density');
+  d.addEventListener('click',function(){
+    var on=document.body.classList.toggle('compact');
+    d.setAttribute('aria-pressed',on?'true':'false');
+    d.textContent=on?'舒适模式（显示简介）':'紧凑模式（只看标题）';
+  });
+  var hdr=document.querySelector('header');
+  var toggle=document.getElementById('hdrToggle');
+  var ticking=false;
+  function onScroll(){
+    var y=window.scrollY||window.pageYOffset;
+    if(y>90){ hdr.classList.add('is-shrunk'); }
+    else if(y<40){
+      hdr.classList.remove('is-shrunk'); hdr.classList.remove('show-controls');
+      toggle.setAttribute('aria-expanded','false'); toggle.textContent='筛选 ▾';
+    }
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){ ticking=true; window.requestAnimationFrame(onScroll); }
+  },{passive:true});
+  onScroll();
+  toggle.addEventListener('click',function(){
+    var open=hdr.classList.toggle('show-controls');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'筛选 ▴':'筛选 ▾';
+  });
+})();
+</script>
+</body>
+</html>
