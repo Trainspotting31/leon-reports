@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="text-scale" content="scale" />
-  <title>北京 60+ 老人七日三餐食单（10元/天健康版）</title>
+  <title>北京 60+ 老人七日三餐食单（附早市买菜与成本核算）</title>
   <style>
     :root {
       --paper: #fbfbf8;
@@ -143,26 +143,28 @@
       text-wrap: balance;
     }
 
-    .price-stamp {
+    .menu-stamp {
       display: inline-flex;
       flex-direction: column;
       align-items: flex-start;
-      padding: 0.5rem 0.9rem;
-      border: 2px solid var(--jujube);
+      padding: 0.48rem 0.9rem;
+      border: 1.5px solid var(--pine);
       border-radius: 0.35rem;
-      background: var(--jujube-soft);
-      color: var(--jujube);
+      background: var(--pine-soft);
+      color: var(--pine);
     }
 
-    .price-stamp strong {
+    .menu-stamp strong {
       font-family: var(--serif);
-      font-size: 1.35em;
-      line-height: 1.2;
+      font-size: 1.15em;
+      line-height: 1.25;
+      letter-spacing: 0.03em;
     }
 
-    .price-stamp span {
+    .menu-stamp span {
       font-size: 0.82em;
-      color: var(--ink);
+      color: var(--ink-sub);
+      margin-top: 0.1rem;
     }
 
     .lead {
@@ -170,6 +172,7 @@
       max-width: 44rem;
       color: var(--ink-sub);
       font-size: 1em;
+      text-wrap: pretty;
     }
 
     .rule-strip {
@@ -305,15 +308,11 @@
     }
 
     .day-theme {
-      font-size: 0.95em;
-      color: var(--ink-sub);
-      font-weight: 500;
-    }
-
-    .day-cost {
-      font-weight: 700;
-      color: var(--jujube);
+      font-family: var(--serif);
       font-size: 1.02em;
+      color: var(--sesame);
+      font-weight: 700;
+      letter-spacing: 0.02em;
     }
 
     .meals-list {
@@ -330,7 +329,7 @@
 
     @media (min-width: 42em) {
       .meal-row {
-        grid-template-columns: 5.8rem 1fr;
+        grid-template-columns: 4.6rem 1fr;
         gap: 1rem;
         align-items: start;
       }
@@ -338,21 +337,13 @@
 
     .meal-tag {
       display: inline-flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 0.4rem;
-    }
-
-    @media (min-width: 42em) {
-      .meal-tag {
-        flex-direction: column;
-        gap: 0.15rem;
-      }
+      align-items: center;
+      padding-top: 0.12rem;
     }
 
     .meal-slot {
       display: inline-block;
-      padding: 0.15rem 0.55rem;
+      padding: 0.16rem 0.58rem;
       border-radius: 0.25rem;
       background: var(--sesame-soft);
       color: var(--sesame);
@@ -370,42 +361,42 @@
       color: var(--pine);
     }
 
-    .meal-subcost {
-      font-size: 0.86em;
-      color: var(--ink-sub);
-      font-weight: 600;
-    }
-
     .meal-dishes {
-      font-size: 1.05em;
+      font-family: var(--serif);
+      font-size: 1.1em;
       font-weight: 700;
       color: var(--ink);
       line-height: 1.5;
     }
 
     .meal-detail {
-      margin-top: 0.28rem;
+      margin-top: 0.3rem;
       font-size: 0.93em;
       color: var(--ink-sub);
       line-height: 1.65;
     }
 
+    .meal-detail strong,
+    .cook-tip strong {
+      font-weight: 600;
+    }
+
     .cook-tip {
-      margin-top: 0.35rem;
-      font-size: 0.88em;
+      margin-top: 0.32rem;
+      font-size: 0.89em;
       color: var(--pine);
-      font-weight: 500;
+      line-height: 1.6;
     }
 
     .day-foot {
-      padding: 0.6rem 1.15rem;
+      padding: 0.65rem 1.15rem;
       background: var(--paper);
       font-size: 0.86em;
       color: var(--ink-sub);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 0.4rem;
+      gap: 0.35rem 1rem;
     }
 
     .section-block {
@@ -428,17 +419,95 @@
       font-family: var(--serif);
       font-size: 1.5em;
       color: var(--ink);
+      text-wrap: balance;
     }
 
     .section-note {
       color: var(--ink-sub);
       font-size: 0.94em;
       margin-bottom: 1.1rem;
+      text-wrap: pretty;
+    }
+
+    /* 成本核算总账条 */
+    .cost-ledger {
+      background: var(--wash-warm);
+      border: 1.5px solid var(--line-strong);
+      border-radius: 0.5rem;
+      padding: 1.05rem 1.15rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .ledger-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.6rem 1.2rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px dashed var(--line-strong);
+    }
+
+    .ledger-main {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.45rem 0.9rem;
+    }
+
+    .ledger-daily {
+      font-family: var(--serif);
+      font-size: 1.4em;
+      font-weight: 700;
+      color: var(--jujube);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ledger-weekly {
+      font-size: 0.98em;
+      font-weight: 600;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ledger-caption {
+      font-size: 0.86em;
+      color: var(--ink-sub);
+    }
+
+    .ledger-split {
+      margin-top: 0.8rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+      gap: 0.6rem;
+    }
+
+    .ledger-item {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 0.38rem;
+      padding: 0.55rem 0.8rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .ledger-item span {
+      font-size: 0.9em;
+      color: var(--ink-sub);
+    }
+
+    .ledger-item strong {
+      font-size: 1em;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     .shop-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr));
       gap: 1rem;
     }
 
@@ -449,42 +518,95 @@
       padding: 1rem 1.1rem;
     }
 
+    @media (min-width: 50em) {
+      .shop-group.span-full {
+        grid-column: 1 / -1;
+      }
+      .shop-group.span-full .check-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem 1.5rem;
+      }
+    }
+
+    .shop-group-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding-bottom: 0.55rem;
+      margin-bottom: 0.7rem;
+      border-bottom: 1.5px solid var(--line);
+    }
+
     .shop-group h3 {
       font-size: 1.05em;
       color: var(--pine);
-      padding-bottom: 0.5rem;
-      margin-bottom: 0.65rem;
-      border-bottom: 1px solid var(--line);
+    }
+
+    .group-subtotal {
+      font-size: 0.95em;
+      font-weight: 700;
+      color: var(--jujube);
+      font-variant-numeric: tabular-nums;
     }
 
     .check-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
+      gap: 0.65rem;
     }
 
     .check-item label {
-      display: flex;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: start;
       gap: 0.6rem;
       cursor: pointer;
-      line-height: 1.55;
-      font-size: 0.95em;
+      line-height: 1.5;
+      font-size: 0.94em;
     }
 
     .check-item input[type="checkbox"] {
-      width: 1.3rem;
-      height: 1.3rem;
-      margin-top: 0.2rem;
+      width: 1.28rem;
+      height: 1.28rem;
+      margin-top: 0.18rem;
       flex-shrink: 0;
       accent-color: var(--pine);
     }
 
-    .check-item input[type="checkbox"]:checked + span {
+    .item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .item-name {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .item-usage {
+      font-size: 0.88em;
+      color: var(--ink-sub);
+      line-height: 1.45;
+    }
+
+    .item-price {
+      font-weight: 700;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      padding-left: 0.35rem;
+    }
+
+    .check-item input[type="checkbox"]:checked ~ .item-info,
+    .check-item input[type="checkbox"]:checked ~ .item-price {
       text-decoration: line-through;
       color: var(--ink-sub);
-      opacity: 0.72;
+      opacity: 0.65;
     }
 
     .adjust-list {
@@ -542,6 +664,7 @@
       }
 
       .day-sheet,
+      .cost-ledger,
       .shop-group,
       .adjust-card {
         break-inside: avoid;
@@ -566,12 +689,12 @@
       <div>
         <h1>北京 60+ 老人七日三餐食单</h1>
         <p class="lead">
-          老北京家常舒坦口，早、中、晚三餐齐全。按北京 11 月初冬早市与社区生鲜超市整买分装价核算，一人一天食材加调料控制在 10 元以内（日均 9.5 元）。
+          老北京家常舒坦口，一周七天早、中、晚三餐不重样。专按 60 岁以上牙口与肠胃拿捏火候：肉压烂、鱼少刺、菜焖软、晚饭热乎好消化。文末附一周早市买菜清单与菜金细账。
         </p>
       </div>
-      <div class="price-stamp">
-        <strong>全天 9.1–9.9 元</strong>
-        <span>一周总菜金约 66.5 元</span>
+      <div class="menu-stamp">
+        <strong>初冬家常食单</strong>
+        <span>一日三餐 · 软烂适老</span>
       </div>
     </div>
 
@@ -586,7 +709,7 @@
       </div>
       <div class="rule-box">
         <strong>蛋白和钙不缩水</strong>
-        <p>每天 1 个以上鸡蛋 + 一顿肉或鱼 + 豆浆/豆腐/牛奶轮换，守住老人肌肉与骨量。</p>
+        <p>每天 1–2 个鸡蛋 + 一顿肉或鱼 + 豆浆/豆腐/牛奶轮换，守住老人肌肉与骨量。</p>
       </div>
       <div class="rule-box">
         <strong>晚饭吃软七分饱</strong>
@@ -604,7 +727,7 @@
       <a class="day-pill" data-day="5" href="#day-5">周五</a>
       <a class="day-pill" data-day="6" href="#day-6">周六</a>
       <a class="day-pill" data-day="0" href="#day-0">周日</a>
-      <a class="day-pill is-shop" href="#shop-list">一周买菜表</a>
+      <a class="day-pill is-shop" href="#shop-list">买菜表·成本账</a>
     </div>
   </nav>
 
@@ -614,48 +737,44 @@
       <div class="day-header">
         <div class="day-title-group">
           <h2 class="day-name">周一</h2>
-          <span class="day-theme">酸香开胃 · 补铁护胃</span>
         </div>
-        <span class="day-cost">全天约 9.9 元</span>
+        <span class="day-theme">酸香开胃 · 补铁护胃</span>
       </div>
       <ul class="meals-list">
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot">早餐</span>
-            <span class="meal-subcost">1.7 元</span>
           </div>
           <div>
-            <div class="meal-dishes">自磨无糖热豆浆 + 水煮鸡蛋 + 玉米面红枣软发糕 + 香油拌心里美细丝</div>
-            <p class="meal-detail">干黄豆 25g 现打热豆浆（0.3元）、鸡蛋 1 个（0.6元）、软发糕 1 块（0.5元）、心里美萝卜擦极细丝滴两滴香油（0.3元）。</p>
-            <p class="cook-tip">老人做法：发糕用一半白面一半细玉米面加酵母发透再蒸，松软不喇嗓子。</p>
+            <div class="meal-dishes">自磨无糖热豆浆 · 水煮鸡蛋 · 玉米面红枣软发糕 · 香油拌心里美细丝</div>
+            <p class="meal-detail"><strong>配料：</strong>干黄豆 30g 现打热豆浆；水煮蛋 1 个；玉米面红枣发糕 1 块；心里美萝卜擦极细丝滴两滴香油。</p>
+            <p class="cook-tip"><strong>做法：</strong>发糕用白面与细玉米面各半，加酵母温水发透再蒸，暄软不喇嗓子；红枣提前去核剪碎。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot lunch">午餐</span>
-            <span class="meal-subcost">5.6 元</span>
           </div>
           <div>
-            <div class="meal-dishes">西红柿软炖牛腩 + 小油菜烧北豆腐 + 金银二米饭</div>
-            <p class="meal-detail">牛腩 55g（3.6元）配西红柿 100g（0.7元）；小油菜 100g 配北豆腐 80g（0.9元）；大米小米 2:1 焖二米饭（0.4元）。</p>
-            <p class="cook-tip">老人做法：牛腩切小块用高压锅压 25 分钟至筷子一戳即烂，西红柿炒出红沙借酸减盐。</p>
+            <div class="meal-dishes">西红柿软炖牛腩 · 小油菜烧北豆腐 · 金银二米饭</div>
+            <p class="meal-detail"><strong>配料：</strong>牛腩 60g、西红柿 100g；小油菜 100g、北豆腐半块；大米与小米按 2:1 焖软二米饭。</p>
+            <p class="cook-tip"><strong>做法：</strong>牛腩切小块用高压锅压 25 分钟至筷子一戳即烂；西红柿先炒出红沙再兑牛肉原汤慢煨，借酸减盐。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot dinner">晚餐</span>
-            <span class="meal-subcost">2.0 元</span>
           </div>
           <div>
-            <div class="meal-dishes">老北京西红柿青菜小疙瘩汤 + 蒸铁棍山药一段</div>
-            <p class="meal-detail">西红柿 80g + 鸡蛋半个 + 面粉 45g + 小青菜碎 80g（1.4元）；去皮铁棍山药 50g 上锅蒸面（0.6元）。</p>
-            <p class="cook-tip">老人做法：面碗接水龙头滴水搅拌成米粒大小碎疙瘩，好咽易消化。</p>
+            <div class="meal-dishes">老北京西红柿青菜小疙瘩汤 · 蒸铁棍山药一段</div>
+            <p class="meal-detail"><strong>配料：</strong>西红柿 80g、鸡蛋半个、面粉 45g、小青菜碎 80g；去皮铁棍山药一段（约 60g）。</p>
+            <p class="cook-tip"><strong>做法：</strong>山药随锅蒸面；面碗在细水柱下边滴水边搅成米粒大小碎疙瘩，汤滚下锅淋蛋花，顺滑易消化。</p>
           </div>
         </li>
       </ul>
       <div class="day-foot">
-        <span>含全天油盐葱姜调料 0.6 元</span>
-        <span>营养重点：血红素铁 + 大豆异黄酮 + 番茄红素</span>
+        <span>顺手备菜：余下半个蛋液封好冷藏，明午炒西葫芦正好用完</span>
+        <span>食养重点：红肉血红素铁 · 番茄红素 · 大豆蛋白</span>
       </div>
     </article>
 
@@ -664,48 +783,44 @@
       <div class="day-header">
         <div class="day-title-group">
           <h2 class="day-name">周二</h2>
-          <span class="day-theme">醋焖少刺鱼 · 补钙润肠</span>
         </div>
-        <span class="day-cost">全天约 9.4 元</span>
+        <span class="day-theme">醋焖少刺鱼 · 补钙润肠</span>
       </div>
       <ul class="meals-list">
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot">早餐</span>
-            <span class="meal-subcost">1.8 元</span>
           </div>
           <div>
-            <div class="meal-dishes">小米南瓜稠粥 + 水煮蛋 + 老北京麻酱小花卷 + 焯菠菜拌碎花生</div>
-            <p class="meal-detail">小米 20g 熬南瓜 60g（0.4元）、鸡蛋 1 个（0.6元）、自蒸麻酱小花卷（0.5元）、焯水菠菜配几粒压碎熟花生（0.3元）。</p>
-            <p class="cook-tip">老人做法：菠菜沸水焯 30 秒去掉草酸；花生煮面再压碎，避免整粒呛咳。</p>
+            <div class="meal-dishes">小米南瓜稠粥 · 水煮蛋 · 老北京麻酱小花卷 · 焯菠菜拌碎花生</div>
+            <p class="meal-detail"><strong>配料：</strong>小米 20g、去皮南瓜 60g；水煮蛋 1 个；自蒸麻酱小花卷 1 个；鲜菠菜一小把、熟花生米几粒。</p>
+            <p class="cook-tip"><strong>做法：</strong>小米同南瓜丁慢熬出米油；菠菜沸水焯 30 秒去掉草酸，花生煮面再压碎拌入，避免整粒呛咳。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot lunch">午餐</span>
-            <span class="meal-subcost">5.2 元</span>
           </div>
           <div>
-            <div class="meal-dishes">陈醋酱焖带鱼中段 + 木耳鸡蛋炒西葫芦 + 玉米面发糕 + 冬瓜虾皮汤</div>
-            <p class="meal-detail">带鱼中段 95g（2.8元）；鸡蛋半个 + 西葫芦 140g + 碎黑木耳（1.5元）；发糕（0.5元）；冬瓜淡虾皮清汤（0.4元）。</p>
-            <p class="cook-tip">老人做法：带鱼只有一根主骨好挑刺；不裹厚面糊油炸，平底锅少油煎定型后多放陈醋焖 15 分钟，边刺酥软。</p>
+            <div class="meal-dishes">陈醋酱焖带鱼中段 · 木耳鸡蛋炒西葫芦 · 玉米面发糕 · 冬瓜虾皮汤</div>
+            <p class="meal-detail"><strong>配料：</strong>带鱼中段 1 块（约 100g）；西葫芦半根、碎黑木耳、鸡蛋半个；发糕 1 块；冬瓜薄片配淡虾皮清汤。</p>
+            <p class="cook-tip"><strong>做法：</strong>带鱼只留中段，一根主骨好挑刺；不裹厚面糊油炸，平底锅少油煎定型后多放山西陈醋焖 15 分钟，边刺酥软。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot dinner">晚餐</span>
-            <span class="meal-subcost">1.8 元</span>
           </div>
           <div>
-            <div class="meal-dishes">虾皮小白菜烩南豆腐 + 细玉米糁棒碴粥 + 半个小花卷</div>
-            <p class="meal-detail">南豆腐 120g + 小白菜 120g + 淡干虾皮一撮（1.4元）；细玉米糁慢熬棒碴粥（0.2元）；半个花卷（0.2元）。</p>
-            <p class="cook-tip">老人做法：南豆腐用勺子舀成片下锅烩，入口即化，虾皮先用清水投洗一遍去浮盐。</p>
+            <div class="meal-dishes">虾皮小白菜烩南豆腐 · 细玉米糁棒碴粥 · 小花卷半个</div>
+            <p class="meal-detail"><strong>配料：</strong>南豆腐 1 小盒、小白菜 120g、淡干虾皮一撮；细玉米糁慢熬棒碴粥；麻酱小花卷半个。</p>
+            <p class="cook-tip"><strong>做法：</strong>虾皮先用清水投洗一遍去浮盐；南豆腐拿勺子舀成薄片下锅同菜叶烩透，入口即化。</p>
           </div>
         </li>
       </ul>
       <div class="day-foot">
-        <span>含全天油盐葱姜陈醋 0.6 元</span>
-        <span>营养重点：深海鱼护血管 + 纯麻酱南豆腐双补钙</span>
+        <span>顺手备菜：把剩的半块北豆腐切块放冷冻室，明午炖砂锅即成冻豆腐；睡前泡黄豆 30g</span>
+        <span>食养重点：深海鱼护血管 · 纯麻酱与南豆腐双补钙</span>
       </div>
     </article>
 
@@ -714,48 +829,44 @@
       <div class="day-header">
         <div class="day-title-group">
           <h2 class="day-name">周三</h2>
-          <span class="day-theme">冬日砂锅丸子 · 热汤暖身</span>
         </div>
-        <span class="day-cost">全天约 9.2 元</span>
+        <span class="day-theme">冬日砂锅丸子 · 热汤暖身</span>
       </div>
       <ul class="meals-list">
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot">早餐</span>
-            <span class="meal-subcost">1.7 元</span>
           </div>
           <div>
-            <div class="meal-dishes">温水虾皮蒸嫩蛋羹 + 热豆浆 + 发面软馒头 + 少盐蒜泥拍黄瓜</div>
-            <p class="meal-detail">鸡蛋 1 个加 1.5 倍温水蒸蛋羹（0.7元）、热豆浆（0.3元）、软馒头 1 个（0.3元）、去皮拍黄瓜小碟（0.4元）。</p>
-            <p class="cook-tip">老人做法：黄瓜削皮拍碎切小块，比带皮整块好嚼且不凉胃。</p>
+            <div class="meal-dishes">温水虾皮蒸嫩蛋羹 · 热豆浆 · 发面软馒头 · 少盐蒜泥拍黄瓜</div>
+            <p class="meal-detail"><strong>配料：</strong>鸡蛋 1 个、淡虾皮几粒；现磨热豆浆 1 碗；发面软馒头 1 个；黄瓜小半根。</p>
+            <p class="cook-tip"><strong>做法：</strong>蛋液加 1.5 倍温开水撇沫，扣盘蒸 8 分钟至镜面嫩滑；黄瓜削去硬皮拍碎切小块，好嚼不凉胃。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot lunch">午餐</span>
-            <span class="meal-subcost">4.7 元</span>
           </div>
           <div>
-            <div class="meal-dishes">砂锅水汆丸子白菜冻豆腐 + 软炒醋溜土豆丝 + 燕麦大米软饭</div>
-            <p class="meal-detail">猪前尖瘦肉馅 80g（2.2元）配大白菜心 180g、冻豆腐 80g、粉丝一小撮（1.1元）；土豆丝 130g（0.5元）；燕麦大米饭及葱花清汤（0.9元）。</p>
-            <p class="cook-tip">老人做法：肉馅加姜水搅上劲，冷水下锅水汆代替油炸，软嫩不腻；冻豆腐提前一晚把北豆腐切块放冷冻室自制即可。</p>
+            <div class="meal-dishes">砂锅水汆丸子白菜冻豆腐 · 软炒醋溜土豆丝 · 燕麦大米软饭</div>
+            <p class="meal-detail"><strong>配料：</strong>猪前尖瘦肉馅 80g、大白菜心 180g、自制冻豆腐半块、粉丝一小撮；土豆 1 个；燕麦大米软饭。</p>
+            <p class="cook-tip"><strong>做法：</strong>肉馅打入葱姜水搅上劲，冷水下锅水汆代替油炸，软嫩不腻；冻豆腐同白菜帮慢煨吸满鲜汤。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot dinner">晚餐</span>
-            <span class="meal-subcost">2.2 元</span>
           </div>
           <div>
-            <div class="meal-dishes">菠菜荷包蛋热汤面 + 麻酱拌软腐竹小碟</div>
-            <p class="meal-detail">细挂面掺少许荞麦面 60g + 荷包蛋 1 个 + 焯水菠菜 100g（1.6元）；干腐竹 15g 温水泡透煮软拌麻酱（0.6元）。</p>
-            <p class="cook-tip">老人做法：面条比年轻人多煮 2 分钟至无硬芯，睡前喝半碗热汤不口干。</p>
+            <div class="meal-dishes">菠菜荷包蛋热汤面 · 麻酱拌软腐竹小碟</div>
+            <p class="meal-detail"><strong>配料：</strong>细挂面掺少许荞麦面 60g、荷包蛋 1 个、焯水菠菜 100g；干腐竹 15g、纯芝麻酱半勺。</p>
+            <p class="cook-tip"><strong>做法：</strong>腐竹温水泡透煮至无硬芯再拌麻酱；面条比平时多煮 2 分钟，睡前喝半碗热汤不口干。</p>
           </div>
         </li>
       </ul>
       <div class="day-foot">
-        <span>含全天油盐葱姜调料 0.6 元</span>
-        <span>营养重点：水汆低脂瘦肉蛋白 + 燕麦可溶性膳食纤维</span>
+        <span>顺手备菜：调肉馅时顺手留 35g 包 8 个小馄饨冻进冰箱，周六晚直接下锅</span>
+        <span>食养重点：水汆低脂瘦肉蛋白 · 燕麦可溶性膳食纤维</span>
       </div>
     </article>
 
@@ -764,48 +875,44 @@
       <div class="day-header">
         <div class="day-title-group">
           <h2 class="day-name">周四</h2>
-          <span class="day-theme">山药焖嫩鸡 · 健脾通便</span>
         </div>
-        <span class="day-cost">全天约 9.1 元</span>
+        <span class="day-theme">山药焖嫩鸡 · 健脾通便</span>
       </div>
       <ul class="meals-list">
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot">早餐</span>
-            <span class="meal-subcost">1.9 元</span>
           </div>
           <div>
-            <div class="meal-dishes">棒碴红薯粥 + 五香茶鸡蛋 + 发面葱花软饼 + 熟焖胡萝卜丝</div>
-            <p class="meal-detail">细玉米糁熬去皮红薯丁（0.4元）、茶鸡蛋 1 个（0.7元）、发面葱花软饼（0.5元）、胡萝卜擦丝少油焖软（0.3元）。</p>
-            <p class="cook-tip">老人做法：胡萝卜用几滴油焖软后脂溶性维生素 A 更好吸收，护眼防干涩。</p>
+            <div class="meal-dishes">棒碴红薯粥 · 五香茶鸡蛋 · 发面葱花软饼 · 熟焖胡萝卜丝</div>
+            <p class="meal-detail"><strong>配料：</strong>细玉米糁 25g、去皮红薯丁 60g；茶鸡蛋 1 个；发面葱花软饼 1 角；胡萝卜半根擦细丝。</p>
+            <p class="cook-tip"><strong>做法：</strong>红薯切小丁随棒碴慢熬至化沙；胡萝卜丝用几滴油加盖焖软，脂溶性维生素 A 更好吸收，护眼防干涩。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot lunch">午餐</span>
-            <span class="meal-subcost">4.6 元</span>
           </div>
           <div>
-            <div class="meal-dishes">香菇山药焖去皮鸡腿 + 少油手撕圆白菜 + 二米饭 + 紫菜清汤</div>
-            <p class="meal-detail">去骨鸡琵琶腿肉 105g（1.9元）配铁棍山药 70g、胡萝卜丁、干香菇 2 朵（1.5元）；圆白菜 160g（0.6元）；二米饭与紫菜汤（0.6元）。</p>
-            <p class="cook-tip">老人做法：买琵琶腿撕掉鸡皮和黄油，肉质比鸡胸嫩滑数倍、绝不塞牙；泡香菇的原汤撇净泥沙直接入锅提鲜。</p>
+            <div class="meal-dishes">香菇山药焖去皮鸡腿 · 少油手撕圆白菜 · 金银二米饭 · 紫菜清汤</div>
+            <p class="meal-detail"><strong>配料：</strong>鸡琵琶腿 1 只（去皮去骨取净肉约 105g）、铁棍山药 70g、胡萝卜丁、干香菇 2 朵；圆白菜 160g；二米饭与紫菜汤。</p>
+            <p class="cook-tip"><strong>做法：</strong>琵琶腿撕掉鸡皮和黄油切块，肉质比鸡胸嫩滑数倍、绝不塞牙；泡香菇的原汤撇净泥沙直接入锅提鲜。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot dinner">晚餐</span>
-            <span class="meal-subcost">2.0 元</span>
           </div>
           <div>
-            <div class="meal-dishes">大米山药白粥 + 嫩芹菜丁炒白豆干 + 玉米面软发糕半块</div>
-            <p class="meal-detail">大米山药熬稠粥（0.5元）；嫩芹菜切 0.5 厘米小丁 100g 炒白豆干小丁 50g（1.1元）；发糕半块（0.4元）。</p>
-            <p class="cook-tip">老人做法：老芹菜撕掉粗筋再切碎丁，既保留降压膳食纤维，又不费牙。</p>
+            <div class="meal-dishes">大米山药白粥 · 嫩芹菜丁炒白豆干 · 玉米面软发糕半块</div>
+            <p class="meal-detail"><strong>配料：</strong>大米同鲜山药片熬稠粥；嫩芹菜 100g、白豆干 50g；玉米面软发糕半块。</p>
+            <p class="cook-tip"><strong>做法：</strong>芹菜撕掉粗筋，同白豆干一起切成指甲盖大小的碎丁快炒焖软，既留住降压膳食纤维，又不费牙。</p>
           </div>
         </li>
       </ul>
       <div class="day-foot">
-        <span>含全天油盐葱姜调料 0.6 元</span>
-        <span>营养重点：低脂高蛋白禽腿肉 + 山药红薯温和促排便</span>
+        <span>顺手备菜：干香菇提前半小时温水泡发，蒂头剪净</span>
+        <span>食养重点：去皮禽腿高蛋白 · 山药红薯温和促排便</span>
       </div>
     </article>
 
@@ -814,48 +921,44 @@
       <div class="day-header">
         <div class="day-title-group">
           <h2 class="day-name">周五</h2>
-          <span class="day-theme">京味打卤面与糊塌子 · 面食改善日</span>
         </div>
-        <span class="day-cost">全天约 9.5 元</span>
+        <span class="day-theme">京味打卤面与糊塌子 · 面食改善日</span>
       </div>
       <ul class="meals-list">
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot">早餐</span>
-            <span class="meal-subcost">2.2 元</span>
           </div>
           <div>
-            <div class="meal-dishes">温热袋装纯牛奶 + 老北京麻酱小花卷 + 高压锅五香软花生米</div>
-            <p class="meal-detail">三元纯牛奶 1 袋 200ml（整箱均价 1.6元）、麻酱花卷 1 个（0.4元）、煮软花生米一小撮（0.2元）。</p>
-            <p class="cook-tip">老人做法：袋奶连袋放温水里泡热再喝，不冰肠胃；乳糖不耐受的老人可换舒化奶或酸奶。</p>
+            <div class="meal-dishes">温热袋装纯牛奶 · 老北京麻酱小花卷 · 高压锅五香软花生米</div>
+            <p class="meal-detail"><strong>配料：</strong>三元袋装纯牛奶 1 袋（200ml）；麻酱小花卷 1 个；五香煮软花生米一小撮。</p>
+            <p class="cook-tip"><strong>做法：</strong>袋奶连袋放温水里泡热再喝，不冰肠胃；乳糖不耐受的老人可换舒化奶或无糖酸奶。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot lunch">午餐</span>
-            <span class="meal-subcost">4.6 元</span>
           </div>
           <div>
-            <div class="meal-dishes">少油茄丁肉末鸡蛋打卤面（配焯绿豆芽、黄瓜丝菜码 + 原汤面汤）</div>
-            <p class="meal-detail">圆茄子 120g + 猪瘦肉丁 55g + 鸡蛋 1 个 + 碎木耳打卤，配鲜切面 85g（3.9元）；焯绿豆芽与去皮黄瓜丝菜码（0.7元）。</p>
-            <p class="cook-tip">老人做法：圆茄子切小丁先上蒸锅蒸 6 分钟蒸软再下锅炒卤，彻底避开餐馆“油泡茄子”的吸油坑，卤汁减盐勾薄芡。</p>
+            <div class="meal-dishes">少油茄丁肉末鸡蛋打卤面（配焯绿豆芽、黄瓜丝菜码）</div>
+            <p class="meal-detail"><strong>配料：</strong>圆茄子 1 小个（约 120g）、猪瘦肉丁 55g、鸡蛋 1 个、碎黑木耳、鲜切面 85g；焯绿豆芽与去皮黄瓜丝菜码。</p>
+            <p class="cook-tip"><strong>做法：</strong>圆茄子切小丁先上蒸锅蒸 6 分钟蒸软再下锅炒卤，彻底避开餐馆“油泡茄子”的吸油坑，卤汁减盐勾薄芡。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot dinner">晚餐</span>
-            <span class="meal-subcost">2.1 元</span>
           </div>
           <div>
-            <div class="meal-dishes">老北京西葫芦鸡蛋软糊塌子 + 冬瓜海米清汤</div>
-            <p class="meal-detail">西葫芦擦细丝 130g 搅入鸡蛋 1 个与面粉 45g 摊 2 张软糊塌子（1.5元）；冬瓜海米清汤 1 碗（0.6元）。</p>
-            <p class="cook-tip">老人做法：平底不粘锅只刷薄薄一层油，小火盖盖焖熟，外软里嫩，没牙也能抿化。</p>
+            <div class="meal-dishes">老北京西葫芦鸡蛋软糊塌子 · 冬瓜虾皮清汤</div>
+            <p class="meal-detail"><strong>配料：</strong>西葫芦半根擦细丝（约 130g）、鸡蛋 1 个、面粉 45g；冬瓜薄片配淡虾皮清汤 1 碗。</p>
+            <p class="cook-tip"><strong>做法：</strong>西葫芦丝搅入鸡蛋与面粉成稀糊，平底不粘锅刷薄油，小火盖盖焖熟两张，外软里嫩，没牙也能抿化。</p>
           </div>
         </li>
       </ul>
       <div class="day-foot">
-        <span>含全天油盐葱姜调料 0.6 元</span>
-        <span>营养重点：老北京地道面食解馋 + 蒸茄丁控油法</span>
+        <span>顺手备菜：睡前泡黑豆黄豆共 35g；无刺鱼柳移到冷藏室缓化</span>
+        <span>食养重点：老北京地道面食解馋 · 蒸茄丁控油法</span>
       </div>
     </article>
 
@@ -864,48 +967,44 @@
       <div class="day-header">
         <div class="day-title-group">
           <h2 class="day-name">周六</h2>
-          <span class="day-theme">清蒸零刺鱼与小馄饨 · 周末鲜味</span>
         </div>
-        <span class="day-cost">全天约 9.8 元</span>
+        <span class="day-theme">清蒸零刺鱼与小馄饨 · 周末鲜味</span>
       </div>
       <ul class="meals-list">
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot">早餐</span>
-            <span class="meal-subcost">1.6 元</span>
           </div>
           <div>
-            <div class="meal-dishes">现磨黑豆黄豆浆 + 水煮蛋 + 南瓜发面软馒头 + 软煮短海带丝</div>
-            <p class="meal-detail">黑豆黄豆拼配热豆浆（0.4元）、鸡蛋 1 个（0.6元）、南瓜泥发面馒头（0.4元）、海带丝切短煮软少醋凉拌（0.2元）。</p>
-            <p class="cook-tip">老人做法：海带丝务必切成 3 厘米短段并多煮 10 分钟至软糯，防整根滑入咽喉。</p>
+            <div class="meal-dishes">现磨黑豆黄豆浆 · 水煮蛋 · 南瓜发面软馒头 · 软煮短海带丝</div>
+            <p class="meal-detail"><strong>配料：</strong>黑豆黄豆拼配热豆浆 1 碗；水煮蛋 1 个；南瓜泥发面软馒头 1 个；熟海带丝一小撮。</p>
+            <p class="cook-tip"><strong>做法：</strong>海带丝务必横切成 3 厘米短段并多煮 10 分钟至软糯再滴醋凉拌，防长根滑入咽喉。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot lunch">午餐</span>
-            <span class="meal-subcost">5.4 元</span>
           </div>
           <div>
-            <div class="meal-dishes">清蒸无刺龙利鱼柳垫嫩豆腐 + 西红柿烧松花菜 + 二米饭</div>
-            <p class="meal-detail">无刺龙利鱼柳（或鲈鱼净肉）95g 铺在南豆腐 120g 上清蒸（3.6元）；松花菜 140g 配西红柿烧软（1.4元）；二米饭（0.4元）。</p>
-            <p class="cook-tip">老人做法：完全零小刺，鱼片铺在豆腐上大火蒸 7 分钟，淋半勺低盐蒸鱼豉油与几滴香油即可。</p>
+            <div class="meal-dishes">清蒸无刺龙利鱼柳垫嫩豆腐 · 西红柿烧松花菜 · 金银二米饭</div>
+            <p class="meal-detail"><strong>配料：</strong>无刺龙利鱼柳（或鲈鱼净肉）100g、南豆腐 1 小盒；松花菜 140g、西红柿 1 个；金银二米饭。</p>
+            <p class="cook-tip"><strong>做法：</strong>完全零小刺，鱼片铺在南豆腐上水开大火蒸 7 分钟，倒掉腥水淋半勺减盐豉油与几滴香油；松花菜多焖 3 分钟至软透。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot dinner">晚餐</span>
-            <span class="meal-subcost">2.2 元</span>
           </div>
           <div>
-            <div class="meal-dishes">紫菜虾皮猪肉小馄饨 + 蒜蓉白灼生菜</div>
-            <p class="meal-detail">自包薄皮小馄饨 8 个（猪瘦肉芹菜细馅 35g + 馄饨皮 + 紫菜虾皮汤底，1.8元）；焯生菜 100g（0.4元）。</p>
-            <p class="cook-tip">老人做法：周三买肉馅时顺手包出一小盒冻冰箱，周末晚上下水 3 分钟即熟，皮滑好咽。</p>
+            <div class="meal-dishes">紫菜虾皮猪肉小馄饨 · 蒜蓉白灼生菜</div>
+            <p class="meal-detail"><strong>配料：</strong>自包薄皮小馄饨 8 个（猪瘦肉芹菜细馅，配紫菜虾皮汤底）；鲜生菜 100g。</p>
+            <p class="cook-tip"><strong>做法：</strong>取出周三冻好的小馄饨，沸水下锅 3 分钟皮滑馅熟；生菜沸水烫 15 秒捞出淋热蒜汤。</p>
           </div>
         </li>
       </ul>
       <div class="day-foot">
-        <span>含全天油盐葱姜豉油 0.6 元</span>
-        <span>营养重点：零刺优质鱼蛋白 + 藻类碘与膳食纤维</span>
+        <span>顺手备菜：取出明午木樨肉用的瘦肉片放冷藏缓化</span>
+        <span>食养重点：零刺优质鱼蛋白 · 藻类碘与菌蔬膳食纤维</span>
       </div>
     </article>
 
@@ -914,100 +1013,326 @@
       <div class="day-header">
         <div class="day-title-group">
           <h2 class="day-name">周日</h2>
-          <span class="day-theme">京味木樨肉 · 清淡收尾</span>
         </div>
-        <span class="day-cost">全天约 9.6 元</span>
+        <span class="day-theme">京味木樨肉 · 清淡收尾</span>
       </div>
       <ul class="meals-list">
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot">早餐</span>
-            <span class="meal-subcost">2.3 元</span>
           </div>
           <div>
-            <div class="meal-dishes">温热袋装纯牛奶 + 玉米面红枣软发糕 + 焯小油菜心</div>
-            <p class="meal-detail">三元纯牛奶 1 袋（1.6元）、软发糕 1 块（0.5元）、白水焯小油菜心淋两滴生抽（0.2元）。</p>
-            <p class="cook-tip">老人做法：牛奶配发酵面食，早晨血糖平稳不犯困。</p>
+            <div class="meal-dishes">温热袋装纯牛奶 · 玉米面红枣软发糕 · 白灼小油菜心</div>
+            <p class="meal-detail"><strong>配料：</strong>三元袋装纯牛奶 1 袋（200ml）；玉米面红枣软发糕 1 块；嫩小油菜心几棵。</p>
+            <p class="cook-tip"><strong>做法：</strong>牛奶温水泡热配发酵面食，早晨血糖平稳不犯困；小油菜心白水焯软淋两滴生抽。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot lunch">午餐</span>
-            <span class="meal-subcost">4.7 元</span>
           </div>
           <div>
-            <div class="meal-dishes">家常软炒木樨肉 + 虾皮烧冬瓜 + 红薯大米软饭 + 萝卜丝汤</div>
-            <p class="meal-detail">猪里脊薄片 60g + 鸡蛋 1 个 + 黄瓜薄片 80g + 碎黑木耳（3.3元）；冬瓜 180g 烧虾皮（0.7元）；红薯饭与清汤（0.7元）。</p>
-            <p class="cook-tip">老人做法：里脊逆纹切薄片抓少许水淀粉温水滑熟（不走宽油），冬瓜焖至透明软烂利水消肿。</p>
+            <div class="meal-dishes">家常软炒木樨肉 · 虾皮烧冬瓜 · 红薯大米软饭 · 白萝卜丝汤</div>
+            <p class="meal-detail"><strong>配料：</strong>猪瘦肉薄片 60g、鸡蛋 1 个、去皮黄瓜薄片 80g、碎黑木耳；冬瓜 180g、淡虾皮；红薯大米软饭配萝卜丝清汤。</p>
+            <p class="cook-tip"><strong>做法：</strong>瘦肉逆纹切薄片抓少许水淀粉，温水滑熟代替过油，一样滑嫩不柴；冬瓜小火焖至透明软烂，利水消肿。</p>
           </div>
         </li>
         <li class="meal-row">
           <div class="meal-tag">
             <span class="meal-slot dinner">晚餐</span>
-            <span class="meal-subcost">2.0 元</span>
           </div>
           <div>
-            <div class="meal-dishes">红枣小米养胃粥 + 瘦肉末蒸嫩蛋羹 + 清炒大白菜叶 + 半块软饼</div>
-            <p class="meal-detail">小米红枣稠粥（0.4元）；鸡蛋 1 个加 15g 熟瘦肉末蒸羹（1.0元）；单取嫩白菜叶 150g 软炒（0.3元）；软饼半块（0.3元）。</p>
-            <p class="cook-tip">老人做法：红枣提前去核剪碎再熬粥，杜绝老人误吞枣核风险（枣核两头尖最伤食道）。</p>
+            <div class="meal-dishes">红枣小米养胃粥 · 瘦肉末蒸嫩蛋羹 · 清炒嫩白菜叶 · 软饼半角</div>
+            <p class="meal-detail"><strong>配料：</strong>小米 25g、去核红枣碎 3 颗；鸡蛋 1 个加熟瘦肉末 15g 蒸羹；单取大白菜嫩黄叶 150g；发面软饼半角。</p>
+            <p class="cook-tip"><strong>做法：</strong>红枣务必提前去核剪碎再熬粥，杜绝老人误吞枣核风险（枣核两头尖最伤食道）。</p>
           </div>
         </li>
       </ul>
       <div class="day-foot">
-        <span>含全天油盐葱姜调料 0.6 元</span>
-        <span>营养重点：清肠刮油收尾 + 去核红枣安全细节</span>
+        <span>顺手备菜：周末早市补齐下周耐放食材，红枣集中剪开去核装罐</span>
+        <span>食养重点：温水滑肉控油法 · 去核红枣安全细节</span>
       </div>
     </article>
 
-    <!-- 一周早市采购清单 -->
+    <!-- 一周早市采购清单与成本核算 -->
     <section class="section-block" id="shop-list">
       <div class="section-head">
-        <h2>一周早市集中买菜表（单人 7 天量）</h2>
+        <h2>一周买菜表与成本核算（单人 7 天量）</h2>
         <button type="button" class="action-btn no-print" id="btnResetShop">清空勾选</button>
       </div>
       <p class="section-note">
-        把全天预算稳稳压进 10 元的秘诀：周末早市或社区超市整买肉鱼，回家按每顿 60–100g 分小袋冷冻；当季耐放根茎菜一次买齐，绿叶菜周中补一次鲜。点击方框可打钩记录。
+        做饭没法按“半个花卷几毛钱”单买，把预算稳控在一天 10 元以内的秘诀是整买分装：周末早市或社区超市一次买齐肉蛋与耐放根茎菜，回家按每顿 60–100g 分袋冷冻，周中只补一次鲜叶菜。点击方框可买菜打钩。
       </p>
+
+      <div class="cost-ledger" aria-label="一周菜金总账">
+        <div class="ledger-top">
+          <div class="ledger-main">
+            <span class="ledger-daily">折合日均约 9.7 元</span>
+            <span class="ledger-weekly">一周 21 餐总计约 68.0 元</span>
+          </div>
+          <span class="ledger-caption">按 2026 年 11 月北京朝阳/东城社区早市与生鲜超市日常价核算</span>
+        </div>
+        <div class="ledger-split">
+          <div class="ledger-item">
+            <span>肉鱼蛋奶豆与干货（56%）</span>
+            <strong>37.8 元</strong>
+          </div>
+          <div class="ledger-item">
+            <span>初冬当家蔬菜（25%）</span>
+            <strong>17.0 元</strong>
+          </div>
+          <div class="ledger-item">
+            <span>米面杂粮与调料折算（19%）</span>
+            <strong>13.2 元</strong>
+          </div>
+        </div>
+      </div>
 
       <div class="shop-grid">
         <div class="shop-group">
-          <h3>肉鱼蛋奶豆（约 35.5 元）</h3>
+          <div class="shop-group-head">
+            <h3>肉鱼蛋奶豆与干货</h3>
+            <span class="group-subtotal">小计 37.8 元</span>
+          </div>
           <ul class="check-list">
-            <li class="check-item"><label><input type="checkbox" data-key="s1" /><span>鸡蛋 8 个（约 1 斤，4.8 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="s2" /><span>猪前尖肉/里脊 230g（分 3 份：丸子馅+打卤丁+木樨肉片，约 6.5 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="s3" /><span>牛腩 55–65g（或一次买一斤分 8 袋冻存，单份约 3.6 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="s4" /><span>鸡琵琶腿 1 只（去皮去骨取净肉约 105g，1.9 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="s5" /><span>带鱼中段 1 块 + 无刺龙利鱼柳 1 块（共约 190g，5.8 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="s6" /><span>北豆腐 1 块（一半切块冻成冻豆腐）+ 南豆腐 2 小块 + 白豆干（共约 2.9 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="s7" /><span>三元袋装纯牛奶 2 袋 + 干黄豆/黑豆 100g（自磨 4 次豆浆，共约 4.5 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="s8" /><span>馄饨皮一小沓（包 8 个小馄饨，余皮可下汤面，约 1.0 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="s9" /><span>干货摊分摊：淡干虾皮、紫菜、干黑木耳、干香菇、腐竹（周耗约 4.5 元）</span></label></li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="s1" />
+                <span class="item-info">
+                  <span class="item-name">鸡蛋 11 个（约 1.3 斤）</span>
+                  <span class="item-usage">水煮蛋、茶蛋、蒸羹、炒菜与疙瘩汤全周用量</span>
+                </span>
+                <span class="item-price">6.0 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="s2" />
+                <span class="item-info">
+                  <span class="item-name">猪前尖瘦肉 半斤（250g）</span>
+                  <span class="item-usage">切 60g 片炒木樨肉、55g 丁打卤，余下剁馅汆丸子、包馄饨、蒸蛋</span>
+                </span>
+                <span class="item-price">6.8 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="s3" />
+                <span class="item-info">
+                  <span class="item-name">牛腩 1 份（生重约 60g）</span>
+                  <span class="item-usage">建议一次买 1 斤压熟分 8 盒冻存，本周取 1 份折算</span>
+                </span>
+                <span class="item-price">3.8 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="s4" />
+                <span class="item-info">
+                  <span class="item-name">鸡琵琶腿 1 只</span>
+                  <span class="item-usage">撕皮去骨取净嫩肉约 105g，周四焖山药香菇</span>
+                </span>
+                <span class="item-price">2.6 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="s5" />
+                <span class="item-info">
+                  <span class="item-name">带鱼中段 1 块 + 无刺龙利鱼柳 1 块</span>
+                  <span class="item-usage">各约 100g，周二醋焖带鱼、周六清蒸鱼片</span>
+                </span>
+                <span class="item-price">5.8 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="s6" />
+                <span class="item-info">
+                  <span class="item-name">北豆腐 1 块 + 南豆腐 2 小盒 + 白豆干</span>
+                  <span class="item-usage">北豆腐一半烧菜一半自制冻豆腐；南豆腐烩菜垫鱼</span>
+                </span>
+                <span class="item-price">4.3 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="s7" />
+                <span class="item-info">
+                  <span class="item-name">三元袋装纯牛奶 2 袋 + 黄豆黑豆 100g</span>
+                  <span class="item-usage">周五周日喝热奶，周一周三周六现磨 3 次热豆浆</span>
+                </span>
+                <span class="item-price">4.2 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="s8" />
+                <span class="item-info">
+                  <span class="item-name">馄饨皮一小沓</span>
+                  <span class="item-usage">包 8 个薄皮小馄饨冻存，余皮可顺手下汤</span>
+                </span>
+                <span class="item-price">0.8 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="s9" />
+                <span class="item-info">
+                  <span class="item-name">提鲜干货按周折算</span>
+                  <span class="item-usage">淡干虾皮、紫菜、黑木耳、干香菇 2 朵、腐竹、熟海带丝</span>
+                </span>
+                <span class="item-price">3.5 元</span>
+              </label>
+            </li>
           </ul>
         </div>
 
         <div class="shop-group">
-          <h3>11月初冬北京当家菜（约 16.5 元）</h3>
+          <div class="shop-group-head">
+            <h3>11月初冬北京当家菜</h3>
+            <span class="group-subtotal">小计 17.0 元</span>
+          </div>
           <ul class="check-list">
-            <li class="check-item"><label><input type="checkbox" data-key="v1" /><span>大白菜半棵（约 2 斤，吃两顿，1.6 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="v2" /><span>冬瓜 1 块（约 1 斤，烧菜+做汤，1.2 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="v3" /><span>西红柿 3 个（约 350g，炖牛腩+疙瘩汤+烧菜花，2.4 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="v4" /><span>西葫芦 1 根（约 280g，炒木耳+烙糊塌子，1.5 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="v5" /><span>土豆 1 个 + 胡萝卜 1 根 + 心里美/白萝卜半根（共约 1.6 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="v6" /><span>铁棍山药 1 根 + 南瓜 1 小块 + 红薯 1 个（共约 3.2 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="v7" /><span>圆白菜半棵 + 圆茄子半个 + 松花菜小半棵（共约 2.4 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="v8" /><span>深色叶菜：菠菜、小油菜、小白菜、嫩芹菜、绿豆芽、黄瓜（周中补鲜，共约 2.6 元）</span></label></li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="v1" />
+                <span class="item-info">
+                  <span class="item-name">冬储大白菜 半棵（约 2 斤）</span>
+                  <span class="item-usage">菜帮菜心炖周三砂锅丸子，嫩黄叶周日晚清炒</span>
+                </span>
+                <span class="item-price">1.5 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="v2" />
+                <span class="item-info">
+                  <span class="item-name">冬瓜 1 厚片（约 1 斤）</span>
+                  <span class="item-usage">周日虾皮烧冬瓜 + 周二周五两顿清汤</span>
+                </span>
+                <span class="item-price">1.2 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="v3" />
+                <span class="item-info">
+                  <span class="item-name">西红柿 3 个（约 350g）</span>
+                  <span class="item-usage">炖牛腩、熬疙瘩汤、烧松花菜，天然果酸减盐</span>
+                </span>
+                <span class="item-price">2.4 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="v4" />
+                <span class="item-info">
+                  <span class="item-name">西葫芦 1 根（约 280g）</span>
+                  <span class="item-usage">半根炒木耳鸡蛋，半根擦丝摊老北京软糊塌子</span>
+                </span>
+                <span class="item-price">1.5 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="v5" />
+                <span class="item-info">
+                  <span class="item-name">土豆 1 个 + 胡萝卜 1 根 + 萝卜半根</span>
+                  <span class="item-usage">醋溜土豆丝、焖胡萝卜丝、拌心里美细丝与萝卜汤</span>
+                </span>
+                <span class="item-price">1.6 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="v6" />
+                <span class="item-info">
+                  <span class="item-name">铁棍山药 1 根 + 南瓜 1 小块 + 红薯 1 个</span>
+                  <span class="item-usage">蒸山药/焖鸡/熬粥、南瓜粥与发面馒头、红薯粥饭</span>
+                </span>
+                <span class="item-price">3.2 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="v7" />
+                <span class="item-info">
+                  <span class="item-name">圆白菜小半棵 + 圆茄子 1 小个 + 松花菜小半棵</span>
+                  <span class="item-usage">手撕圆白菜、打卤蒸茄丁、西红柿烧松花菜</span>
+                </span>
+                <span class="item-price">2.4 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="v8" />
+                <span class="item-info">
+                  <span class="item-name">鲜叶菜与菜码（周中补一次鲜）</span>
+                  <span class="item-usage">菠菜、小油菜、小白菜、嫩芹菜、生菜、绿豆芽、黄瓜 1 根</span>
+                </span>
+                <span class="item-price">3.2 元</span>
+              </label>
+            </li>
           </ul>
         </div>
 
-        <div class="shop-group">
-          <h3>米面杂粮与调料分摊（约 14.5 元）</h3>
+        <div class="shop-group span-full">
+          <div class="shop-group-head">
+            <h3>米面杂粮与油盐调料折算</h3>
+            <span class="group-subtotal">小计 13.2 元</span>
+          </div>
           <ul class="check-list">
-            <li class="check-item"><label><input type="checkbox" data-key="g1" /><span>大米 + 小米 + 燕麦片（周耗约 600g，约 3.6 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="g2" /><span>普通面粉 + 细玉米面 + 细玉米糁（发糕/花卷/疙瘩汤/棒碴粥，周耗约 750g，约 3.5 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="g3" /><span>鲜切面/细挂面（掺少许荞麦面，两顿约 150g，1.0 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="g4" /><span>纯芝麻酱（认准 100% 纯白芝麻酱，补钙主力，周耗约 1.6 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="g5" /><span>去核红枣几颗 + 生花生米一小把（约 0.6 元）</span></label></li>
-            <li class="check-item"><label><input type="checkbox" data-key="g6" /><span>烹调油、低钠盐、山西陈醋、减盐生抽、葱姜蒜（7 天合计约 4.2 元）</span></label></li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="g1" />
+                <span class="item-info">
+                  <span class="item-name">大米 + 小米 + 燕麦片（周耗约 550g）</span>
+                  <span class="item-usage">二米饭、燕麦软饭与早晚稠粥</span>
+                </span>
+                <span class="item-price">3.3 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="g2" />
+                <span class="item-info">
+                  <span class="item-name">面粉 + 细玉米面 + 细玉米糁（周耗约 700g）</span>
+                  <span class="item-usage">自蒸软发糕、小花卷、葱花软饼、疙瘩汤、糊塌子与棒碴粥</span>
+                </span>
+                <span class="item-price">3.2 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="g3" />
+                <span class="item-info">
+                  <span class="item-name">鲜切面 / 细挂面（掺少许荞麦面，约 150g）</span>
+                  <span class="item-usage">周三晚荷包蛋热汤面 + 周五午茄丁打卤面</span>
+                </span>
+                <span class="item-price">1.0 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="g4" />
+                <span class="item-info">
+                  <span class="item-name">100% 纯白芝麻酱 + 去核红枣 + 生花生米</span>
+                  <span class="item-usage">纯麻酱补钙主力，红枣蒸糕煮粥，花生米煮软佐餐</span>
+                </span>
+                <span class="item-price">2.0 元</span>
+              </label>
+            </li>
+            <li class="check-item">
+              <label>
+                <input type="checkbox" data-key="g5" />
+                <span class="item-info">
+                  <span class="item-name">油盐酱醋与葱姜蒜（7 天折算）</span>
+                  <span class="item-usage">烹调油（日均≤22g）、低钠盐、山西陈醋、减盐生抽豉油、香油、葱姜蒜</span>
+                </span>
+                <span class="item-price">3.7 元</span>
+              </label>
+            </li>
           </ul>
         </div>
       </div>
@@ -1033,7 +1358,7 @@
         </div>
         <div class="adjust-card">
           <h3>预算宽裕怎么加码</h3>
-          <p>若预算放宽到每天 13–15 元，只需每天固定加 1 袋纯牛奶（1.8 元）和半个应季苹果或雪花梨（1.5 元，牙弱可煮梨水），无需大改食谱。</p>
+          <p>若预算放宽到每天 13–15 元，只需每天固定加 1 袋纯牛奶（约 1.8 元）和半个应季苹果或雪花梨（约 1.5 元，牙弱可煮梨水），无需大改食谱。</p>
         </div>
       </div>
     </section>
