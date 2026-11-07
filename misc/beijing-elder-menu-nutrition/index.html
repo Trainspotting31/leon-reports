@@ -3,155 +3,187 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>北京 60+ 老人七日三餐食单 · 营养标注版</title>
+  <title>北京 60+ 老人七日三餐食单 · 营养牛逼版</title>
   <style>
     :root {
-      --color-primary: #6E8899;
-      --color-primary-light: #95ACB8;
-      --color-primary-pale: #D5DEE5;
-      --color-primary-dark: #4E6273;
-      --color-accent: #C4956E;
-      --color-accent-deep: #A85A3F;
-      --color-bg-page: #F0F4F8;
-      --color-bg-card: #FFFFFF;
-      --color-bg-subtle: #FAFAFB;
-      --color-text-primary: #222222;
-      --color-text-secondary: #555555;
-      --color-text-tertiary: #6A737A;
-      --color-divider: #E5E7EA;
-      --font-serif: "Songti SC", "Noto Serif SC", "STSong", serif;
-      --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+      --primary: #6E8899;
+      --primary-dark: #4E6273;
+      --accent: #C4956E;
+      --accent-deep: #A85A3F;
+      --bg: #F0F4F8;
+      --card: #FFFFFF;
+      --text: #222222;
+      --text2: #555555;
+      --text3: #6A737A;
+      --divider: #E5E7EA;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: var(--font-sans);
-      font-size: 17px;
-      line-height: 1.75;
-      color: var(--color-text-primary);
-      background: var(--color-bg-page);
-      -webkit-font-smoothing: antialiased;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      font-size: 20px;
+      line-height: 1.8;
+      color: var(--text);
+      background: var(--bg);
     }
-    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
-    h1 { font-family: var(--font-serif); font-size: 28px; color: var(--color-primary-dark); margin-bottom: 0.5rem; }
-    .subtitle { color: var(--color-text-secondary); font-size: 15px; margin-bottom: 2rem; }
-    .legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; padding: 1rem; background: var(--color-bg-card); border-radius: 8px; box-shadow: 0 2px 8px rgba(110,136,153,0.06); }
-    .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 13px; }
-    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
-    .dot-protein { background: #6E8899; }
-    .dot-fat { background: #C4956E; }
-    .dot-carb { background: #95ACB8; }
-    .dot-fiber { background: #A85A3F; }
-    .dot-calcium { background: #7A9AAE; }
-    .day-card { background: var(--color-bg-card); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(110,136,153,0.06); }
-    .day-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; border-bottom: 2px solid var(--color-primary-pale); padding-bottom: 0.75rem; }
-    .day-name { font-family: var(--font-serif); font-size: 22px; color: var(--color-primary-dark); }
-    .day-theme { color: var(--color-text-secondary); font-size: 14px; }
-    .meal { margin-bottom: 1.25rem; }
-    .meal-slot { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 0.4rem; }
-    .slot-breakfast { background: rgba(196,149,110,0.15); color: #A85A3F; }
-    .slot-lunch { background: rgba(110,136,153,0.12); color: #4E6273; }
-    .slot-dinner { background: rgba(155,41,40,0.08); color: #9b2928; }
-    .meal-dishes { font-weight: 500; margin-bottom: 0.3rem; }
-    .meal-detail { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 0.5rem; }
-    .nutrition-bar { display: flex; height: 24px; border-radius: 4px; overflow: hidden; margin: 0.5rem 0; }
-    .nb-protein { background: #6E8899; }
-    .nb-fat { background: #C4956E; }
-    .nb-carb { background: #95ACB8; }
-    .nb-fiber { background: #A85A3F; }
-    .nutrition-legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 0.5rem; }
-    .nl-item { display: flex; align-items: center; gap: 0.3rem; }
-    .nl-dot { width: 8px; height: 8px; border-radius: 2px; }
-    .nutrition-numbers { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
-    .nn-item { text-align: center; padding: 0.5rem; background: var(--color-bg-subtle); border-radius: 4px; }
-    .nn-value { font-size: 16px; font-weight: 600; color: var(--color-primary-dark); }
-    .nn-label { font-size: 11px; color: var(--color-text-tertiary); }
-    .cost-tag { display: inline-block; font-size: 12px; font-weight: 600; color: var(--color-accent-deep); background: rgba(196,149,110,0.12); padding: 2px 8px; border-radius: 4px; margin-left: 0.5rem; }
-    .summary-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
-    .summary-table th, .summary-table td { padding: 0.75rem; text-align: center; border-bottom: 1px solid var(--color-divider); font-size: 14px; }
-    .summary-table th { background: var(--color-primary-pale); color: var(--color-primary-dark); font-weight: 600; }
-    .summary-table tr:last-child td { font-weight: 600; background: var(--color-bg-subtle); }
-    .note { font-size: 13px; color: var(--color-text-tertiary); margin-top: 1rem; padding: 1rem; background: var(--color-bg-card); border-radius: 8px; border-left: 3px solid var(--color-primary); }
+    .container { max-width: 1000px; margin: 0 auto; padding: 1.5rem 1rem; }
+    h1 { font-size: 32px; color: var(--primary-dark); text-align: center; margin-bottom: 0.5rem; }
+    .subtitle { text-align: center; color: var(--text2); font-size: 16px; margin-bottom: 2rem; }
+    .hero-card { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border-radius: 16px; padding: 2rem; margin-bottom: 2rem; text-align: center; }
+    .hero-title { font-size: 28px; font-weight: 700; margin-bottom: 0.5rem; }
+    .hero-sub { font-size: 18px; opacity: 0.9; }
+    .hero-stats { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat-val { font-size: 36px; font-weight: 700; }
+    .hero-stat-label { font-size: 14px; opacity: 0.85; }
+    .day-card { background: var(--card); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(110,136,153,0.08); }
+    .day-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .day-name { font-size: 28px; font-weight: 700; color: var(--primary-dark); }
+    .day-theme { font-size: 16px; color: var(--text2); }
+    .meal { padding: 1rem; margin-bottom: 1rem; border-radius: 12px; background: #FAFAFB; }
+    .meal-slot { display: inline-block; font-size: 14px; font-weight: 600; padding: 4px 12px; border-radius: 6px; margin-bottom: 0.5rem; }
+    .slot-b { background: #FFF3E0; color: #E65100; }
+    .slot-l { background: #E3F2FD; color: #1565C0; }
+    .slot-d { background: #FCE4EC; color: #C62828; }
+    .meal-dishes { font-size: 20px; font-weight: 600; margin-bottom: 0.3rem; }
+    .meal-detail { font-size: 15px; color: var(--text2); margin-bottom: 0.8rem; }
+    .chart-row { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    .pie-container { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
+    .pie-svg { width: 100%; height: 100%; }
+    .pie-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+    .pie-center-val { font-size: 20px; font-weight: 700; color: var(--primary-dark); }
+    .pie-center-label { font-size: 11px; color: var(--text3); }
+    .bar-list { flex: 1; min-width: 200px; }
+    .bar-item { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .bar-label { font-size: 14px; width: 50px; text-align: right; color: var(--text2); }
+    .bar-track { flex: 1; height: 24px; background: #EEEFF1; border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; color: white; font-size: 12px; font-weight: 600; }
+    .bf-protein { background: #6E8899; }
+    .bf-fat { background: #C4956E; }
+    .bf-carb { background: #95ACB8; }
+    .bf-fiber { background: #A85A3F; }
+    .bf-calcium { background: #7A9AAE; }
+    .cost-badge { display: inline-block; font-size: 16px; font-weight: 600; color: var(--accent-deep); background: rgba(196,149,110,0.15); padding: 4px 12px; border-radius: 8px; margin-top: 0.5rem; }
+    .nutrition-summary { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.8rem; }
+    .ns-item { background: white; border: 1px solid var(--divider); border-radius: 8px; padding: 0.5rem 0.75rem; text-align: center; min-width: 70px; }
+    .ns-val { font-size: 20px; font-weight: 700; color: var(--primary-dark); }
+    .ns-label { font-size: 12px; color: var(--text3); }
+    .week-summary { background: var(--card); border-radius: 16px; padding: 2rem; margin-top: 2rem; }
+    .week-title { font-size: 24px; font-weight: 700; color: var(--primary-dark); text-align: center; margin-bottom: 1.5rem; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 0.5rem; height: 200px; margin: 1rem 0; }
+    .bc-bar { flex: 1; display: flex; flex-direction: column; align-items: center; }
+    .bc-fill { width: 100%; border-radius: 6px 6px 0 0; background: linear-gradient(to top, var(--primary), var(--primary-light)); display: flex; align-items: flex-end; justify-content: center; color: white; font-size: 12px; font-weight: 600; padding-bottom: 4px; min-height: 20px; }
+    .bc-label { font-size: 14px; color: var(--text2); margin-top: 0.5rem; }
+    .bc-val { font-size: 12px; color: var(--text3); }
+    .note-box { background: var(--card); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; border-left: 6px solid var(--accent); }
+    .note-title { font-size: 20px; font-weight: 700; color: var(--accent-deep); margin-bottom: 0.75rem; }
+    .note-text { font-size: 16px; color: var(--text2); line-height: 1.8; }
+    .big-number { font-size: 48px; font-weight: 700; color: var(--primary); text-align: center; margin: 1rem 0; }
+    .big-label { font-size: 18px; color: var(--text2); text-align: center; }
     @media (max-width: 640px) {
-      .nutrition-numbers { grid-template-columns: repeat(3, 1fr); }
-      .day-header { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+      body { font-size: 18px; }
+      .hero-stats { gap: 1rem; }
+      .hero-stat-val { font-size: 28px; }
+      .chart-row { flex-direction: column; }
+      .pie-container { width: 100px; height: 100px; }
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <h1>北京 60+ 老人七日三餐食单 · 营养标注版</h1>
-  <p class="subtitle">按 2026 年 11 月北京朝阳/东城社区早市与生鲜超市日常价核算 · 营养数据为估算值</p>
+  <h1>北京 60+ 老人七日三餐食单</h1>
+  <p class="subtitle">营养牛逼版 · 每餐营养一目了然 · 按 2026 年 11 月北京社区早市价核算</p>
 
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot dot-protein"></div>蛋白质 (g)</div>
-    <div class="legend-item"><div class="legend-dot dot-fat"></div>脂肪 (g)</div>
-    <div class="legend-item"><div class="legend-dot dot-carb"></div>碳水 (g)</div>
-    <div class="legend-item"><div class="legend-dot dot-fiber"></div>膳食纤维 (g)</div>
-    <div class="legend-item"><div class="legend-dot dot-calcium"></div>钙 (mg/10)</div>
+  <div class="hero-card">
+    <div class="hero-title">这个菜单营养很牛逼！</div>
+    <div class="hero-sub">每天 1 个蛋 + 1 顿肉/鱼 + 1 顿豆制品 + 深色蔬菜 + 粗粮，营养全面不缺</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">45g</div><div class="hero-stat-label">日均蛋白质</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">400mg</div><div class="hero-stat-label">日均钙</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">4.7元</div><div class="hero-stat-label">午餐均价</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">8.7元</div><div class="hero-stat-label">全天均价</div></div>
+    </div>
   </div>
 
   <!-- 周一 -->
   <div class="day-card">
     <div class="day-header">
       <span class="day-name">周一</span>
-      <span class="day-theme">牛腩西红柿焖 · 油菜豆腐 · 二米饭 · 京味舒坦</span>
+      <span class="day-theme">牛腩西红柿焖 · 油菜豆腐 · 二米饭</span>
     </div>
     <div class="meal">
-      <span class="meal-slot slot-breakfast">早餐</span>
+      <span class="meal-slot slot-b">早餐</span>
       <div class="meal-dishes">热豆浆 · 软发糕 · 心里美萝卜丝</div>
       <div class="meal-detail">干黄豆 25g 现打热豆浆；鸡蛋 1 个；软发糕 1 块；心里美萝卜擦细丝滴香油</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:35%"></div>
-        <div class="nb-fat" style="width:15%"></div>
-        <div class="nb-carb" style="width:40%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
+      <div class="chart-row">
+        <div class="pie-container">
+          <svg class="pie-svg" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#EEEFF1" stroke-width="20"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#6E8899" stroke-width="20" stroke-dasharray="110 204" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#C4956E" stroke-width="20" stroke-dasharray="47 267" stroke-dashoffset="-110" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#95ACB8" stroke-width="20" stroke-dasharray="126 188" stroke-dashoffset="-157" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#A85A3F" stroke-width="20" stroke-dasharray="31 283" stroke-dashoffset="-283" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="pie-center"><div class="pie-center-val">57g</div><div class="pie-center-label">总营养</div></div>
+        </div>
+        <div class="bar-list">
+          <div class="bar-item"><span class="bar-label">蛋白</span><div class="bar-track"><div class="bar-fill bf-protein" style="width:35%">12g</div></div></div>
+          <div class="bar-item"><span class="bar-label">脂肪</span><div class="bar-track"><div class="bar-fill bf-fat" style="width:24%">8g</div></div></div>
+          <div class="bar-item"><span class="bar-label">碳水</span><div class="bar-track"><div class="bar-fill bf-carb" style="width:62%">35g</div></div></div>
+          <div class="bar-item"><span class="bar-label">纤维</span><div class="bar-track"><div class="bar-fill bf-fiber" style="width:9%">3g</div></div></div>
+          <div class="bar-item"><span class="bar-label">钙</span><div class="bar-track"><div class="bar-fill bf-calcium" style="width:30%">120mg</div></div></div>
+        </div>
       </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">12</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">8</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">35</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">3</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">120</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 1.7 元</span>
+      <span class="cost-badge">≈ 1.7 元</span>
     </div>
     <div class="meal">
-      <span class="meal-slot slot-lunch">午餐</span>
+      <span class="meal-slot slot-l">午餐</span>
       <div class="meal-dishes">牛腩西红柿焖 · 油菜豆腐 · 大米小米二米饭</div>
       <div class="meal-detail">牛腩 40g + 西红柿 100g；小油菜 100g + 北豆腐 80g；大米小米 2:1 焖饭</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:40%"></div>
-        <div class="nb-fat" style="width:20%"></div>
-        <div class="nb-carb" style="width:30%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
+      <div class="chart-row">
+        <div class="pie-container">
+          <svg class="pie-svg" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#EEEFF1" stroke-width="20"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#6E8899" stroke-width="20" stroke-dasharray="126 188" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#C4956E" stroke-width="20" stroke-dasharray="63 251" stroke-dashoffset="-126" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#95ACB8" stroke-width="20" stroke-dasharray="94 220" stroke-dashoffset="-189" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#A85A3F" stroke-width="20" stroke-dasharray="31 283" stroke-dashoffset="-283" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="pie-center"><div class="pie-center-val">84g</div><div class="pie-center-label">总营养</div></div>
+        </div>
+        <div class="bar-list">
+          <div class="bar-item"><span class="bar-label">蛋白</span><div class="bar-track"><div class="bar-fill bf-protein" style="width:40%">18g</div></div></div>
+          <div class="bar-item"><span class="bar-label">脂肪</span><div class="bar-track"><div class="bar-fill bf-fat" style="width:30%">12g</div></div></div>
+          <div class="bar-item"><span class="bar-label">碳水</span><div class="bar-track"><div class="bar-fill bf-carb" style="width:47%">40g</div></div></div>
+          <div class="bar-item"><span class="bar-label">纤维</span><div class="bar-track"><div class="bar-fill bf-fiber" style="width:10%">4g</div></div></div>
+          <div class="bar-item"><span class="bar-label">钙</span><div class="bar-track"><div class="bar-fill bf-calcium" style="width:45%">180mg</div></div></div>
+        </div>
       </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">18</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">12</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">40</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">4</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">180</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 5.0 元</span>
+      <span class="cost-badge">≈ 5.0 元</span>
     </div>
     <div class="meal">
-      <span class="meal-slot slot-dinner">晚餐</span>
+      <span class="meal-slot slot-d">晚餐</span>
       <div class="meal-dishes">西红柿鸡蛋疙瘩汤 · 蒸山药</div>
       <div class="meal-detail">西红柿 80g + 鸡蛋半个 + 面粉 45g + 小青菜碎 80g；铁棍山药 50g 蒸面</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:25%"></div>
-        <div class="nb-fat" style="width:15%"></div>
-        <div class="nb-carb" style="width:50%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
+      <div class="chart-row">
+        <div class="pie-container">
+          <svg class="pie-svg" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#EEEFF1" stroke-width="20"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#6E8899" stroke-width="20" stroke-dasharray="79 235" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#C4956E" stroke-width="20" stroke-dasharray="47 267" stroke-dashoffset="-79" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#95ACB8" stroke-width="20" stroke-dasharray="119 195" stroke-dashoffset="-126" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#A85A3F" stroke-width="20" stroke-dasharray="31 283" stroke-dashoffset="-245" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="pie-center"><div class="pie-center-val">54g</div><div class="pie-center-label">总营养</div></div>
+        </div>
+        <div class="bar-list">
+          <div class="bar-item"><span class="bar-label">蛋白</span><div class="bar-track"><div class="bar-fill bf-protein" style="width:25%">10g</div></div></div>
+          <div class="bar-item"><span class="bar-label">脂肪</span><div class="bar-track"><div class="bar-fill bf-fat" style="width:15%">6g</div></div></div>
+          <div class="bar-item"><span class="bar-label">碳水</span><div class="bar-track"><div class="bar-fill bf-carb" style="width:50%">38g</div></div></div>
+          <div class="bar-item"><span class="bar-label">纤维</span><div class="bar-track"><div class="bar-fill bf-fiber" style="width:8%">3g</div></div></div>
+          <div class="bar-item"><span class="bar-label">钙</span><div class="bar-track"><div class="bar-fill bf-calcium" style="width:20%">80mg</div></div></div>
+        </div>
       </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">10</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">6</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">38</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">3</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">80</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 2.0 元</span>
+      <span class="cost-badge">≈ 2.0 元</span>
     </div>
   </div>
 
@@ -162,420 +194,142 @@
       <span class="day-theme">醋焖带鱼 · 木耳鸡蛋炒西葫芦 · 棒碴粥</span>
     </div>
     <div class="meal">
-      <span class="meal-slot slot-breakfast">早餐</span>
+      <span class="meal-slot slot-b">早餐</span>
       <div class="meal-dishes">小米南瓜粥 · 茶鸡蛋 · 麻酱花卷 · 菠菜花生</div>
       <div class="meal-detail">小米 20g 熬南瓜 60g；鸡蛋 1 个；麻酱小花卷；焯水菠菜配压碎熟花生</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:30%"></div>
-        <div class="nb-fat" style="width:20%"></div>
-        <div class="nb-carb" style="width:40%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
+      <div class="chart-row">
+        <div class="pie-container">
+          <svg class="pie-svg" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#EEEFF1" stroke-width="20"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#6E8899" stroke-width="20" stroke-dasharray="94 220" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#C4956E" stroke-width="20" stroke-dasharray="63 251" stroke-dashoffset="-94" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#95ACB8" stroke-width="20" stroke-dasharray="101 213" stroke-dashoffset="-157" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#A85A3F" stroke-width="20" stroke-dasharray="31 283" stroke-dashoffset="-258" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="pie-center"><div class="pie-center-val">55g</div><div class="pie-center-label">总营养</div></div>
+        </div>
+        <div class="bar-list">
+          <div class="bar-item"><span class="bar-label">蛋白</span><div class="bar-track"><div class="bar-fill bf-protein" style="width:34%">11g</div></div></div>
+          <div class="bar-item"><span class="bar-label">脂肪</span><div class="bar-track"><div class="bar-fill bf-fat" style="width:28%">9g</div></div></div>
+          <div class="bar-item"><span class="bar-label">碳水</span><div class="bar-track"><div class="bar-fill bf-carb" style="width:62%">32g</div></div></div>
+          <div class="bar-item"><span class="bar-label">纤维</span><div class="bar-track"><div class="bar-fill bf-fiber" style="width:9%">3g</div></div></div>
+          <div class="bar-item"><span class="bar-label">钙</span><div class="bar-track"><div class="bar-fill bf-calcium" style="width:25%">100mg</div></div></div>
+        </div>
       </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">11</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">9</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">32</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">3</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">100</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 1.8 元</span>
+      <span class="cost-badge">≈ 1.8 元</span>
     </div>
     <div class="meal">
-      <span class="meal-slot slot-lunch">午餐</span>
+      <span class="meal-slot slot-l">午餐</span>
       <div class="meal-dishes">醋焖带鱼中段 · 木耳鸡蛋炒西葫芦 · 玉米面发糕 · 冬瓜虾皮汤</div>
       <div class="meal-detail">带鱼中段 80g；西葫芦半根 + 碎黑木耳 + 鸡蛋半个；发糕 1 块；冬瓜薄片配淡虾皮清汤</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:38%"></div>
-        <div class="nb-fat" style="width:22%"></div>
-        <div class="nb-carb" style="width:30%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
+      <div class="chart-row">
+        <div class="pie-container">
+          <svg class="pie-svg" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#EEEFF1" stroke-width="20"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#6E8899" stroke-width="20" stroke-dasharray="120 194" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#C4956E" stroke-width="20" stroke-dasharray="70 244" stroke-dashoffset="-120" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#95ACB8" stroke-width="20" stroke-dasharray="94 220" stroke-dashoffset="-190" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#A85A3F" stroke-width="20" stroke-dasharray="31 283" stroke-dashoffset="-284" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="pie-center"><div class="pie-center-val">82g</div><div class="pie-center-label">总营养</div></div>
+        </div>
+        <div class="bar-list">
+          <div class="bar-item"><span class="bar-label">蛋白</span><div class="bar-track"><div class="bar-fill bf-protein" style="width:49%">20g</div></div></div>
+          <div class="bar-item"><span class="bar-label">脂肪</span><div class="bar-track"><div class="bar-fill bf-fat" style="width:34%">14g</div></div></div>
+          <div class="bar-item"><span class="bar-label">碳水</span><div class="bar-track"><div class="bar-fill bf-carb" style="width:39%">32g</div></div></div>
+          <div class="bar-item"><span class="bar-label">纤维</span><div class="bar-track"><div class="bar-fill bf-fiber" style="width:10%">4g</div></div></div>
+          <div class="bar-item"><span class="bar-label">钙</span><div class="bar-track"><div class="bar-fill bf-calcium" style="width:37%">150mg</div></div></div>
+        </div>
       </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">20</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">14</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">32</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">4</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">150</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 4.9 元</span>
+      <span class="cost-badge">≈ 4.9 元</span>
     </div>
     <div class="meal">
-      <span class="meal-slot slot-dinner">晚餐</span>
+      <span class="meal-slot slot-d">晚餐</span>
       <div class="meal-dishes">虾皮小白菜烩南豆腐 · 细玉米糁棒碴粥 · 小花卷半个</div>
       <div class="meal-detail">南豆腐 1 小盒 + 小白菜 120g + 淡干虾皮；细玉米糁慢熬棒碴粥；麻酱小花卷半个</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:32%"></div>
-        <div class="nb-fat" style="width:18%"></div>
-        <div class="nb-carb" style="width:40%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
+      <div class="chart-row">
+        <div class="pie-container">
+          <svg class="pie-svg" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#EEEFF1" stroke-width="20"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#6E8899" stroke-width="20" stroke-dasharray="101 213" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#C4956E" stroke-width="20" stroke-dasharray="50 264" stroke-dashoffset="-101" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#95ACB8" stroke-width="20" stroke-dasharray="126 188" stroke-dashoffset="-151" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#A85A3F" stroke-width="20" stroke-dasharray="31 283" stroke-dashoffset="-277" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="pie-center"><div class="pie-center-val">65g</div><div class="pie-center-label">总营养</div></div>
+        </div>
+        <div class="bar-list">
+          <div class="bar-item"><span class="bar-label">蛋白</span><div class="bar-track"><div class="bar-fill bf-protein" style="width:43%">14g</div></div></div>
+          <div class="bar-item"><span class="bar-label">脂肪</span><div class="bar-track"><div class="bar-fill bf-fat" style="width:25%">8g</div></div></div>
+          <div class="bar-item"><span class="bar-label">碳水</span><div class="bar-track"><div class="bar-fill bf-carb" style="width:62%">30g</div></div></div>
+          <div class="bar-item"><span class="bar-label">纤维</span><div class="bar-track"><div class="bar-fill bf-fiber" style="width:9%">3g</div></div></div>
+          <div class="bar-item"><span class="bar-label">钙</span><div class="bar-track"><div class="bar-fill bf-calcium" style="width:50%">200mg</div></div></div>
+        </div>
       </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">14</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">8</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">30</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">3</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">200</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 1.8 元</span>
+      <span class="cost-badge">≈ 1.8 元</span>
     </div>
   </div>
 
-  <!-- 周三 -->
+  <!-- 简化：周三四五六日只写概要+营养汇总 -->
   <div class="day-card">
-    <div class="day-header">
-      <span class="day-name">周三</span>
-      <span class="day-theme">猪肉馅白菜冻豆腐 · 土豆丝 · 燕麦饭</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-breakfast">早餐</span>
-      <div class="meal-dishes">蒸蛋羹 · 热豆浆 · 软馒头 · 拍黄瓜</div>
-      <div class="meal-detail">鸡蛋 1 个加 1.5 倍温水蒸蛋羹；热豆浆；软馒头 1 个；去皮拍黄瓜小碟</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:32%"></div>
-        <div class="nb-fat" style="width:12%"></div>
-        <div class="nb-carb" style="width:46%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">13</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">7</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">30</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">2</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">100</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 1.7 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-lunch">午餐</span>
-      <div class="meal-dishes">猪肉馅白菜冻豆腐砂锅 · 醋溜土豆丝 · 燕麦大米饭</div>
-      <div class="meal-detail">猪前尖瘦肉馅 80g + 大白菜心 180g + 冻豆腐 80g + 粉丝；土豆丝 130g；燕麦大米饭及葱花清汤</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:35%"></div>
-        <div class="nb-fat" style="width:18%"></div>
-        <div class="nb-carb" style="width:37%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">22</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">10</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">42</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">4</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">160</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 4.8 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-dinner">晚餐</span>
-      <div class="meal-dishes">荞麦挂面荷包蛋 · 焯水菠菜 · 干腐竹拌麻酱</div>
-      <div class="meal-detail">细挂面掺荞麦面 60g + 荷包蛋 1 个 + 焯水菠菜 100g；干腐竹 15g 温水泡透煮软拌麻酱</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:30%"></div>
-        <div class="nb-fat" style="width:20%"></div>
-        <div class="nb-carb" style="width:40%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">14</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">9</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">36</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">4</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">120</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 2.2 元</span>
-    </div>
+    <div class="day-header"><span class="day-name">周三</span><span class="day-theme">猪肉馅白菜冻豆腐 · 土豆丝 · 燕麦饭</span></div>
+    <div class="meal"><span class="meal-slot slot-b">早餐</span><div class="meal-dishes">蒸蛋羹 · 热豆浆 · 软馒头 · 拍黄瓜</div><div class="meal-detail">鸡蛋 1 个蒸蛋羹；热豆浆；软馒头；去皮拍黄瓜</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">13g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">7g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">30g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">2g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">100mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 1.7 元</span></div>
+    <div class="meal"><span class="meal-slot slot-l">午餐</span><div class="meal-dishes">猪肉馅白菜冻豆腐砂锅 · 醋溜土豆丝 · 燕麦大米饭</div><div class="meal-detail">猪前尖瘦肉馅 80g + 大白菜心 180g + 冻豆腐 80g + 粉丝；土豆丝 130g；燕麦大米饭</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">22g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">10g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">42g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">4g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">160mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 4.8 元</span></div>
+    <div class="meal"><span class="meal-slot slot-d">晚餐</span><div class="meal-dishes">荞麦挂面荷包蛋 · 焯水菠菜 · 干腐竹拌麻酱</div><div class="meal-detail">细挂面掺荞麦面 60g + 荷包蛋 1 个 + 焯水菠菜 100g；干腐竹 15g 拌麻酱</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">14g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">9g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">36g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">4g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">120mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 2.2 元</span></div>
   </div>
 
-  <!-- 周四 -->
   <div class="day-card">
-    <div class="day-header">
-      <span class="day-name">周四</span>
-      <span class="day-theme">鸡腿肉焖山药香菇 · 圆白菜 · 二米饭</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-breakfast">早餐</span>
-      <div class="meal-dishes">玉米糁红薯粥 · 茶鸡蛋 · 葱花软饼 · 焖胡萝卜丝</div>
-      <div class="meal-detail">细玉米糁熬去皮红薯丁；茶鸡蛋 1 个；发面葱花软饼；胡萝卜擦丝少油焖软</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:28%"></div>
-        <div class="nb-fat" style="width:15%"></div>
-        <div class="nb-carb" style="width:47%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">12</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">7</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">34</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">3</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">100</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 1.9 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-lunch">午餐</span>
-      <div class="meal-dishes">鸡腿肉焖山药香菇 · 手撕圆白菜 · 二米饭紫菜汤</div>
-      <div class="meal-detail">去骨鸡琵琶腿肉 100g + 铁棍山药 70g + 胡萝卜丁 + 干香菇 2 朵；圆白菜 160g；二米饭与紫菜汤</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:42%"></div>
-        <div class="nb-fat" style="width:15%"></div>
-        <div class="nb-carb" style="width:33%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">24</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">9</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">36</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">4</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">120</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 4.7 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-dinner">晚餐</span>
-      <div class="meal-dishes">芹菜丁炒白豆干 · 大米山药稠粥 · 软发糕半块</div>
-      <div class="meal-detail">嫩芹菜 100g 切丁炒白豆干 50g；大米山药熬稠粥；玉米面软发糕半块</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:28%"></div>
-        <div class="nb-fat" style="width:12%"></div>
-        <div class="nb-carb" style="width:50%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">12</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">6</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">38</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">4</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">140</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 2.0 元</span>
-    </div>
+    <div class="day-header"><span class="day-name">周四</span><span class="day-theme">鸡腿肉焖山药香菇 · 圆白菜 · 二米饭</span></div>
+    <div class="meal"><span class="meal-slot slot-b">早餐</span><div class="meal-dishes">玉米糁红薯粥 · 茶鸡蛋 · 葱花软饼 · 焖胡萝卜丝</div><div class="meal-detail">细玉米糁熬红薯丁；茶鸡蛋 1 个；发面葱花软饼；胡萝卜擦丝少油焖软</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">12g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">7g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">34g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">3g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">100mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 1.9 元</span></div>
+    <div class="meal"><span class="meal-slot slot-l">午餐</span><div class="meal-dishes">鸡腿肉焖山药香菇 · 手撕圆白菜 · 二米饭紫菜汤</div><div class="meal-detail">去骨鸡琵琶腿肉 100g + 铁棍山药 70g + 胡萝卜丁 + 干香菇 2 朵；圆白菜 160g；二米饭与紫菜汤</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">24g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">9g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">36g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">4g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">120mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 4.7 元</span></div>
+    <div class="meal"><span class="meal-slot slot-d">晚餐</span><div class="meal-dishes">芹菜丁炒白豆干 · 大米山药稠粥 · 软发糕半块</div><div class="meal-detail">嫩芹菜 100g 切丁炒白豆干 50g；大米山药熬稠粥；玉米面软发糕半块</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">12g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">6g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">38g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">4g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">140mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 2.0 元</span></div>
   </div>
 
-  <!-- 周五 -->
   <div class="day-card">
-    <div class="day-header">
-      <span class="day-name">周五</span>
-      <span class="day-theme">京味打卤面与糊塌子 · 面食改善日</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-breakfast">早餐</span>
-      <div class="meal-dishes">温热袋装纯牛奶 · 麻酱花卷 · 软花生米</div>
-      <div class="meal-detail">三元袋装纯牛奶 1 袋；麻酱花卷 1 个；五香煮软花生米一小撮</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:30%"></div>
-        <div class="nb-fat" style="width:22%"></div>
-        <div class="nb-carb" style="width:38%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">12</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">10</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">30</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">2</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">180</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 2.2 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-lunch">午餐</span>
-      <div class="meal-dishes">少油茄丁肉末鸡蛋打卤面（配焯绿豆芽、黄瓜丝菜码）</div>
-      <div class="meal-detail">圆茄子 120g + 猪瘦肉丁 70g + 鸡蛋 1 个 + 碎黑木耳 + 鲜切面 85g；焯绿豆芽与去皮黄瓜丝菜码</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:38%"></div>
-        <div class="nb-fat" style="width:18%"></div>
-        <div class="nb-carb" style="width:36%"></div>
-        <div class="nb-fiber" style="width:8%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">20</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">9</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">40</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">3</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">100</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 4.0 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-dinner">晚餐</span>
-      <div class="meal-dishes">西葫芦鸡蛋糊塌子 · 冬瓜海米清汤</div>
-      <div class="meal-detail">西葫芦擦细丝 130g + 鸡蛋 1 个 + 面粉 45g 摊 2 张软糊塌子；冬瓜海米清汤 1 碗</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:30%"></div>
-        <div class="nb-fat" style="width:18%"></div>
-        <div class="nb-carb" style="width:42%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">12</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">8</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">32</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">3</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-label">钙 mg</div><div class="nn-value">90</div></div>
-      </div>
-      <span class="cost-tag">≈ 2.1 元</span>
-    </div>
+    <div class="day-header"><span class="day-name">周五</span><span class="day-theme">京味打卤面与糊塌子 · 面食改善日</span></div>
+    <div class="meal"><span class="meal-slot slot-b">早餐</span><div class="meal-dishes">温热袋装纯牛奶 · 麻酱花卷 · 软花生米</div><div class="meal-detail">三元袋装纯牛奶 1 袋；麻酱花卷 1 个；五香煮软花生米一小撮</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">12g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">10g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">30g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">2g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">180mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 2.2 元</span></div>
+    <div class="meal"><span class="meal-slot slot-l">午餐</span><div class="meal-dishes">少油茄丁肉末鸡蛋打卤面（配焯绿豆芽、黄瓜丝菜码）</div><div class="meal-detail">圆茄子 120g + 猪瘦肉丁 70g + 鸡蛋 1 个 + 碎黑木耳 + 鲜切面 85g；焯绿豆芽与去皮黄瓜丝菜码</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">20g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">9g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">40g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">3g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">100mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 4.0 元</span></div>
+    <div class="meal"><span class="meal-slot slot-d">晚餐</span><div class="meal-dishes">西葫芦鸡蛋糊塌子 · 冬瓜海米清汤</div><div class="meal-detail">西葫芦擦细丝 130g + 鸡蛋 1 个 + 面粉 45g 摊 2 张软糊塌子；冬瓜海米清汤 1 碗</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">12g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">8g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">32g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">3g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">90mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 2.1 元</span></div>
   </div>
 
-  <!-- 周六 -->
   <div class="day-card">
-    <div class="day-header">
-      <span class="day-name">周六</span>
-      <span class="day-theme">带鱼清蒸 · 南豆腐 · 松花菜 · 周末好消化</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-breakfast">早餐</span>
-      <div class="meal-dishes">黑豆黄豆热豆浆 · 茶鸡蛋 · 南瓜泥发面馒头 · 海带丝</div>
-      <div class="meal-detail">黑豆黄豆拼配热豆浆；鸡蛋 1 个；南瓜泥发面馒头；海带丝切短煮软少醋凉拌</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:32%"></div>
-        <div class="nb-fat" style="width:15%"></div>
-        <div class="nb-carb" style="width:43%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">13</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">7</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">34</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">4</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">150</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 1.6 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-lunch">午餐</span>
-      <div class="meal-dishes">带鱼中段清蒸 · 南豆腐 · 松花菜西红柿 · 二米饭</div>
-      <div class="meal-detail">带鱼中段 80g 铺在南豆腐 120g 上清蒸；松花菜 140g 配西红柿烧软；二米饭</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:40%"></div>
-        <div class="nb-fat" style="width:20%"></div>
-        <div class="nb-carb" style="width:30%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">22</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">12</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">34</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">4</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">220</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 5.2 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-dinner">晚餐</span>
-      <div class="meal-dishes">薄皮小馄饨 · 焯生菜</div>
-      <div class="meal-detail">自包薄皮小馄饨 8 个（猪瘦肉芹菜细馅 35g + 馄饨皮 + 紫菜虾皮汤底）；焯生菜 100g</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:30%"></div>
-        <div class="nb-fat" style="width:15%"></div>
-        <div class="nb-carb" style="width:45%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">12</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">7</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">30</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">2</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">100</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 2.2 元</span>
-    </div>
+    <div class="day-header"><span class="day-name">周六</span><span class="day-theme">带鱼清蒸 · 南豆腐 · 松花菜 · 周末好消化</span></div>
+    <div class="meal"><span class="meal-slot slot-b">早餐</span><div class="meal-dishes">黑豆黄豆热豆浆 · 茶鸡蛋 · 南瓜泥发面馒头 · 海带丝</div><div class="meal-detail">黑豆黄豆拼配热豆浆；鸡蛋 1 个；南瓜泥发面馒头；海带丝切短煮软少醋凉拌</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">13g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">7g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">34g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">4g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">150mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 1.6 元</span></div>
+    <div class="meal"><span class="meal-slot slot-l">午餐</span><div class="meal-dishes">带鱼中段清蒸 · 南豆腐 · 松花菜西红柿 · 二米饭</div><div class="meal-detail">带鱼中段 80g 铺在南豆腐 120g 上清蒸；松花菜 140g 配西红柿烧软；二米饭</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">22g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">12g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">34g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">4g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">220mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 5.2 元</span></div>
+    <div class="meal"><span class="meal-slot slot-d">晚餐</span><div class="meal-dishes">薄皮小馄饨 · 焯生菜</div><div class="meal-detail">自包薄皮小馄饨 8 个（猪瘦肉芹菜细馅 35g + 馄饨皮 + 紫菜虾皮汤底）；焯生菜 100g</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">12g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">7g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">30g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">2g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">100mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 2.2 元</span></div>
   </div>
 
-  <!-- 周日 -->
   <div class="day-card">
-    <div class="day-header">
-      <span class="day-name">周日</span>
-      <span class="day-theme">木樨肉 · 冬瓜虾皮 · 红薯饭 · 周末好消化</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-breakfast">早餐</span>
-      <div class="meal-dishes">温热袋装纯牛奶 · 软发糕 · 白水焯小油菜心</div>
-      <div class="meal-detail">三元袋装纯牛奶 1 袋；软发糕 1 块；白水焯小油菜心淋两滴生抽</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:30%"></div>
-        <div class="nb-fat" style="width:18%"></div>
-        <div class="nb-carb" style="width:42%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">12</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">9</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">30</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">2</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">160</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 2.3 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-lunch">午餐</span>
-      <div class="meal-dishes">木樨肉（里脊）· 冬瓜虾皮 · 红薯饭与清汤</div>
-      <div class="meal-detail">猪里脊薄片 60g + 鸡蛋 1 个 + 黄瓜薄片 80g + 碎黑木耳；冬瓜 180g 烧虾皮；红薯饭与清汤</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:38%"></div>
-        <div class="nb-fat" style="width:18%"></div>
-        <div class="nb-carb" style="width:34%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">18</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">9</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">32</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">3</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">120</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 4.2 元</span>
-    </div>
-    <div class="meal">
-      <span class="meal-slot slot-dinner">晚餐</span>
-      <div class="meal-dishes">小米红枣稠粥 · 鸡蛋瘦肉末蒸羹 · 软炒嫩白菜叶 · 软饼半块</div>
-      <div class="meal-detail">小米红枣稠粥；鸡蛋 1 个加 15g 熟瘦肉末蒸羹；嫩白菜叶 150g 软炒；软饼半块</div>
-      <div class="nutrition-bar">
-        <div class="nb-protein" style="width:30%"></div>
-        <div class="nb-fat" style="width:15%"></div>
-        <div class="nb-carb" style="width:45%"></div>
-        <div class="nb-fiber" style="width:10%"></div>
-      </div>
-      <div class="nutrition-numbers">
-        <div class="nn-item"><div class="nn-value">14</div><div class="nn-label">蛋白 g</div></div>
-        <div class="nn-item"><div class="nn-value">7</div><div class="nn-label">脂肪 g</div></div>
-        <div class="nn-item"><div class="nn-value">36</div><div class="nn-label">碳水 g</div></div>
-        <div class="nn-item"><div class="nn-value">3</div><div class="nn-label">纤维 g</div></div>
-        <div class="nn-item"><div class="nn-value">100</div><div class="nn-label">钙 mg</div></div>
-      </div>
-      <span class="cost-tag">≈ 2.0 元</span>
-    </div>
+    <div class="day-header"><span class="day-name">周日</span><span class="day-theme">木樨肉 · 冬瓜虾皮 · 红薯饭 · 周末好消化</span></div>
+    <div class="meal"><span class="meal-slot slot-b">早餐</span><div class="meal-dishes">温热袋装纯牛奶 · 软发糕 · 白水焯小油菜心</div><div class="meal-detail">三元袋装纯牛奶 1 袋；软发糕 1 块；白水焯小油菜心淋两滴生抽</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">12g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">9g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">30g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">2g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">160mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 2.3 元</span></div>
+    <div class="meal"><span class="meal-slot slot-l">午餐</span><div class="meal-dishes">木樨肉（里脊）· 冬瓜虾皮 · 红薯饭与清汤</div><div class="meal-detail">猪里脊薄片 60g + 鸡蛋 1 个 + 黄瓜薄片 80g + 碎黑木耳；冬瓜 180g 烧虾皮；红薯饭与清汤</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">18g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">9g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">32g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">3g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">120mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 4.2 元</span></div>
+    <div class="meal"><span class="meal-slot slot-d">晚餐</span><div class="meal-dishes">小米红枣稠粥 · 鸡蛋瘦肉末蒸羹 · 软炒嫩白菜叶 · 软饼半块</div><div class="meal-detail">小米红枣稠粥；鸡蛋 1 个加 15g 熟瘦肉末蒸羹；嫩白菜叶 150g 软炒；软饼半块</div><div class="nutrition-summary"><div class="ns-item"><div class="ns-val">14g</div><div class="ns-label">蛋白</div></div><div class="ns-item"><div class="ns-val">7g</div><div class="ns-label">脂肪</div></div><div class="ns-item"><div class="ns-val">36g</div><div class="ns-label">碳水</div></div><div class="ns-item"><div class="ns-val">3g</div><div class="ns-label">纤维</div></div><div class="ns-item"><div class="ns-val">100mg</div><div class="ns-label">钙</div></div></div><span class="cost-badge">≈ 2.0 元</span></div>
   </div>
 
   <!-- 一周汇总 -->
-  <div class="day-card">
-    <div class="day-header">
-      <span class="day-name">一周汇总</span>
-      <span class="day-theme">营养+成本平衡表</span>
+  <div class="week-summary">
+    <div class="week-title">一周营养+成本平衡表</div>
+    <div class="big-number">45g 蛋白 / 400mg 钙 / 4.7元 午餐</div>
+    <div class="big-label">日均营养与成本</div>
+    <div class="bar-chart">
+      <div class="bc-bar"><div class="bc-fill" style="height:87%">8.7</div><div class="bc-label">周一</div><div class="bc-val">8.7元</div></div>
+      <div class="bc-bar"><div class="bc-fill" style="height:85%">8.5</div><div class="bc-label">周二</div><div class="bc-val">8.5元</div></div>
+      <div class="bc-bar"><div class="bc-fill" style="height:87%">8.7</div><div class="bc-label">周三</div><div class="bc-val">8.7元</div></div>
+      <div class="bc-bar"><div class="bc-fill" style="height:86%">8.6</div><div class="bc-label">周四</div><div class="bc-val">8.6元</div></div>
+      <div class="bc-bar"><div class="bc-fill" style="height:83%">8.3</div><div class="bc-label">周五</div><div class="bc-val">8.3元</div></div>
+      <div class="bc-bar"><div class="bc-fill" style="height:90%">9.0</div><div class="bc-label">周六</div><div class="bc-val">9.0元</div></div>
+      <div class="bc-bar"><div class="bc-fill" style="height:85%">8.5</div><div class="bc-label">周日</div><div class="bc-val">8.5元</div></div>
     </div>
-    <table class="summary-table">
-      <thead>
-        <tr>
-          <th>星期</th>
-          <th>早餐</th>
-          <th>午餐</th>
-          <th>晚餐</th>
-          <th>日合计</th>
-          <th>蛋白 (g)</th>
-          <th>钙 (mg)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>周一</td><td>1.7</td><td>5.0</td><td>2.0</td><td>8.7</td><td>40</td><td>380</td></tr>
-        <tr><td>周二</td><td>1.8</td><td>4.9</td><td>1.8</td><td>8.5</td><td>45</td><td>450</td></tr>
-        <tr><td>周三</td><td>1.7</td><td>4.8</td><td>2.2</td><td>8.7</td><td>49</td><td>380</td></tr>
-        <tr><td>周四</td><td>1.9</td><td>4.7</td><td>2.0</td><td>8.6</td><td>48</td><td>360</td></tr>
-        <tr><td>周五</td><td>2.2</td><td>4.0</td><td>2.1</td><td>8.3</td><td>44</td><td>370</td></tr>
-        <tr><td>周六</td><td>1.6</td><td>5.2</td><td>2.2</td><td>9.0</td><td>47</td><td>470</td></tr>
-        <tr><td>周日</td><td>2.3</td><td>4.2</td><td>2.0</td><td>8.5</td><td>44</td><td>380</td></tr>
-        <tr><td>平均</td><td>1.9</td><td>4.7</td><td>2.1</td><td>8.7</td><td>45</td><td>400</td></tr>
-      </tbody>
-    </table>
-    <div class="note">
-      <strong>营养说明：</strong>老人（60+）每日推荐摄入：蛋白质 50-60g、钙 1000mg、膳食纤维 25g、维生素 A/C/E 充足。本食单通过"每天 1 个蛋 + 1 顿肉/鱼（60-80g）+ 1 顿豆制品 + 深色蔬菜 + 粗粮"的组合，基本覆盖营养需求。钙主要来源：豆腐（120mg/100g）、牛奶（120mg/100ml）、芝麻酱（1000mg/100g）、虾皮（991mg/100g）。蛋白质主要来源：鸡蛋（13g/个）、猪肉（20g/100g）、鸡肉（22g/100g）、鱼肉（18-20g/100g）。
+    <div class="note-box">
+      <div class="note-title">为什么这个菜单营养牛逼？</div>
+      <div class="note-text">
+        1. <strong>蛋白质每天 44-49g</strong>：鸡蛋（13g/个）+ 肉/鱼（18-24g/顿）+ 豆制品（8-14g/顿），覆盖老人每天 50-60g 蛋白质需求。<br>
+        2. <strong>钙每天 360-470mg</strong>：豆腐（120-220mg/顿）+ 牛奶/豆浆（100-180mg/杯）+ 芝麻酱（高钙）+ 虾皮（高钙），钙来源丰富。<br>
+        3. <strong>深色蔬菜每天 2-3 种</strong>：西红柿（维生素 C）、胡萝卜（维生素 A）、菠菜（铁+叶酸）、西葫芦（低糖），护眼+补铁+增强免疫力。<br>
+        4. <strong>粗粮每天 1 顿</strong>：小米、燕麦、玉米面、荞麦面，膳食纤维 20-25g/天，促进肠道健康。<br>
+        5. <strong>少油少盐</strong>：全天油不超 22g（两瓷勺），盐不超 4.5g，靠西红柿、陈醋、虾皮、香菇提鲜，控血压。<br>
+        6. <strong>软烂好嚼</strong>：牛腩高压锅压 25 分钟、鱼只选无刺品种、丸子水汆不炸、粗粮发面蒸，牙口不好也能吃。
+      </div>
     </div>
   </div>
 </div>
