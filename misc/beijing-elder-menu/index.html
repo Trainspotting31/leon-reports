@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="text-scale" content="scale" />
+  <title>北京 60+ 老人七日三餐食单（10元/天健康版）</title>
+  <style>
+    :root {
+      --paper: #fbfbf8;
+      --card: #ffffff;
+      --wash: #f2f4f0;
+      --wash-warm: #f7f4ee;
+      --ink: #1b2228;
+      --ink-sub: #46515a;
+      --jujube: #9b2928;
+      --jujube-soft: rgba(155, 41, 40, 0.09);
+      --pine: #26583d;
+      --pine-soft: rgba(38, 88, 61, 0.09);
+      --sesame: #7a541e;
+      --sesame-soft: rgba(122, 84, 30, 0.10);
+      --line: rgba(27, 34, 40, 0.15);
+      --line-strong: rgba(27, 34, 40, 0.28);
+      --serif: "Songti SC", "Noto Serif SC", "STSong", "Source Han Serif SC", "SimSun", serif;
+      --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    body {
+      font-family: var(--sans);
+      font-size: 1.125rem;
+      line-height: 1.75;
+      color: var(--ink);
+      background-color: var(--paper);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.large-print {
+      font-size: 1.32rem;
+      line-height: 1.82;
+    }
+
+    .top-utility {
+      max-width: 54rem;
+      margin: 0 auto;
+      padding: 0.85rem 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem;
+    }
+
+    .back-link {
+      color: var(--ink-sub);
+      text-decoration: none;
+      font-size: 0.95em;
+      padding: 0.35rem 0.2rem;
+      border-bottom: 1px solid transparent;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      color: var(--jujube);
+      border-bottom-color: var(--jujube);
+    }
+
+    .utility-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      font-family: inherit;
+      font-size: 0.92em;
+      font-weight: 600;
+      line-height: 1.3;
+      min-height: 2.65rem;
+      padding: 0.45rem 0.95rem;
+      border-radius: 0.45rem;
+      border: 1.5px solid var(--line-strong);
+      background: var(--card);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      border-color: var(--jujube);
+      color: var(--jujube);
+    }
+
+    .action-btn[aria-pressed="true"] {
+      background: var(--jujube);
+      border-color: var(--jujube);
+      color: #ffffff;
+    }
+
+    .action-btn:focus-visible,
+    .day-pill:focus-visible,
+    .check-item input:focus-visible {
+      outline: 3px solid var(--jujube);
+      outline-offset: 2px;
+    }
+
+    header.masthead {
+      max-width: 54rem;
+      margin: 0.75rem auto 0;
+      padding: 1.5rem 1rem 1.4rem;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .masthead-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .masthead h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.75rem, 1.35rem + 1.8vw, 2.5rem);
+      line-height: 1.28;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.01em;
+    }
+
+    .price-stamp {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0.5rem 0.9rem;
+      border: 2px solid var(--jujube);
+      border-radius: 0.35rem;
+      background: var(--jujube-soft);
+      color: var(--jujube);
+    }
+
+    .price-stamp strong {
+      font-family: var(--serif);
+      font-size: 1.35em;
+      line-height: 1.2;
+    }
+
+    .price-stamp span {
+      font-size: 0.82em;
+      color: var(--ink);
+    }
+
+    .lead {
+      margin-top: 0.9rem;
+      max-width: 44rem;
+      color: var(--ink-sub);
+      font-size: 1em;
+    }
+
+    .rule-strip {
+      margin-top: 1.15rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+      gap: 0.65rem;
+    }
+
+    .rule-box {
+      padding: 0.75rem 0.9rem;
+      background: var(--wash);
+      border-left: 4px solid var(--pine);
+      border-radius: 0 0.35rem 0.35rem 0;
+    }
+
+    .rule-box strong {
+      display: block;
+      color: var(--pine);
+      font-size: 0.96em;
+      margin-bottom: 0.15rem;
+    }
+
+    .rule-box p {
+      font-size: 0.9em;
+      line-height: 1.55;
+      color: var(--ink-sub);
+    }
+
+    nav.day-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(251, 251, 248, 0.96);
+      border-bottom: 1px solid var(--line);
+      padding: 0.55rem 1rem;
+    }
+
+    .day-nav-inner {
+      max-width: 54rem;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .day-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      min-height: 2.4rem;
+      padding: 0.3rem 0.72rem;
+      border-radius: 0.35rem;
+      border: 1px solid var(--line-strong);
+      background: var(--card);
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.92em;
+      font-weight: 600;
+    }
+
+    .day-pill:hover {
+      border-color: var(--jujube);
+      color: var(--jujube);
+    }
+
+    .day-pill.is-today {
+      border-color: var(--jujube);
+      background: var(--jujube);
+      color: #ffffff;
+    }
+
+    .day-pill.is-shop {
+      border-color: var(--pine);
+      color: var(--pine);
+      background: var(--pine-soft);
+    }
+
+    main {
+      max-width: 54rem;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 3.5rem;
+    }
+
+    .day-sheet {
+      background: var(--card);
+      border: 1px solid var(--line-strong);
+      border-radius: 0.5rem;
+      margin-bottom: 1.35rem;
+      scroll-margin-top: 4.5rem;
+      overflow: hidden;
+    }
+
+    .day-sheet.today-highlight {
+      border: 2px solid var(--jujube);
+    }
+
+    .day-header {
+      padding: 0.9rem 1.15rem;
+      background: var(--wash-warm);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem 1rem;
+    }
+
+    .day-title-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.6rem;
+    }
+
+    .day-name {
+      font-family: var(--serif);
+      font-size: 1.45em;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .today-badge {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.8em;
+      font-weight: 700;
+      color: #ffffff;
+      background: var(--jujube);
+      border-radius: 0.25rem;
+      vertical-align: middle;
+    }
+
+    .day-theme {
+      font-size: 0.95em;
+      color: var(--ink-sub);
+      font-weight: 500;
+    }
+
+    .day-cost {
+      font-weight: 700;
+      color: var(--jujube);
+      font-size: 1.02em;
+    }
+
+    .meals-list {
+      list-style: none;
+    }
+
+    .meal-row {
+      padding: 1rem 1.15rem;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+    }
+
+    @media (min-width: 42em) {
+      .meal-row {
+        grid-template-columns: 5.8rem 1fr;
+        gap: 1rem;
+        align-items: start;
+      }
+    }
+
+    .meal-tag {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+
+    @media (min-width: 42em) {
+      .meal-tag {
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+    }
+
+    .meal-slot {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 0.25rem;
+      background: var(--sesame-soft);
+      color: var(--sesame);
+      font-weight: 700;
+      font-size: 0.92em;
+    }
+
+    .meal-slot.lunch {
+      background: var(--jujube-soft);
+      color: var(--jujube);
+    }
+
+    .meal-slot.dinner {
+      background: var(--pine-soft);
+      color: var(--pine);
+    }
+
+    .meal-subcost {
+      font-size: 0.86em;
+      color: var(--ink-sub);
+      font-weight: 600;
+    }
+
+    .meal-dishes {
+      font-size: 1.05em;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .meal-detail {
+      margin-top: 0.28rem;
+      font-size: 0.93em;
+      color: var(--ink-sub);
+      line-height: 1.65;
+    }
+
+    .cook-tip {
+      margin-top: 0.35rem;
+      font-size: 0.88em;
+      color: var(--pine);
+      font-weight: 500;
+    }
+
+    .day-foot {
+      padding: 0.6rem 1.15rem;
+      background: var(--paper);
+      font-size: 0.86em;
+      color: var(--ink-sub);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    .section-block {
+      margin-top: 2.2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--ink);
+      scroll-margin-top: 4.5rem;
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .section-block h2 {
+      font-family: var(--serif);
+      font-size: 1.5em;
+      color: var(--ink);
+    }
+
+    .section-note {
+      color: var(--ink-sub);
+      font-size: 0.94em;
+      margin-bottom: 1.1rem;
+    }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+      gap: 1rem;
+    }
+
+    .shop-group {
+      background: var(--card);
+      border: 1px solid var(--line-strong);
+      border-radius: 0.45rem;
+      padding: 1rem 1.1rem;
+    }
+
+    .shop-group h3 {
+      font-size: 1.05em;
+      color: var(--pine);
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.65rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .check-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .check-item label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      cursor: pointer;
+      line-height: 1.55;
+      font-size: 0.95em;
+    }
+
+    .check-item input[type="checkbox"] {
+      width: 1.3rem;
+      height: 1.3rem;
+      margin-top: 0.2rem;
+      flex-shrink: 0;
+      accent-color: var(--pine);
+    }
+
+    .check-item input[type="checkbox"]:checked + span {
+      text-decoration: line-through;
+      color: var(--ink-sub);
+      opacity: 0.72;
+    }
+
+    .adjust-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+      gap: 0.85rem;
+    }
+
+    .adjust-card {
+      background: var(--card);
+      border: 1px solid var(--line-strong);
+      border-radius: 0.45rem;
+      padding: 0.95rem 1.05rem;
+    }
+
+    .adjust-card h3 {
+      font-size: 1em;
+      color: var(--jujube);
+      margin-bottom: 0.35rem;
+    }
+
+    .adjust-card p {
+      font-size: 0.92em;
+      color: var(--ink-sub);
+      line-height: 1.65;
+    }
+
+    footer.page-foot {
+      margin-top: 2.4rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.88em;
+      color: var(--ink-sub);
+    }
+
+    @media print {
+      body,
+      body.large-print {
+        background: #ffffff;
+        font-size: 11pt;
+        line-height: 1.5;
+      }
+
+      .top-utility,
+      nav.day-nav,
+      .no-print {
+        display: none !important;
+      }
+
+      header.masthead,
+      main {
+        max-width: 100%;
+        padding: 0;
+        margin: 0 0 0.8rem;
+      }
+
+      .day-sheet,
+      .shop-group,
+      .adjust-card {
+        break-inside: avoid;
+        margin-bottom: 0.65rem;
+        border-color: #666;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-utility">
+    <a class="back-link" href="../../index.html">返回报告库首页</a>
+    <div class="utility-actions">
+      <button type="button" class="action-btn" id="btnFont" aria-pressed="false">特大字号</button>
+      <button type="button" class="action-btn" id="btnToday">跳到今天</button>
+      <button type="button" class="action-btn" id="btnPrint">打印贴冰箱</button>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="masthead-head">
+      <div>
+        <h1>北京 60+ 老人七日三餐食单</h1>
+        <p class="lead">
+          老北京家常舒坦口，早、中、晚三餐齐全。按北京 11 月初冬早市与社区生鲜超市整买分装价核算，一人一天食材加调料控制在 10 元以内（日均 9.5 元）。
+        </p>
+      </div>
+      <div class="price-stamp">
+        <strong>全天 9.1–9.9 元</strong>
+        <span>一周总菜金约 66.5 元</span>
+      </div>
+    </div>
+
+    <div class="rule-strip" aria-label="60岁以上饮食四条铁律">
+      <div class="rule-box">
+        <strong>牙口友好防呛噎</strong>
+        <p>牛腩高压锅压烂，鱼只选带鱼中段或无刺鱼柳，丸子水汆不炸，粗粮发面蒸或熬稠粥。</p>
+      </div>
+      <div class="rule-box">
+        <strong>少油少盐借鲜味</strong>
+        <p>全天油不超两瓷勺（22g）、盐不超 4.5g，靠西红柿、陈醋、虾皮、香菇提鲜。</p>
+      </div>
+      <div class="rule-box">
+        <strong>蛋白和钙不缩水</strong>
+        <p>每天 1 个以上鸡蛋 + 一顿肉或鱼 + 豆浆/豆腐/牛奶轮换，守住老人肌肉与骨量。</p>
+      </div>
+      <div class="rule-box">
+        <strong>晚饭吃软七分饱</strong>
+        <p>晚餐主打疙瘩汤、糊塌子、棒碴粥、小馄饨、烩豆腐，热乎好消化，夜里不起夜折腾。</p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="day-nav" aria-label="按星期快速跳转">
+    <div class="day-nav-inner">
+      <a class="day-pill" data-day="1" href="#day-1">周一</a>
+      <a class="day-pill" data-day="2" href="#day-2">周二</a>
+      <a class="day-pill" data-day="3" href="#day-3">周三</a>
+      <a class="day-pill" data-day="4" href="#day-4">周四</a>
+      <a class="day-pill" data-day="5" href="#day-5">周五</a>
+      <a class="day-pill" data-day="6" href="#day-6">周六</a>
+      <a class="day-pill" data-day="0" href="#day-0">周日</a>
+      <a class="day-pill is-shop" href="#shop-list">一周买菜表</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- 周一 -->
+    <article class="day-sheet" id="day-1" data-weekday="1">
+      <div class="day-header">
+        <div class="day-title-group">
+          <h2 class="day-name">周一</h2>
+          <span class="day-theme">酸香开胃 · 补铁护胃</span>
+        </div>
+        <span class="day-cost">全天约 9.9 元</span>
+      </div>
+      <ul class="meals-list">
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot">早餐</span>
+            <span class="meal-subcost">1.7 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">自磨无糖热豆浆 + 水煮鸡蛋 + 玉米面红枣软发糕 + 香油拌心里美细丝</div>
+            <p class="meal-detail">干黄豆 25g 现打热豆浆（0.3元）、鸡蛋 1 个（0.6元）、软发糕 1 块（0.5元）、心里美萝卜擦极细丝滴两滴香油（0.3元）。</p>
+            <p class="cook-tip">老人做法：发糕用一半白面一半细玉米面加酵母发透再蒸，松软不喇嗓子。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot lunch">午餐</span>
+            <span class="meal-subcost">5.6 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">西红柿软炖牛腩 + 小油菜烧北豆腐 + 金银二米饭</div>
+            <p class="meal-detail">牛腩 55g（3.6元）配西红柿 100g（0.7元）；小油菜 100g 配北豆腐 80g（0.9元）；大米小米 2:1 焖二米饭（0.4元）。</p>
+            <p class="cook-tip">老人做法：牛腩切小块用高压锅压 25 分钟至筷子一戳即烂，西红柿炒出红沙借酸减盐。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot dinner">晚餐</span>
+            <span class="meal-subcost">2.0 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">老北京西红柿青菜小疙瘩汤 + 蒸铁棍山药一段</div>
+            <p class="meal-detail">西红柿 80g + 鸡蛋半个 + 面粉 45g + 小青菜碎 80g（1.4元）；去皮铁棍山药 50g 上锅蒸面（0.6元）。</p>
+            <p class="cook-tip">老人做法：面碗接水龙头滴水搅拌成米粒大小碎疙瘩，好咽易消化。</p>
+          </div>
+        </li>
+      </ul>
+      <div class="day-foot">
+        <span>含全天油盐葱姜调料 0.6 元</span>
+        <span>营养重点：血红素铁 + 大豆异黄酮 + 番茄红素</span>
+      </div>
+    </article>
+
+    <!-- 周二 -->
+    <article class="day-sheet" id="day-2" data-weekday="2">
+      <div class="day-header">
+        <div class="day-title-group">
+          <h2 class="day-name">周二</h2>
+          <span class="day-theme">醋焖少刺鱼 · 补钙润肠</span>
+        </div>
+        <span class="day-cost">全天约 9.4 元</span>
+      </div>
+      <ul class="meals-list">
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot">早餐</span>
+            <span class="meal-subcost">1.8 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">小米南瓜稠粥 + 水煮蛋 + 老北京麻酱小花卷 + 焯菠菜拌碎花生</div>
+            <p class="meal-detail">小米 20g 熬南瓜 60g（0.4元）、鸡蛋 1 个（0.6元）、自蒸麻酱小花卷（0.5元）、焯水菠菜配几粒压碎熟花生（0.3元）。</p>
+            <p class="cook-tip">老人做法：菠菜沸水焯 30 秒去掉草酸；花生煮面再压碎，避免整粒呛咳。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot lunch">午餐</span>
+            <span class="meal-subcost">5.2 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">陈醋酱焖带鱼中段 + 木耳鸡蛋炒西葫芦 + 玉米面发糕 + 冬瓜虾皮汤</div>
+            <p class="meal-detail">带鱼中段 95g（2.8元）；鸡蛋半个 + 西葫芦 140g + 碎黑木耳（1.5元）；发糕（0.5元）；冬瓜淡虾皮清汤（0.4元）。</p>
+            <p class="cook-tip">老人做法：带鱼只有一根主骨好挑刺；不裹厚面糊油炸，平底锅少油煎定型后多放陈醋焖 15 分钟，边刺酥软。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot dinner">晚餐</span>
+            <span class="meal-subcost">1.8 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">虾皮小白菜烩南豆腐 + 细玉米糁棒碴粥 + 半个小花卷</div>
+            <p class="meal-detail">南豆腐 120g + 小白菜 120g + 淡干虾皮一撮（1.4元）；细玉米糁慢熬棒碴粥（0.2元）；半个花卷（0.2元）。</p>
+            <p class="cook-tip">老人做法：南豆腐用勺子舀成片下锅烩，入口即化，虾皮先用清水投洗一遍去浮盐。</p>
+          </div>
+        </li>
+      </ul>
+      <div class="day-foot">
+        <span>含全天油盐葱姜陈醋 0.6 元</span>
+        <span>营养重点：深海鱼护血管 + 纯麻酱南豆腐双补钙</span>
+      </div>
+    </article>
+
+    <!-- 周三 -->
+    <article class="day-sheet" id="day-3" data-weekday="3">
+      <div class="day-header">
+        <div class="day-title-group">
+          <h2 class="day-name">周三</h2>
+          <span class="day-theme">冬日砂锅丸子 · 热汤暖身</span>
+        </div>
+        <span class="day-cost">全天约 9.2 元</span>
+      </div>
+      <ul class="meals-list">
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot">早餐</span>
+            <span class="meal-subcost">1.7 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">温水虾皮蒸嫩蛋羹 + 热豆浆 + 发面软馒头 + 少盐蒜泥拍黄瓜</div>
+            <p class="meal-detail">鸡蛋 1 个加 1.5 倍温水蒸蛋羹（0.7元）、热豆浆（0.3元）、软馒头 1 个（0.3元）、去皮拍黄瓜小碟（0.4元）。</p>
+            <p class="cook-tip">老人做法：黄瓜削皮拍碎切小块，比带皮整块好嚼且不凉胃。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot lunch">午餐</span>
+            <span class="meal-subcost">4.7 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">砂锅水汆丸子白菜冻豆腐 + 软炒醋溜土豆丝 + 燕麦大米软饭</div>
+            <p class="meal-detail">猪前尖瘦肉馅 80g（2.2元）配大白菜心 180g、冻豆腐 80g、粉丝一小撮（1.1元）；土豆丝 130g（0.5元）；燕麦大米饭及葱花清汤（0.9元）。</p>
+            <p class="cook-tip">老人做法：肉馅加姜水搅上劲，冷水下锅水汆代替油炸，软嫩不腻；冻豆腐提前一晚把北豆腐切块放冷冻室自制即可。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot dinner">晚餐</span>
+            <span class="meal-subcost">2.2 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">菠菜荷包蛋热汤面 + 麻酱拌软腐竹小碟</div>
+            <p class="meal-detail">细挂面掺少许荞麦面 60g + 荷包蛋 1 个 + 焯水菠菜 100g（1.6元）；干腐竹 15g 温水泡透煮软拌麻酱（0.6元）。</p>
+            <p class="cook-tip">老人做法：面条比年轻人多煮 2 分钟至无硬芯，睡前喝半碗热汤不口干。</p>
+          </div>
+        </li>
+      </ul>
+      <div class="day-foot">
+        <span>含全天油盐葱姜调料 0.6 元</span>
+        <span>营养重点：水汆低脂瘦肉蛋白 + 燕麦可溶性膳食纤维</span>
+      </div>
+    </article>
+
+    <!-- 周四 -->
+    <article class="day-sheet" id="day-4" data-weekday="4">
+      <div class="day-header">
+        <div class="day-title-group">
+          <h2 class="day-name">周四</h2>
+          <span class="day-theme">山药焖嫩鸡 · 健脾通便</span>
+        </div>
+        <span class="day-cost">全天约 9.1 元</span>
+      </div>
+      <ul class="meals-list">
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot">早餐</span>
+            <span class="meal-subcost">1.9 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">棒碴红薯粥 + 五香茶鸡蛋 + 发面葱花软饼 + 熟焖胡萝卜丝</div>
+            <p class="meal-detail">细玉米糁熬去皮红薯丁（0.4元）、茶鸡蛋 1 个（0.7元）、发面葱花软饼（0.5元）、胡萝卜擦丝少油焖软（0.3元）。</p>
+            <p class="cook-tip">老人做法：胡萝卜用几滴油焖软后脂溶性维生素 A 更好吸收，护眼防干涩。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot lunch">午餐</span>
+            <span class="meal-subcost">4.6 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">香菇山药焖去皮鸡腿 + 少油手撕圆白菜 + 二米饭 + 紫菜清汤</div>
+            <p class="meal-detail">去骨鸡琵琶腿肉 105g（1.9元）配铁棍山药 70g、胡萝卜丁、干香菇 2 朵（1.5元）；圆白菜 160g（0.6元）；二米饭与紫菜汤（0.6元）。</p>
+            <p class="cook-tip">老人做法：买琵琶腿撕掉鸡皮和黄油，肉质比鸡胸嫩滑数倍、绝不塞牙；泡香菇的原汤撇净泥沙直接入锅提鲜。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot dinner">晚餐</span>
+            <span class="meal-subcost">2.0 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">大米山药白粥 + 嫩芹菜丁炒白豆干 + 玉米面软发糕半块</div>
+            <p class="meal-detail">大米山药熬稠粥（0.5元）；嫩芹菜切 0.5 厘米小丁 100g 炒白豆干小丁 50g（1.1元）；发糕半块（0.4元）。</p>
+            <p class="cook-tip">老人做法：老芹菜撕掉粗筋再切碎丁，既保留降压膳食纤维，又不费牙。</p>
+          </div>
+        </li>
+      </ul>
+      <div class="day-foot">
+        <span>含全天油盐葱姜调料 0.6 元</span>
+        <span>营养重点：低脂高蛋白禽腿肉 + 山药红薯温和促排便</span>
+      </div>
+    </article>
+
+    <!-- 周五 -->
+    <article class="day-sheet" id="day-5" data-weekday="5">
+      <div class="day-header">
+        <div class="day-title-group">
+          <h2 class="day-name">周五</h2>
+          <span class="day-theme">京味打卤面与糊塌子 · 面食改善日</span>
+        </div>
+        <span class="day-cost">全天约 9.5 元</span>
+      </div>
+      <ul class="meals-list">
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot">早餐</span>
+            <span class="meal-subcost">2.2 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">温热袋装纯牛奶 + 老北京麻酱小花卷 + 高压锅五香软花生米</div>
+            <p class="meal-detail">三元纯牛奶 1 袋 200ml（整箱均价 1.6元）、麻酱花卷 1 个（0.4元）、煮软花生米一小撮（0.2元）。</p>
+            <p class="cook-tip">老人做法：袋奶连袋放温水里泡热再喝，不冰肠胃；乳糖不耐受的老人可换舒化奶或酸奶。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot lunch">午餐</span>
+            <span class="meal-subcost">4.6 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">少油茄丁肉末鸡蛋打卤面（配焯绿豆芽、黄瓜丝菜码 + 原汤面汤）</div>
+            <p class="meal-detail">圆茄子 120g + 猪瘦肉丁 55g + 鸡蛋 1 个 + 碎木耳打卤，配鲜切面 85g（3.9元）；焯绿豆芽与去皮黄瓜丝菜码（0.7元）。</p>
+            <p class="cook-tip">老人做法：圆茄子切小丁先上蒸锅蒸 6 分钟蒸软再下锅炒卤，彻底避开餐馆“油泡茄子”的吸油坑，卤汁减盐勾薄芡。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot dinner">晚餐</span>
+            <span class="meal-subcost">2.1 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">老北京西葫芦鸡蛋软糊塌子 + 冬瓜海米清汤</div>
+            <p class="meal-detail">西葫芦擦细丝 130g 搅入鸡蛋 1 个与面粉 45g 摊 2 张软糊塌子（1.5元）；冬瓜海米清汤 1 碗（0.6元）。</p>
+            <p class="cook-tip">老人做法：平底不粘锅只刷薄薄一层油，小火盖盖焖熟，外软里嫩，没牙也能抿化。</p>
+          </div>
+        </li>
+      </ul>
+      <div class="day-foot">
+        <span>含全天油盐葱姜调料 0.6 元</span>
+        <span>营养重点：老北京地道面食解馋 + 蒸茄丁控油法</span>
+      </div>
+    </article>
+
+    <!-- 周六 -->
+    <article class="day-sheet" id="day-6" data-weekday="6">
+      <div class="day-header">
+        <div class="day-title-group">
+          <h2 class="day-name">周六</h2>
+          <span class="day-theme">清蒸零刺鱼与小馄饨 · 周末鲜味</span>
+        </div>
+        <span class="day-cost">全天约 9.8 元</span>
+      </div>
+      <ul class="meals-list">
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot">早餐</span>
+            <span class="meal-subcost">1.6 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">现磨黑豆黄豆浆 + 水煮蛋 + 南瓜发面软馒头 + 软煮短海带丝</div>
+            <p class="meal-detail">黑豆黄豆拼配热豆浆（0.4元）、鸡蛋 1 个（0.6元）、南瓜泥发面馒头（0.4元）、海带丝切短煮软少醋凉拌（0.2元）。</p>
+            <p class="cook-tip">老人做法：海带丝务必切成 3 厘米短段并多煮 10 分钟至软糯，防整根滑入咽喉。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot lunch">午餐</span>
+            <span class="meal-subcost">5.4 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">清蒸无刺龙利鱼柳垫嫩豆腐 + 西红柿烧松花菜 + 二米饭</div>
+            <p class="meal-detail">无刺龙利鱼柳（或鲈鱼净肉）95g 铺在南豆腐 120g 上清蒸（3.6元）；松花菜 140g 配西红柿烧软（1.4元）；二米饭（0.4元）。</p>
+            <p class="cook-tip">老人做法：完全零小刺，鱼片铺在豆腐上大火蒸 7 分钟，淋半勺低盐蒸鱼豉油与几滴香油即可。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot dinner">晚餐</span>
+            <span class="meal-subcost">2.2 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">紫菜虾皮猪肉小馄饨 + 蒜蓉白灼生菜</div>
+            <p class="meal-detail">自包薄皮小馄饨 8 个（猪瘦肉芹菜细馅 35g + 馄饨皮 + 紫菜虾皮汤底，1.8元）；焯生菜 100g（0.4元）。</p>
+            <p class="cook-tip">老人做法：周三买肉馅时顺手包出一小盒冻冰箱，周末晚上下水 3 分钟即熟，皮滑好咽。</p>
+          </div>
+        </li>
+      </ul>
+      <div class="day-foot">
+        <span>含全天油盐葱姜豉油 0.6 元</span>
+        <span>营养重点：零刺优质鱼蛋白 + 藻类碘与膳食纤维</span>
+      </div>
+    </article>
+
+    <!-- 周日 -->
+    <article class="day-sheet" id="day-0" data-weekday="0">
+      <div class="day-header">
+        <div class="day-title-group">
+          <h2 class="day-name">周日</h2>
+          <span class="day-theme">京味木樨肉 · 清淡收尾</span>
+        </div>
+        <span class="day-cost">全天约 9.6 元</span>
+      </div>
+      <ul class="meals-list">
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot">早餐</span>
+            <span class="meal-subcost">2.3 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">温热袋装纯牛奶 + 玉米面红枣软发糕 + 焯小油菜心</div>
+            <p class="meal-detail">三元纯牛奶 1 袋（1.6元）、软发糕 1 块（0.5元）、白水焯小油菜心淋两滴生抽（0.2元）。</p>
+            <p class="cook-tip">老人做法：牛奶配发酵面食，早晨血糖平稳不犯困。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot lunch">午餐</span>
+            <span class="meal-subcost">4.7 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">家常软炒木樨肉 + 虾皮烧冬瓜 + 红薯大米软饭 + 萝卜丝汤</div>
+            <p class="meal-detail">猪里脊薄片 60g + 鸡蛋 1 个 + 黄瓜薄片 80g + 碎黑木耳（3.3元）；冬瓜 180g 烧虾皮（0.7元）；红薯饭与清汤（0.7元）。</p>
+            <p class="cook-tip">老人做法：里脊逆纹切薄片抓少许水淀粉温水滑熟（不走宽油），冬瓜焖至透明软烂利水消肿。</p>
+          </div>
+        </li>
+        <li class="meal-row">
+          <div class="meal-tag">
+            <span class="meal-slot dinner">晚餐</span>
+            <span class="meal-subcost">2.0 元</span>
+          </div>
+          <div>
+            <div class="meal-dishes">红枣小米养胃粥 + 瘦肉末蒸嫩蛋羹 + 清炒大白菜叶 + 半块软饼</div>
+            <p class="meal-detail">小米红枣稠粥（0.4元）；鸡蛋 1 个加 15g 熟瘦肉末蒸羹（1.0元）；单取嫩白菜叶 150g 软炒（0.3元）；软饼半块（0.3元）。</p>
+            <p class="cook-tip">老人做法：红枣提前去核剪碎再熬粥，杜绝老人误吞枣核风险（枣核两头尖最伤食道）。</p>
+          </div>
+        </li>
+      </ul>
+      <div class="day-foot">
+        <span>含全天油盐葱姜调料 0.6 元</span>
+        <span>营养重点：清肠刮油收尾 + 去核红枣安全细节</span>
+      </div>
+    </article>
+
+    <!-- 一周早市采购清单 -->
+    <section class="section-block" id="shop-list">
+      <div class="section-head">
+        <h2>一周早市集中买菜表（单人 7 天量）</h2>
+        <button type="button" class="action-btn no-print" id="btnResetShop">清空勾选</button>
+      </div>
+      <p class="section-note">
+        把全天预算稳稳压进 10 元的秘诀：周末早市或社区超市整买肉鱼，回家按每顿 60–100g 分小袋冷冻；当季耐放根茎菜一次买齐，绿叶菜周中补一次鲜。点击方框可打钩记录。
+      </p>
+
+      <div class="shop-grid">
+        <div class="shop-group">
+          <h3>肉鱼蛋奶豆（约 35.5 元）</h3>
+          <ul class="check-list">
+            <li class="check-item"><label><input type="checkbox" data-key="s1" /><span>鸡蛋 8 个（约 1 斤，4.8 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="s2" /><span>猪前尖肉/里脊 230g（分 3 份：丸子馅+打卤丁+木樨肉片，约 6.5 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="s3" /><span>牛腩 55–65g（或一次买一斤分 8 袋冻存，单份约 3.6 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="s4" /><span>鸡琵琶腿 1 只（去皮去骨取净肉约 105g，1.9 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="s5" /><span>带鱼中段 1 块 + 无刺龙利鱼柳 1 块（共约 190g，5.8 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="s6" /><span>北豆腐 1 块（一半切块冻成冻豆腐）+ 南豆腐 2 小块 + 白豆干（共约 2.9 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="s7" /><span>三元袋装纯牛奶 2 袋 + 干黄豆/黑豆 100g（自磨 4 次豆浆，共约 4.5 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="s8" /><span>馄饨皮一小沓（包 8 个小馄饨，余皮可下汤面，约 1.0 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="s9" /><span>干货摊分摊：淡干虾皮、紫菜、干黑木耳、干香菇、腐竹（周耗约 4.5 元）</span></label></li>
+          </ul>
+        </div>
+
+        <div class="shop-group">
+          <h3>11月初冬北京当家菜（约 16.5 元）</h3>
+          <ul class="check-list">
+            <li class="check-item"><label><input type="checkbox" data-key="v1" /><span>大白菜半棵（约 2 斤，吃两顿，1.6 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="v2" /><span>冬瓜 1 块（约 1 斤，烧菜+做汤，1.2 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="v3" /><span>西红柿 3 个（约 350g，炖牛腩+疙瘩汤+烧菜花，2.4 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="v4" /><span>西葫芦 1 根（约 280g，炒木耳+烙糊塌子，1.5 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="v5" /><span>土豆 1 个 + 胡萝卜 1 根 + 心里美/白萝卜半根（共约 1.6 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="v6" /><span>铁棍山药 1 根 + 南瓜 1 小块 + 红薯 1 个（共约 3.2 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="v7" /><span>圆白菜半棵 + 圆茄子半个 + 松花菜小半棵（共约 2.4 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="v8" /><span>深色叶菜：菠菜、小油菜、小白菜、嫩芹菜、绿豆芽、黄瓜（周中补鲜，共约 2.6 元）</span></label></li>
+          </ul>
+        </div>
+
+        <div class="shop-group">
+          <h3>米面杂粮与调料分摊（约 14.5 元）</h3>
+          <ul class="check-list">
+            <li class="check-item"><label><input type="checkbox" data-key="g1" /><span>大米 + 小米 + 燕麦片（周耗约 600g，约 3.6 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="g2" /><span>普通面粉 + 细玉米面 + 细玉米糁（发糕/花卷/疙瘩汤/棒碴粥，周耗约 750g，约 3.5 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="g3" /><span>鲜切面/细挂面（掺少许荞麦面，两顿约 150g，1.0 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="g4" /><span>纯芝麻酱（认准 100% 纯白芝麻酱，补钙主力，周耗约 1.6 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="g5" /><span>去核红枣几颗 + 生花生米一小把（约 0.6 元）</span></label></li>
+            <li class="check-item"><label><input type="checkbox" data-key="g6" /><span>烹调油、低钠盐、山西陈醋、减盐生抽、葱姜蒜（7 天合计约 4.2 元）</span></label></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 慢病老人替换提醒 -->
+    <section class="section-block">
+      <div class="section-head">
+        <h2>常见慢病怎么微调</h2>
+      </div>
+      <div class="adjust-list">
+        <div class="adjust-card">
+          <h3>血糖偏高 / 糖尿病</h3>
+          <p>棒碴粥、小米粥不要熬得太烂糊，改喝热豆浆或牛奶；打卤面面条换成杂粮挂面且多放绿豆芽菜码，吃饭先吃菜肉再吃主食。</p>
+        </div>
+        <div class="adjust-card">
+          <h3>高尿酸 / 痛风</h3>
+          <p>去掉周二带鱼和汤里的虾皮、紫菜、干香菇，等量换成鸡蛋、牛奶、北豆腐和新鲜西红柿提鲜，每天温开水喝够 1500ml。</p>
+        </div>
+        <div class="adjust-card">
+          <h3>高血压 / 肾功能减退</h3>
+          <p>打卤面不喝面汤，麻酱里只兑温水不兑酱油；肾功能不全的老人豆制品减半，优先吃鸡蛋清、鱼肉和瘦猪肉。</p>
+        </div>
+        <div class="adjust-card">
+          <h3>预算宽裕怎么加码</h3>
+          <p>若预算放宽到每天 13–15 元，只需每天固定加 1 袋纯牛奶（1.8 元）和半个应季苹果或雪花梨（1.5 元，牙弱可煮梨水），无需大改食谱。</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="page-foot">
+      <p>口径说明：菜价参考 2026 年 11 月北京朝阳/东城社区早市与生鲜超市日常价；重量均为生重。红枣务必提前去核，鱼类仅选用无肌间乱刺品种。</p>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var fontBtn = document.getElementById('btnFont');
+      var todayBtn = document.getElementById('btnToday');
+      var printBtn = document.getElementById('btnPrint');
+      var resetBtn = document.getElementById('btnResetShop');
+
+      // 1. 特大字号记忆
+      try {
+        if (localStorage.getItem('elderMenuLargePrint') === '1') {
+          document.body.classList.add('large-print');
+          fontBtn.setAttribute('aria-pressed', 'true');
+          fontBtn.textContent = '恢复标准字';
+        }
+      } catch (e) {}
+
+      fontBtn.addEventListener('click', function () {
+        var isLarge = document.body.classList.toggle('large-print');
+        fontBtn.setAttribute('aria-pressed', isLarge ? 'true' : 'false');
+        fontBtn.textContent = isLarge ? '恢复标准字' : '特大字号';
+        try {
+          localStorage.setItem('elderMenuLargePrint', isLarge ? '1' : '0');
+        } catch (e) {}
+      });
+
+      // 2. 自动识别北京时间的星期几并打上「今日」印章
+      var bjParts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Shanghai',
+        weekday: 'short'
+      }).format(new Date());
+      var map = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+      var todayIdx = map[bjParts] !== undefined ? map[bjParts] : new Date().getDay();
+
+      var todayCard = document.getElementById('day-' + todayIdx);
+      if (todayCard) {
+        todayCard.classList.add('today-highlight');
+        var nameEl = todayCard.querySelector('.day-name');
+        if (nameEl) {
+          var badge = document.createElement('span');
+          badge.className = 'today-badge';
+          badge.textContent = '今日';
+          nameEl.insertAdjacentElement('afterend', badge);
+        }
+      }
+
+      var navPill = document.querySelector('.day-pill[data-day="' + todayIdx + '"]');
+      if (navPill) {
+        navPill.classList.add('is-today');
+      }
+
+      todayBtn.addEventListener('click', function () {
+        if (todayCard) {
+          todayCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+
+      // 3. 打印
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+
+      // 4. 买菜表勾选记忆
+      var boxes = document.querySelectorAll('.check-item input[type="checkbox"]');
+      boxes.forEach(function (box) {
+        var key = 'elderShop_' + box.getAttribute('data-key');
+        try {
+          if (localStorage.getItem(key) === '1') {
+            box.checked = true;
+          }
+        } catch (e) {}
+        box.addEventListener('change', function () {
+          try {
+            localStorage.setItem(key, box.checked ? '1' : '0');
+          } catch (e) {}
+        });
+      });
+
+      resetBtn.addEventListener('click', function () {
+        boxes.forEach(function (box) {
+          box.checked = false;
+          try {
+            localStorage.removeItem('elderShop_' + box.getAttribute('data-key'));
+          } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
